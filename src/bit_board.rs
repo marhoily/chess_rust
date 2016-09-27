@@ -8,7 +8,6 @@ use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-
 #[derive(PartialEq, PartialOrd)]
 pub struct Piece(i32);
 #[derive(PartialEq, PartialOrd)]
@@ -29,7 +28,7 @@ impl Debug for PieceType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Color {
     Black,
     White,
@@ -57,6 +56,14 @@ impl Debug for Piece {
         }
     }
 }
+
+const PAWN: PieceType = PieceType(0);
+const KNIGHT: PieceType = PieceType(1);
+const BISHOP: PieceType = PieceType(2);
+const ROOK: PieceType = PieceType(3);
+const QUEEN: PieceType = PieceType(4);
+const KING: PieceType = PieceType(5);
+const UNKNOWN: PieceType = PieceType(-1);
 
 const WHITE_PAWN: Piece = Piece(0);
 const WHITE_KNIGHT: Piece = Piece(1);
@@ -91,13 +98,52 @@ impl BitBoard {
 mod test {
     use super::BitBoard;
     use super::Index64;
-    use super::EMPTY;
+    use super::Color;
 
     #[test]
-    fn piece_partial_eq() {
-        assert_eq!(super::EMPTY == super::EMPTY, true);
+    fn piece_get_color() {
+        //assert_eq!(super::EMPTY.get_color(), super::UNKNOWN);
+        assert_eq!(super::WHITE_PAWN.get_color(), Color::White);
+        assert_eq!(super::WHITE_KNIGHT.get_color(),  Color::White);
+        assert_eq!(super::WHITE_BISHOP.get_color(),Color::White);
+        assert_eq!(super::WHITE_ROOK.get_color(), Color::White);
+        assert_eq!(super::WHITE_QUEEN.get_color(), Color::White);
+        assert_eq!(super::WHITE_KING.get_color(), Color::White);
+        assert_eq!(super::BLACK_PAWN.get_color(), Color::Black);
+        assert_eq!(super::BLACK_KNIGHT.get_color(),Color::Black);
+        assert_eq!(super::BLACK_BISHOP.get_color(),Color::Black);
+        assert_eq!(super::BLACK_ROOK.get_color(), Color::Black);
+        assert_eq!(super::BLACK_QUEEN.get_color(), Color::Black);
+        assert_eq!(super::BLACK_KING.get_color(), Color::Black);
     }
 
+    #[test]
+    fn piece_get_type() {
+        assert_eq!(super::EMPTY.get_type(), super::UNKNOWN);
+        assert_eq!(super::WHITE_PAWN.get_type(), super::PAWN);
+        assert_eq!(super::WHITE_KNIGHT.get_type(), super::KNIGHT);
+        assert_eq!(super::WHITE_BISHOP.get_type(), super::BISHOP);
+        assert_eq!(super::WHITE_ROOK.get_type(), super::ROOK);
+        assert_eq!(super::WHITE_QUEEN.get_type(), super::QUEEN);
+        assert_eq!(super::WHITE_KING.get_type(), super::KING);
+        assert_eq!(super::BLACK_PAWN.get_type(), super::PAWN);
+        assert_eq!(super::BLACK_KNIGHT.get_type(), super::KNIGHT);
+        assert_eq!(super::BLACK_BISHOP.get_type(), super::BISHOP);
+        assert_eq!(super::BLACK_ROOK.get_type(), super::ROOK);
+        assert_eq!(super::BLACK_QUEEN.get_type(), super::QUEEN);
+        assert_eq!(super::BLACK_KING.get_type(), super::KING);
+    }
+
+    #[test]
+    fn piece_type_fmt() {
+        assert_eq!(format!("{:?}", super::UNKNOWN), "unknown");
+        assert_eq!(format!("{:?}", super::PAWN), "pawn");
+        assert_eq!(format!("{:?}", super::KNIGHT), "knight");
+        assert_eq!(format!("{:?}", super::BISHOP), "bishop");
+        assert_eq!(format!("{:?}", super::ROOK), "rook");
+        assert_eq!(format!("{:?}", super::QUEEN), "queen");
+        assert_eq!(format!("{:?}", super::KING), "king");
+    }
     #[test]
     fn piece_fmt() {
         assert_eq!(format!("{:?}", super::EMPTY), "Empty");
@@ -117,6 +163,6 @@ mod test {
     #[test]
     fn basics() {
         let b = BitBoard::new();
-        assert_eq!(b.check_square(Index64(0)), EMPTY);
+        assert_eq!(b.check_square(Index64(0)), super::EMPTY);
     }
 }
