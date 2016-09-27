@@ -97,6 +97,9 @@ impl PieceTypeBits {
     fn test(self, square: SquareExp) -> bool {
         self.0 & square.0 != 0
     }
+    fn set(&mut self, square: SquareExp) {
+        self.0 |= square.0
+    }
 }
 struct AllPieces;
 
@@ -109,13 +112,13 @@ impl IntoIterator for AllPieces {
     }
 }
 struct PieceIter(i32);
-impl Iterator for PieceIter{
+impl Iterator for PieceIter {
     type Item = Piece;
     fn next(&mut self) -> Option<Self::Item> {
         if self.0 < 11 {
             self.0 += 1;
             Some(Piece(self.0))
-        }else{
+        } else {
             None
         }
     }
@@ -125,22 +128,25 @@ impl BitBoard {
     fn new() -> Self {
         BitBoard([PieceTypeBits(0); PIECES_COUNT])
     }
-    fn for_piece(&self, piece: Piece) -> PieceTypeBits{
+    fn for_piece(&self, piece: Piece) -> PieceTypeBits {
         self.0[piece.0 as usize]
     }
-    fn check_square(&self, square: Square64) -> Piece {
+    fn check_square(&self, square: SquareExp) -> Piece {
         for piece in AllPieces {
-            if self.for_piece(piece).test(square.to_exp()) {
+            if self.for_piece(piece).test(square) {
                 return piece;
             }
         }
         EMPTY
     }
+    fn set_piece(&mut self, square: SquareExp, piece: Piece) {
+        self.0[piece.0 as usize].0 |= square.0;
+    }
 }
 #[cfg(test)]
 mod test {
     use super::BitBoard;
-    use super::Square64;
+    use super::SquareExp;
     use super::Color;
 
     #[test]
@@ -204,7 +210,8 @@ mod test {
     }
     #[test]
     fn check_square() {
-        let b = BitBoard::new();
-        assert_eq!(b.check_square(Square64(0)), super::EMPTY);
+        let mut b = BitBoard::new();
+        b.set_piece(SquareExp(1), super::BLACK_ROOK);
+        assert_eq!(b.check_square(SquareExp(1)), super::BLACK_ROOK);
     }
 }
