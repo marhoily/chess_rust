@@ -211,7 +211,9 @@ mod test {
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
-        b.set_piece(SquareExp(1), super::BLACK_ROOK);
-        assert_eq!(b.check_square(SquareExp(1)), super::BLACK_ROOK);
+        b.set_piece(SquareExp(0b0001), super::BLACK_ROOK);
+        b.set_piece(SquareExp(0b0100), super::BLACK_ROOK);
+        assert_eq!(b.check_square(SquareExp(0b0001)), super::BLACK_ROOK);
+        assert_eq!(b.check_square(SquareExp(0b0001)), super::BLACK_ROOK);
     }
 }
