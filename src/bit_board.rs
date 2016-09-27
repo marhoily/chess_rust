@@ -98,6 +98,29 @@ impl PieceTypeBits {
         self.0 & square.0 != 0
     }
 }
+struct AllPieces;
+
+impl IntoIterator for AllPieces {
+    type Item = Piece;
+    type IntoIter = PieceIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        PieceIter(0)
+    }
+}
+struct PieceIter(i32);
+impl Iterator for PieceIter{
+    type Item = Piece;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0 < 11 {
+            self.0 += 1;
+            Some(Piece(self.0))
+        }else{
+            None
+        }
+    }
+}
+
 impl BitBoard {
     fn new() -> Self {
         BitBoard([PieceTypeBits(0); PIECES_COUNT])
@@ -106,9 +129,9 @@ impl BitBoard {
         self.0[piece.0 as usize]
     }
     fn check_square(&self, square: Square64) -> Piece {
-        for piece in 0..PIECES_COUNT {
-            if self.for_piece(Piece(piece as i32)).test(square.to_exp()) {
-                return Piece(piece as i32);
+        for piece in AllPieces {
+            if self.for_piece(piece).test(square.to_exp()) {
+                return piece;
             }
         }
         EMPTY
