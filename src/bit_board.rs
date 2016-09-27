@@ -1,16 +1,26 @@
 #![allow(dead_code)]
 
-struct File(i8);
-struct Rank(i8);
-struct Index64(i8);
-
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-#[derive(PartialEq, PartialOrd)]
+struct File(i8);
+struct Rank(i8);
+
+#[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
+struct Square64(i8);
+
+#[derive(PartialEq, Copy, Clone)]
+struct SquareExp(u64);
+
+impl Square64 {
+    fn to_exp(&self) -> SquareExp {
+        SquareExp(1 << self.0)
+    }
+}
+#[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(i32);
-#[derive(PartialEq, PartialOrd)]
+#[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(i32);
 
 impl Debug for PieceType {
@@ -23,7 +33,7 @@ impl Debug for PieceType {
             3 => write!(f, "rook"),
             4 => write!(f, "queen"),
             5 => write!(f, "king"),
-            _ => panic!()
+            _ => panic!(),
         }
     }
 }
@@ -33,25 +43,26 @@ pub enum Color {
     Black,
     White,
 }
-const TYPES_COUNT : i32 = 6;
+const PIECE_TYPES_COUNT: i32 = 6;
+const PIECES_COUNT: usize = 12;
 
 impl Piece {
     pub fn get_color(&self) -> Color {
-        if self.0 >= TYPES_COUNT {
+        if self.0 >= PIECE_TYPES_COUNT {
             Color::Black
         } else {
             Color::White
         }
     }
     pub fn get_type(&self) -> PieceType {
-        PieceType(self.0 % TYPES_COUNT)
+        PieceType(self.0 % PIECE_TYPES_COUNT)
     }
 }
 impl Debug for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
         if *self == EMPTY {
             write!(f, "Empty")
-        }else {
+        } else {
             write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
         }
     }
@@ -79,15 +90,24 @@ const BLACK_QUEEN: Piece = Piece(10);
 const BLACK_KING: Piece = Piece(11);
 const EMPTY: Piece = Piece(-1);
 
-pub struct BitBoard([u64; 12]);
-
+#[derive(PartialEq, Copy, Clone)]
+pub struct PieceTypeBits(u64);
+pub struct BitBoard([PieceTypeBits; PIECES_COUNT]);
+impl PieceTypeBits {
+    fn test(self, square: SquareExp) -> bool {
+        self.0 & square.0 != 0
+    }
+}
 impl BitBoard {
     fn new() -> Self {
-        BitBoard([0; 12])
+        BitBoard([PieceTypeBits(0); PIECES_COUNT])
     }
-    fn check_square(&self, square: Index64) -> Piece {
-        for piece in 0..12 {
-            if self.0[piece] & (1 << square.0) != 0 {
+    fn for_piece(&self, piece: Piece) -> PieceTypeBits{
+        self.0[piece.0 as usize]
+    }
+    fn check_square(&self, square: Square64) -> Piece {
+        for piece in 0..PIECES_COUNT {
+            if self.for_piece(Piece(piece as i32)).test(square.to_exp()) {
                 return Piece(piece as i32);
             }
         }
@@ -97,21 +117,20 @@ impl BitBoard {
 #[cfg(test)]
 mod test {
     use super::BitBoard;
-    use super::Index64;
+    use super::Square64;
     use super::Color;
 
     #[test]
     fn piece_get_color() {
-        //assert_eq!(super::EMPTY.get_color(), super::UNKNOWN);
         assert_eq!(super::WHITE_PAWN.get_color(), Color::White);
-        assert_eq!(super::WHITE_KNIGHT.get_color(),  Color::White);
-        assert_eq!(super::WHITE_BISHOP.get_color(),Color::White);
+        assert_eq!(super::WHITE_KNIGHT.get_color(), Color::White);
+        assert_eq!(super::WHITE_BISHOP.get_color(), Color::White);
         assert_eq!(super::WHITE_ROOK.get_color(), Color::White);
         assert_eq!(super::WHITE_QUEEN.get_color(), Color::White);
         assert_eq!(super::WHITE_KING.get_color(), Color::White);
         assert_eq!(super::BLACK_PAWN.get_color(), Color::Black);
-        assert_eq!(super::BLACK_KNIGHT.get_color(),Color::Black);
-        assert_eq!(super::BLACK_BISHOP.get_color(),Color::Black);
+        assert_eq!(super::BLACK_KNIGHT.get_color(), Color::Black);
+        assert_eq!(super::BLACK_BISHOP.get_color(), Color::Black);
         assert_eq!(super::BLACK_ROOK.get_color(), Color::Black);
         assert_eq!(super::BLACK_QUEEN.get_color(), Color::Black);
         assert_eq!(super::BLACK_KING.get_color(), Color::Black);
@@ -161,8 +180,8 @@ mod test {
         assert_eq!(format!("{:?}", super::BLACK_KING), "Black-king");
     }
     #[test]
-    fn basics() {
+    fn check_square() {
         let b = BitBoard::new();
-        assert_eq!(b.check_square(Index64(0)), super::EMPTY);
+        assert_eq!(b.check_square(Square64(0)), super::EMPTY);
     }
 }
