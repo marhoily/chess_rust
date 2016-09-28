@@ -31,6 +31,9 @@ impl SquareExp {
     pub fn next(&mut self) {
         self.0 <<= 1;
     }
+    pub fn forward(&mut self, count : u8) {
+        self.0 <<= count;
+    }
 }
 
 
