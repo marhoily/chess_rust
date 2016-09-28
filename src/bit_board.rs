@@ -394,6 +394,6 @@ mod test {
             .collect::<Vec<SquareExp>>();
         assert_eq!(all.len(), 64);
         assert_eq!(all[0], SquareExp(1));
-        assert_eq!(all[11], SquareExp(1<<63));
+        assert_eq!(all[63], SquareExp(1<<63));
     }
 }
