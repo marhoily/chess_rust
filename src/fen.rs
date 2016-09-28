@@ -3,9 +3,10 @@
 #![allow(unused_variables)]
 
 use bit_board::*;
-use std::string::ToString;
-use std::fmt::Display;
-use std::i32;
+use nom::{IResult};
+use nom::IResult::*;
+use std::str;
+use std::str::FromStr;
 
 impl BitBoard {
     pub fn print_fen(&self) -> String{
@@ -38,51 +39,78 @@ impl BitBoard {
 }
 
 
-use nom::{IResult, digit};
-use nom::IResult::*;
-use std::str;
-use std::str::FromStr;
+pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard> {
+    use nom::{Err, ErrorKind};
+    let mut result = BitBoard::new();
+    let mut square = SquareExp::new(1);
+    let mut rank = 0;
+    let mut file = 0; 
+    let mut just_had_gap = false;
+    let mut consumed = 0;
+    for &e in input {
+        match consume(e as char) {
+            Symbol::Id(p) => {
 
+            }
+            Symbol::Gap(size) => {
 
-#[derive(Debug, PartialEq)]
-pub enum FenItem {
-    Gap(u8),
-    Pce(Piece),
+            }
+            Symbol::Slash => {
+
+            }
+            Symbol::Other => {
+                return Error(Err::Code(ErrorKind::Custom(0)))
+            }
+        }
+        consumed += 1;
+    }    
+    Done(&input[consumed..], result)
 }
 
-named!(item<FenItem>,
-    alt!(
-        chain!(char!('P'), || FenItem::Pce(WHITE_PAWN)) |
-        chain!(char!('N'), || FenItem::Pce(WHITE_KNIGHT)) |
-        chain!(char!('B'), || FenItem::Pce(WHITE_BISHOP)) |
-        chain!(char!('R'), || FenItem::Pce(WHITE_ROOK)) |
-        chain!(char!('Q'), || FenItem::Pce(WHITE_QUEEN)) |
-        chain!(char!('K'), || FenItem::Pce(WHITE_KING)) |
-        chain!(char!('p'), || FenItem::Pce(BLACK_PAWN)) |
-        chain!(char!('n'), || FenItem::Pce(BLACK_KNIGHT)) |
-        chain!(char!('b'), || FenItem::Pce(BLACK_BISHOP)) |
-        chain!(char!('r'), || FenItem::Pce(BLACK_ROOK)) |
-        chain!(char!('q'), || FenItem::Pce(WHITE_QUEEN)) |
-        chain!(char!('k'), || FenItem::Pce(BLACK_KING)) |
+enum Symbol {
+    Id(Piece),
+    Gap(u8),
+    Slash,
+    Other
+}
 
-        chain!(char!('1'), || FenItem::Gap(1)) |
-        chain!(char!('2'), || FenItem::Gap(2)) |
-        chain!(char!('3'), || FenItem::Gap(3)) |
-        chain!(char!('4'), || FenItem::Gap(4)) |
-        chain!(char!('5'), || FenItem::Gap(5)) |
-        chain!(char!('6'), || FenItem::Gap(6)) |
-        chain!(char!('7'), || FenItem::Gap(7)) |
-        chain!(char!('8'), || FenItem::Gap(8))
-    )
-);
+fn consume(c : char) -> Symbol {
+    match c {
+        'P' => Symbol::Id(WHITE_PAWN),
+        'N' => Symbol::Id(WHITE_KNIGHT),
+        'B' => Symbol::Id(WHITE_BISHOP),
+        'R' => Symbol::Id(WHITE_ROOK),
+        'Q' => Symbol::Id(WHITE_QUEEN),
+        'K' => Symbol::Id(WHITE_KING),
+        'p' => Symbol::Id(BLACK_PAWN),
+        'n' => Symbol::Id(BLACK_KNIGHT),
+        'b' => Symbol::Id(BLACK_BISHOP),
+        'r' => Symbol::Id(BLACK_ROOK),
+        'q' => Symbol::Id(BLACK_QUEEN),
+        'k' => Symbol::Id(BLACK_KING),
+
+        '1' => Symbol::Gap(1),
+        '2' => Symbol::Gap(2),
+        '3' => Symbol::Gap(3),
+        '4' => Symbol::Gap(4),
+        '5' => Symbol::Gap(5),
+        '6' => Symbol::Gap(6),
+        '7' => Symbol::Gap(7),
+        '8' => Symbol::Gap(8),
+
+        '/' => Symbol::Slash,
+
+        _ => Symbol::Other,
+    }
+}
+ 
 
 #[cfg(test)]
 mod test {
     use bit_board::*;
-    use nom::{IResult, digit};
+    use nom::IResult;
     use nom::IResult::*;
-    use super::FenItem;
-    use super::item;
+    use super::board;
 
     #[test]
     fn print_fen() {
@@ -95,13 +123,12 @@ mod test {
     }
     #[test]
     fn parse_fen() {
-        assert_eq!(item(b"Q"),
-            IResult::Done(&b""[..], FenItem::Pce(WHITE_QUEEN)));
+        check("8/p7/8/8/4Q3/8/8/8");
+    }
+    fn check(fen : &str){
+        assert_eq!(
+            board(fen.as_bytes()).unwrap().1.print_fen(),
+            fen);
 
-        assert_eq!(item(b"p"),
-            IResult::Done(&b""[..], FenItem::Pce(BLACK_PAWN)));
-
-        assert_eq!(item(b"1"),
-            IResult::Done(&b""[..], FenItem::Gap(1)));
     }
 }
