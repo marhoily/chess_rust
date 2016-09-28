@@ -1,4 +1,5 @@
 use bit_board::*;
+use bit_board::pieces::*;
 use nom::IResult;
 use nom::IResult::*;
 use std::str;
@@ -142,7 +143,8 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use bit_board::{BitBoard, Square64, BLACK_PAWN, WHITE_QUEEN};
+    use bit_board::{BitBoard, Square64};
+    use bit_board::pieces::*;
     use nom::{Err, ErrorKind, Needed};
     use super::board;
 
