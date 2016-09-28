@@ -13,11 +13,14 @@ struct Rank(i8);
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
 pub struct Square64(i8);
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub struct SquareExp(u64);
 
 impl Square64 {
-    fn to_exp(&self) -> SquareExp {
+    pub fn new(square_number: i8) -> Square64 {
+        Square64(square_number)
+    }
+    pub fn to_exp(&self) -> SquareExp {
         SquareExp(1 << self.0)
     }
 }
@@ -75,27 +78,27 @@ impl Debug for Piece {
     }
 }
 
-const PAWN: PieceType = PieceType(0);
-const KNIGHT: PieceType = PieceType(1);
-const BISHOP: PieceType = PieceType(2);
-const ROOK: PieceType = PieceType(3);
-const QUEEN: PieceType = PieceType(4);
-const KING: PieceType = PieceType(5);
-const UNKNOWN: PieceType = PieceType(-1);
+pub const PAWN: PieceType = PieceType(0);
+pub const KNIGHT: PieceType = PieceType(1);
+pub const BISHOP: PieceType = PieceType(2);
+pub const ROOK: PieceType = PieceType(3);
+pub const QUEEN: PieceType = PieceType(4);
+pub const KING: PieceType = PieceType(5);
+pub const UNKNOWN: PieceType = PieceType(-1);
 
-const WHITE_PAWN: Piece = Piece(0);
-const WHITE_KNIGHT: Piece = Piece(1);
-const WHITE_BISHOP: Piece = Piece(2);
-const WHITE_ROOK: Piece = Piece(3);
-const WHITE_QUEEN: Piece = Piece(4);
-const WHITE_KING: Piece = Piece(5);
-const BLACK_PAWN: Piece = Piece(6);
-const BLACK_KNIGHT: Piece = Piece(7);
-const BLACK_BISHOP: Piece = Piece(8);
-const BLACK_ROOK: Piece = Piece(9);
-const BLACK_QUEEN: Piece = Piece(10);
-const BLACK_KING: Piece = Piece(11);
-const EMPTY: Piece = Piece(-1);
+pub const WHITE_PAWN: Piece = Piece(0);
+pub const WHITE_KNIGHT: Piece = Piece(1);
+pub const WHITE_BISHOP: Piece = Piece(2);
+pub const WHITE_ROOK: Piece = Piece(3);
+pub const WHITE_QUEEN: Piece = Piece(4);
+pub const WHITE_KING: Piece = Piece(5);
+pub const BLACK_PAWN: Piece = Piece(6);
+pub const BLACK_KNIGHT: Piece = Piece(7);
+pub const BLACK_BISHOP: Piece = Piece(8);
+pub const BLACK_ROOK: Piece = Piece(9);
+pub const BLACK_QUEEN: Piece = Piece(10);
+pub const BLACK_KING: Piece = Piece(11);
+pub const EMPTY: Piece = Piece(-1);
 
 #[derive(PartialEq, Copy, Clone)]
 pub struct PieceTypeBits(u64);
@@ -127,23 +130,50 @@ struct PieceIter(i32);
 impl Iterator for PieceIter {
     type Item = Piece;
     fn next(&mut self) -> Option<Self::Item> {
-        if self.0 < 11 {
+        if self.0 < 12 {
+            let result = Piece(self.0);
             self.0 += 1;
-            Some(Piece(self.0))
+            Some(result)
         } else {
             None
         }
     }
 }
 
+pub struct AllSquaresExp;
+
+impl IntoIterator for AllSquaresExp {
+    type Item = SquareExp;
+    type IntoIter = SquareExpIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        SquareExpIter(1)
+    }
+}
+
+pub struct SquareExpIter(u64);
+
+impl Iterator for SquareExpIter {
+    type Item = SquareExp;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0 == 0 {
+            None
+        } else {
+            let result = SquareExp(self.0);
+            self.0 <<= 1;
+            Some(result)
+        }
+    }
+}
+
 impl BitBoard {
-    fn new() -> Self {
+    pub fn new() -> Self {
         BitBoard([PieceTypeBits(0); PIECES_COUNT])
     }
-    fn for_piece(&self, piece: Piece) -> PieceTypeBits {
+    pub fn for_piece(&self, piece: Piece) -> PieceTypeBits {
         self.0[piece.0 as usize]
     }
-    fn check_square(&self, square: SquareExp) -> Piece {
+    pub fn check_square(&self, square: SquareExp) -> Piece {
         for piece in AllPieces {
             if self.for_piece(piece).test(square) {
                 return piece;
@@ -151,11 +181,39 @@ impl BitBoard {
         }
         EMPTY
     }
-    fn set_piece(&mut self, square: SquareExp, piece: Piece) {
+    pub fn set_piece(&mut self, square: SquareExp, piece: Piece) {
         self.0[piece.0 as usize].0 |= square.0;
+    }
+    pub fn get_piece(&self, square: SquareExp) -> Piece {
+        for probe in AllPieces {
+            if self.for_piece(probe).test(square) {
+                return probe
+            }
+        }
+        EMPTY
+    }
+    pub fn squares<'a>(&'a self) -> SquareIter<'a> {
+        SquareIter {
+            board: &self,
+            square_iter: SquareExpIter(1),
+        }
     }
 }
 
+pub struct SquareIter<'a> {
+    board: &'a BitBoard,
+    square_iter: SquareExpIter,
+}
+
+impl<'a> Iterator for SquareIter<'a> {
+    type Item = Piece;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.square_iter.next().map(|square| {
+            self.board.get_piece(square)
+        })
+    }
+}
 bitflags! {
     pub flags Castling: u8 {
         //const None = 0,
@@ -312,5 +370,30 @@ mod test {
         b.set_piece(SquareExp(0b0100), super::BLACK_ROOK);
         assert_eq!(b.check_square(SquareExp(0b0001)), super::BLACK_ROOK);
         assert_eq!(b.check_square(SquareExp(0b0001)), super::BLACK_ROOK);
+    }
+
+    #[test]
+    fn all_pieces() {
+        use std::iter::*;
+        use super::Piece;
+
+        let all = super::AllPieces
+            .into_iter()
+            .collect::<Vec<Piece>>();
+        assert_eq!(all.len(), 12);
+        assert_eq!(all[0], super::WHITE_PAWN);
+        assert_eq!(all[11], super::BLACK_KING);
+    }
+
+    #[test]
+    fn all_squares_exp() {
+        use std::iter::*;
+
+        let all = super::AllSquaresExp
+            .into_iter()
+            .collect::<Vec<SquareExp>>();
+        assert_eq!(all.len(), 64);
+        assert_eq!(all[0], SquareExp(1));
+        assert_eq!(all[11], SquareExp(1<<63));
     }
 }

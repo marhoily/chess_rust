@@ -5,3 +5,4 @@ authors = ["marhoily <marhoily@homtail.com>"]
 
 [dependencies]
 bitflags = "0.7"
+nom = "^1.2.4"
