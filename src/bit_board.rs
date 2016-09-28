@@ -8,6 +8,8 @@ struct File(i8);
 
 struct Rank(i8);
 
+// Note that index 0 corresponds to a8, and NOT a1!
+// Indexes read left to right, top to bottom!
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
 pub struct Square64(i8);
 
@@ -210,7 +212,10 @@ const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
 const MOVE_PROMOTE_TO_MASK: u16 = 0b0000_0011_0000_0000;
 
 impl Move {
-    pub fn new(from: Square64, to: Square64, promote_to: PieceType) -> Self {
+    pub fn new(from: Square64, to: Square64) -> Self {
+        Move((from.0 as u16) | ((to.0 as u16) << 4))
+    }
+    pub fn wiht_promotion(from: Square64, to: Square64, promote_to: PieceType) -> Self {
         Move((from.0 as u16)
             | ((to.0 as u16) << 4)
             | ((promote_to.0 as u16) << 8))
@@ -226,6 +231,12 @@ impl Move {
     }
 }
 
+struct Position {
+    board: BitBoard,
+    active: Color,
+    available: Castling,
+    en_passant: Option<File>,
+}
 
 #[cfg(test)]
 mod test {
