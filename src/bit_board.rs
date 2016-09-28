@@ -5,28 +5,31 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 
 struct File(i8);
+
 struct Rank(i8);
 
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
-struct Square64(i8);
+pub struct Square64(i8);
 
 #[derive(PartialEq, Copy, Clone)]
-struct SquareExp(u64);
+pub struct SquareExp(u64);
 
 impl Square64 {
     fn to_exp(&self) -> SquareExp {
         SquareExp(1 << self.0)
     }
 }
+
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(i32);
+
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(i32);
 
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
-            -1 => write!(f, "unknown"),
+            - 1 => write!(f, "unknown"),
             0 => write!(f, "pawn"),
             1 => write!(f, "knight"),
             2 => write!(f, "bishop"),
@@ -43,6 +46,7 @@ pub enum Color {
     Black,
     White,
 }
+
 const PIECE_TYPES_COUNT: i32 = 6;
 const PIECES_COUNT: usize = 12;
 
@@ -58,6 +62,7 @@ impl Piece {
         PieceType(self.0 % PIECE_TYPES_COUNT)
     }
 }
+
 impl Debug for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
         if *self == EMPTY {
@@ -92,7 +97,9 @@ const EMPTY: Piece = Piece(-1);
 
 #[derive(PartialEq, Copy, Clone)]
 pub struct PieceTypeBits(u64);
+
 pub struct BitBoard([PieceTypeBits; PIECES_COUNT]);
+
 impl PieceTypeBits {
     fn test(self, square: SquareExp) -> bool {
         self.0 & square.0 != 0
@@ -101,6 +108,7 @@ impl PieceTypeBits {
         self.0 |= square.0
     }
 }
+
 struct AllPieces;
 
 impl IntoIterator for AllPieces {
@@ -111,7 +119,9 @@ impl IntoIterator for AllPieces {
         PieceIter(0)
     }
 }
+
 struct PieceIter(i32);
+
 impl Iterator for PieceIter {
     type Item = Piece;
     fn next(&mut self) -> Option<Self::Item> {
@@ -143,6 +153,80 @@ impl BitBoard {
         self.0[piece.0 as usize].0 |= square.0;
     }
 }
+
+bitflags! {
+    pub flags Castling: u8 {
+        //const None = 0,
+        const Q = WQ.bits | BQ.bits,
+        const K = WK.bits | BK.bits,
+        const W = WQ.bits | WK.bits,
+        const B = BQ.bits | BK.bits,
+        const WQ = 1 << 0,
+        const WK = 1 << 2,
+        const BQ = 1 << 3,
+        const BK = 1 << 4,
+        const ALL = Q.bits | K.bits,
+    }
+}
+
+enum MoveAnnotations {
+    None,
+    Promotion,
+    Capture,
+    EnPassant,
+    DoublePush,
+}
+
+enum Warnings {
+    None,
+    MissingPromotionHint,
+    SparePromotion,
+}
+
+enum Errors {
+    None,
+
+    MoveToCheck,
+    FromEmptyCell,
+    ToOccupiedCell,
+    WrongSideToMove,
+
+    CastleFromCheck,
+    CastleThroughCheck,
+    HasNoCastling,
+
+    HasNoEnPassant,
+
+    DoesNotMoveThisWay,
+    DoesNotCaptureThisWay,
+    OnlyCapturesThisWay,
+    JumpsOverPieces,
+}
+
+pub struct Move(u16);
+
+const MOVE_FROM_MASK: u16 = 0b0000_0000_0000_1111;
+const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
+const MOVE_PROMOTE_TO_MASK: u16 = 0b0000_0011_0000_0000;
+
+impl Move {
+    pub fn new(from: Square64, to: Square64, promote_to: PieceType) -> Self {
+        Move((from.0 as u16)
+            | ((to.0 as u16) << 4)
+            | ((promote_to.0 as u16) << 8))
+    }
+    pub fn get_from(self) -> Square64 {
+        Square64(((self.0 as u16) & MOVE_FROM_MASK) as i8)
+    }
+    pub fn get_to(self) -> Square64 {
+        Square64((((self.0 as u16) & MOVE_TO_MASK) >> 4) as i8)
+    }
+    pub fn get_promote_to(self) -> PieceType {
+        PieceType((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
+    }
+}
+
+
 #[cfg(test)]
 mod test {
     use super::BitBoard;
@@ -192,6 +276,7 @@ mod test {
         assert_eq!(format!("{:?}", super::QUEEN), "queen");
         assert_eq!(format!("{:?}", super::KING), "king");
     }
+
     #[test]
     fn piece_fmt() {
         assert_eq!(format!("{:?}", super::EMPTY), "Empty");
@@ -208,6 +293,7 @@ mod test {
         assert_eq!(format!("{:?}", super::BLACK_QUEEN), "Black-queen");
         assert_eq!(format!("{:?}", super::BLACK_KING), "Black-king");
     }
+
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
