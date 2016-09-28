@@ -2,10 +2,7 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-use bit_board::BitBoard;
-use bit_board::EMPTY;
-use bit_board::Piece;
-use bit_board::AllSquaresExp;
+use bit_board::*;
 use std::string::ToString;
 use std::fmt::Display;
 use std::i32;
@@ -35,7 +32,6 @@ impl BitBoard {
                 sb.push_str(format!("{}", gap).as_str());
                 gap = 0;
             }
-
         }
         sb
     }
@@ -44,73 +40,53 @@ impl BitBoard {
 
 use nom::{IResult, digit};
 use nom::IResult::*;
-
-// Parser definition
-
 use std::str;
 use std::str::FromStr;
 
-named!(parens<i64>, delimited!(
-    char!('('),
-    expr,
-    char!(')')
-  )
+
+#[derive(Debug, PartialEq)]
+pub enum FenItem {
+    Gap(u8),
+    Pce(Piece),
+}
+
+named!(item<FenItem>,
+    alt!(
+        chain!(tag!("P"), || FenItem::Pce(WHITE_PAWN)) |
+        chain!(tag!("N"), || FenItem::Pce(WHITE_KNIGHT)) |
+        chain!(tag!("B"), || FenItem::Pce(WHITE_BISHOP)) |
+        chain!(tag!("R"), || FenItem::Pce(WHITE_ROOK)) |
+        chain!(tag!("Q"), || FenItem::Pce(WHITE_QUEEN)) |
+        chain!(tag!("K"), || FenItem::Pce(WHITE_KING)) |
+        chain!(tag!("p"), || FenItem::Pce(BLACK_PAWN)) |
+        chain!(tag!("n"), || FenItem::Pce(BLACK_KNIGHT)) |
+        chain!(tag!("b"), || FenItem::Pce(BLACK_BISHOP)) |
+        chain!(tag!("r"), || FenItem::Pce(BLACK_ROOK)) |
+        chain!(tag!("q"), || FenItem::Pce(WHITE_QUEEN)) |
+        chain!(tag!("k"), || FenItem::Pce(BLACK_KING)) |
+
+        chain!(tag!("1"), || FenItem::Gap(1)) |
+        chain!(tag!("2"), || FenItem::Gap(2)) |
+        chain!(tag!("3"), || FenItem::Gap(3)) |
+        chain!(tag!("4"), || FenItem::Gap(4)) |
+        chain!(tag!("5"), || FenItem::Gap(5)) |
+        chain!(tag!("6"), || FenItem::Gap(6)) |
+        chain!(tag!("7"), || FenItem::Gap(7)) |
+        chain!(tag!("8"), || FenItem::Gap(8))
+    )
 );
 
-named!(i64_digit<i64>,
-  map_res!(
-    map_res!(
-      digit,
-      str::from_utf8
-    ),
-    FromStr::from_str
-  )
-);
 
-// We transform an integer string into a i64
-// we look for a digit suite, and try to convert it.
-// if either str::from_utf8 or FromStr::from_str fail,
-// the parser will fail
-named!(factor<i64>,
-  alt!(
-    i64_digit
-  | parens
-  )
-);
 
-// we define acc as mutable to update its value whenever a new term is found
-named!(term <i64>,
-  chain!(
-    mut acc: factor  ~
-             many0!(
-               alt!(
-                 tap!(mul: preceded!(tag!("*"), factor) => acc = acc * mul) |
-                 tap!(div: preceded!(tag!("/"), factor) => acc = acc / div)
-               )
-             ),
-    || { return acc }
-  )
-);
 
-named!(expr <i64>,
-  chain!(
-    mut acc: term  ~
-             many0!(
-               alt!(
-                 tap!(add: preceded!(tag!("+"), term) => acc = acc + add) |
-                 tap!(sub: preceded!(tag!("-"), term) => acc = acc - sub)
-               )
-             ),
-    || { return acc }
-  )
-);
 
 #[cfg(test)]
 mod test {
     use bit_board::*;
     use nom::{IResult, digit};
     use nom::IResult::*;
-    use super::expr;
+    use super::FenItem;
+    use super::item;
 
     #[test]
     fn print_fen() {
@@ -122,13 +98,14 @@ mod test {
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
     }
     #[test]
-    fn piece_get_color() {
-        assert_eq!(expr(b"1+2"),         IResult::Done(&b""[..], 3));
-        assert_eq!(expr(b"12+6-4+3"),    IResult::Done(&b""[..], 17));
-        assert_eq!(expr(b"1+2*3+4"),     IResult::Done(&b""[..], 11));
+    fn parse_fen() {
+        assert_eq!(item(b"Q"),
+            IResult::Done(&b""[..], FenItem::Pce(WHITE_QUEEN)));
 
-        assert_eq!(expr(b"(2)"),         IResult::Done(&b""[..], 2));
-        assert_eq!(expr(b"2*(3+4)"),     IResult::Done(&b""[..], 14));
-        assert_eq!(expr(b"2*2/(5-1)+3"), IResult::Done(&b""[..], 4));
+        assert_eq!(item(b"p"),
+            IResult::Done(&b""[..], FenItem::Pce(BLACK_PAWN)));
+
+        assert_eq!(item(b"1"),
+            IResult::Done(&b""[..], FenItem::Gap(1)));
     }
 }
