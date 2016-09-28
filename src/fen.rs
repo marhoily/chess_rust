@@ -50,7 +50,6 @@ pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
     let mut square = SquareExp::new(1);
-    let mut rank = 0;
     let mut file = 0;
     let mut just_had_gap = false;
     let mut consumed = 0;
@@ -186,6 +185,9 @@ mod test {
     }
     #[test]
     fn incomplete() {
+        expect_incomplete("8");
+        expect_incomplete("8/p7/8/8/");
+        expect_incomplete("8/p7/8/8/4");
         expect_incomplete("8/p7/8/8/4Q3/8/8/7");
         expect_incomplete("8/p7/8/8/4Q3/8/8/7");
         expect_incomplete("8/p7/8/8/4Q3/8/8/6p");
