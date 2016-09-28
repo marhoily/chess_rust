@@ -52,33 +52,29 @@ pub enum FenItem {
 
 named!(item<FenItem>,
     alt!(
-        chain!(tag!("P"), || FenItem::Pce(WHITE_PAWN)) |
-        chain!(tag!("N"), || FenItem::Pce(WHITE_KNIGHT)) |
-        chain!(tag!("B"), || FenItem::Pce(WHITE_BISHOP)) |
-        chain!(tag!("R"), || FenItem::Pce(WHITE_ROOK)) |
-        chain!(tag!("Q"), || FenItem::Pce(WHITE_QUEEN)) |
-        chain!(tag!("K"), || FenItem::Pce(WHITE_KING)) |
-        chain!(tag!("p"), || FenItem::Pce(BLACK_PAWN)) |
-        chain!(tag!("n"), || FenItem::Pce(BLACK_KNIGHT)) |
-        chain!(tag!("b"), || FenItem::Pce(BLACK_BISHOP)) |
-        chain!(tag!("r"), || FenItem::Pce(BLACK_ROOK)) |
-        chain!(tag!("q"), || FenItem::Pce(WHITE_QUEEN)) |
-        chain!(tag!("k"), || FenItem::Pce(BLACK_KING)) |
+        chain!(char!('P'), || FenItem::Pce(WHITE_PAWN)) |
+        chain!(char!('N'), || FenItem::Pce(WHITE_KNIGHT)) |
+        chain!(char!('B'), || FenItem::Pce(WHITE_BISHOP)) |
+        chain!(char!('R'), || FenItem::Pce(WHITE_ROOK)) |
+        chain!(char!('Q'), || FenItem::Pce(WHITE_QUEEN)) |
+        chain!(char!('K'), || FenItem::Pce(WHITE_KING)) |
+        chain!(char!('p'), || FenItem::Pce(BLACK_PAWN)) |
+        chain!(char!('n'), || FenItem::Pce(BLACK_KNIGHT)) |
+        chain!(char!('b'), || FenItem::Pce(BLACK_BISHOP)) |
+        chain!(char!('r'), || FenItem::Pce(BLACK_ROOK)) |
+        chain!(char!('q'), || FenItem::Pce(WHITE_QUEEN)) |
+        chain!(char!('k'), || FenItem::Pce(BLACK_KING)) |
 
-        chain!(tag!("1"), || FenItem::Gap(1)) |
-        chain!(tag!("2"), || FenItem::Gap(2)) |
-        chain!(tag!("3"), || FenItem::Gap(3)) |
-        chain!(tag!("4"), || FenItem::Gap(4)) |
-        chain!(tag!("5"), || FenItem::Gap(5)) |
-        chain!(tag!("6"), || FenItem::Gap(6)) |
-        chain!(tag!("7"), || FenItem::Gap(7)) |
-        chain!(tag!("8"), || FenItem::Gap(8))
+        chain!(char!('1'), || FenItem::Gap(1)) |
+        chain!(char!('2'), || FenItem::Gap(2)) |
+        chain!(char!('3'), || FenItem::Gap(3)) |
+        chain!(char!('4'), || FenItem::Gap(4)) |
+        chain!(char!('5'), || FenItem::Gap(5)) |
+        chain!(char!('6'), || FenItem::Gap(6)) |
+        chain!(char!('7'), || FenItem::Gap(7)) |
+        chain!(char!('8'), || FenItem::Gap(8))
     )
 );
-
-
-
-
 
 #[cfg(test)]
 mod test {
