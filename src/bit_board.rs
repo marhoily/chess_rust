@@ -396,4 +396,18 @@ mod test {
         assert_eq!(all[0], SquareExp(1));
         assert_eq!(all[63], SquareExp(1<<63));
     }
+    #[test]
+    fn bit_board_squares() {
+        use std::iter::*;
+
+        let mut b = BitBoard::new();
+        b.set_piece(SquareExp(0b0001), super::BLACK_ROOK);
+
+        let all = b
+            .squares()
+            .collect::<Vec<super::Piece>>();
+        assert_eq!(all.len(), 64);
+        assert_eq!(all[0], super::BLACK_ROOK);
+        assert_eq!(all[63], super::EMPTY);
+    }
 }
