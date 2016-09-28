@@ -55,7 +55,11 @@ pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut just_had_gap = false;
     let mut consumed = 0;
     for &e in input {
-        let token = consume(e as char);
+        let token = if !square.is_out() {
+            consume(e as char)
+        } else {
+            Token::Slash
+        };
         match token {
             Token::Piece(p) => {
                 if file > 7 {
@@ -180,12 +184,26 @@ mod test {
     fn unrecognized_token() {
         expect_error("p7/whatewer", super::ParsingError::UnrecognizedToken, 3);
     }
+    #[test]
+    fn extra_symbols() {
+        check_extra("8/p7/8/8/4Q3/8/8/81", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/8p", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/8[", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/8 ", 18);
+    }
     fn check(fen: &str) {
         let parse = board(fen.as_bytes());
         if parse.is_err() {
             panic!("{:?}", parse.unwrap_err());
         }
         assert_eq!(parse.unwrap().1.print_fen(), fen);
+    }
+    fn check_extra(fen: &str, expected_stop: usize) {
+        let parse = board(fen.as_bytes());
+        if parse.is_err() {
+            panic!("{:?}", parse.unwrap_err());
+        }
+        assert_eq!(parse.unwrap().1.print_fen(), fen[..expected_stop]);
     }
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
         let input = fen.as_bytes();

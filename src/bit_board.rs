@@ -28,6 +28,9 @@ impl SquareExp {
     pub fn new(exp: u64) -> Self {
         SquareExp(exp)
     }
+    pub fn is_out(&self) -> bool {
+        self.0 == 0
+    }
     pub fn next(&mut self) {
         self.0 <<= 1;
     }
