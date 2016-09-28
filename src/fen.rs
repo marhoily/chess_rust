@@ -1,12 +1,7 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
 use std::str;
-use std::str::FromStr;
 
 impl BitBoard {
     pub fn print_fen(&self) -> String {
@@ -147,10 +142,8 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use bit_board::*;
-    use nom::IResult;
+    use bit_board::{BitBoard, Square64, BLACK_PAWN, WHITE_QUEEN};
     use nom::{Err, ErrorKind, Needed};
-    use nom::IResult::*;
     use super::board;
 
     #[test]
@@ -219,8 +212,7 @@ mod test {
         assert_eq!(parse.unwrap().1.print_fen(), fen[..expected_stop]);
     }
     fn expect_incomplete(fen: &str) {
-        assert_eq!(board(fen.as_bytes()).unwrap_inc(),
-                   Needed::Unknown);
+        assert_eq!(board(fen.as_bytes()).unwrap_inc(), Needed::Unknown);
     }
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
         let input = fen.as_bytes();
