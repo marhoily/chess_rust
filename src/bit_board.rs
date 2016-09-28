@@ -54,6 +54,7 @@ pub enum Color {
 
 const PIECE_TYPES_COUNT: i32 = 6;
 const PIECES_COUNT: usize = 12;
+static PIECE_CHARS: &'static [u8;12] = b"PNBRQKpnbrqk";
 
 impl Piece {
     pub fn get_color(&self) -> Color {
@@ -65,6 +66,9 @@ impl Piece {
     }
     pub fn get_type(&self) -> PieceType {
         PieceType(self.0 % PIECE_TYPES_COUNT)
+    }
+    pub fn as_char(&self) -> char{
+        PIECE_CHARS[self.0 as usize] as char
     }
 }
 

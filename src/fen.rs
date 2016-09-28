@@ -3,21 +3,40 @@
 #![allow(unused_variables)]
 
 use bit_board::BitBoard;
+use bit_board::EMPTY;
+use bit_board::Piece;
 use bit_board::AllSquaresExp;
+use std::string::ToString;
+use std::fmt::Display;
+use std::i32;
 
 impl BitBoard {
     pub fn print_fen(&self) -> String{
         let mut sb = String::with_capacity(60);
         let mut file = 0;
+        let mut gap = 0;
         for square in self.squares() {
-            if file == 0 {
-                sb.push_str("/");
+            if file == 8 {
+                sb.push('/');
                 file = 0;
             }
             file += 1;
+            if square == EMPTY {
+                gap += 1;
+            }
+            else {
+                if gap > 0 {
+                    sb.push_str(format!("{}", gap).as_str());
+                    gap = 0;
+                }
+                sb.push(square.as_char())
+            }
+            if file == 8 && gap > 0 {
+                sb.push_str(format!("{}", gap).as_str());
+                gap = 0;
+            }
 
         }
-        sb.push_str("blah");
         sb
     }
 }
@@ -100,7 +119,7 @@ mod test {
         let e4 = Square64::new(4+32).to_exp();
         b.set_piece(a7, BLACK_PAWN);
         b.set_piece(e4, WHITE_QUEEN);
-        assert_eq!(b.print_fen(), "blah");
+        assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
     }
     #[test]
     fn piece_get_color() {
