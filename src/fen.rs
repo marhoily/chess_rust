@@ -47,7 +47,7 @@ pub enum ParsingError {
 }
 
 pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
-    use nom::{Err, ErrorKind};
+    use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
     let mut square = SquareExp::new(1);
     let mut rank = 0;
@@ -101,7 +101,11 @@ pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
         }
         consumed += 1;
     }
-    Done(&input[consumed..], result)
+    if square.is_out() {
+        Done(&input[consumed..], result)
+    } else {
+        Incomplete(Needed::Unknown)
+    }
 }
 
 enum Token {
@@ -146,7 +150,7 @@ fn consume(c: char) -> Token {
 mod test {
     use bit_board::*;
     use nom::IResult;
-    use nom::{Err, ErrorKind};
+    use nom::{Err, ErrorKind, Needed};
     use nom::IResult::*;
     use super::board;
 
@@ -176,9 +180,16 @@ mod test {
         expect_error("pp7whatewer", super::ParsingError::GapIsTooBig, 2);
     }
     #[test]
-    fn gap_is_too_short() {
+    fn rank_is_too_short() {
         expect_error("p6/whatewer", super::ParsingError::RankIsTooShort, 2);
         expect_error("6p/whatewer", super::ParsingError::RankIsTooShort, 2);
+    }
+    #[test]
+    fn incomplete() {
+        expect_incomplete("8/p7/8/8/4Q3/8/8/7");
+        expect_incomplete("8/p7/8/8/4Q3/8/8/7");
+        expect_incomplete("8/p7/8/8/4Q3/8/8/6p");
+        expect_incomplete("8/p7/8/8/4Q3/8/8/6p");
     }
     #[test]
     fn unrecognized_token() {
@@ -204,6 +215,10 @@ mod test {
             panic!("{:?}", parse.unwrap_err());
         }
         assert_eq!(parse.unwrap().1.print_fen(), fen[..expected_stop]);
+    }
+    fn expect_incomplete(fen: &str) {
+        assert_eq!(board(fen.as_bytes()).unwrap_inc(),
+                   Needed::Unknown);
     }
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
         let input = fen.as_bytes();
