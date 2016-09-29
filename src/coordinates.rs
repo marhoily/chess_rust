@@ -137,6 +137,13 @@ impl Square64 {
             Color::Black
         }
     }
+    pub fn to_string(&self) -> String {
+        let mut result = String::with_capacity(2);
+        let (file, rank) = self.humanize();
+        result.push(file.char());
+        result.push(rank.char());
+        result
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -282,6 +289,18 @@ mod test {
         assert_eq!(Square64::parse("f3").0, 45);
         assert_eq!(Square64::parse("g2").0, 54);
         assert_eq!(Square64::parse("h1").0, 63);
+    }
+
+    #[test]
+    fn square_to_string() {
+        assert_eq!(Square64::parse("a8").to_string(), "a8");
+        assert_eq!(Square64::parse("b7").to_string(), "b7");
+        assert_eq!(Square64::parse("c6").to_string(), "c6");
+        assert_eq!(Square64::parse("d5").to_string(), "d5");
+        assert_eq!(Square64::parse("e4").to_string(), "e4");
+        assert_eq!(Square64::parse("f3").to_string(), "f3");
+        assert_eq!(Square64::parse("g2").to_string(), "g2");
+        assert_eq!(Square64::parse("h1").to_string(), "h1");
     }
     #[test]
     fn incomplete() {
