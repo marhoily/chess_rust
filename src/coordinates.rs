@@ -103,40 +103,21 @@ impl Square64 {
     }
     pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Square64, ParseCoordinateError> {
         use nom::{Err, ErrorKind, Needed};
-        let mut consumed = 0;
-        let mut file: Option<File> = None;
-        let mut rank: Option<Rank> = None;
-        for &e in input {
-            match consume(e as char) {
-                Token::File(f) => {
-                    if file.is_some() {
-                        panic!("1")
-                        //return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::UnrecognizedToken),
-                        //                           &input[consumed..]));
-                    }
-
-                    file = Some(f)
-                }
-                Token::Rank(r) => {
-                    if file.is_none() {
-                        return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::RankFirst),
-                                                   &input[consumed..]));
-                    }
-
-                    rank = Some(r)
-                }
-                Token::Other => {
-                    panic!("3")
-                    //return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::UnrecognizedToken),
-                    //                           &input[consumed..]))
-                }
-            }
-            consumed += 1;
+        if input.len() < 2 {
+            return Incomplete(Needed::Size(2))
         }
-        if consumed == 2 {
-            Done(&input[2..], Square64::from(file.unwrap(), rank.unwrap()))
-        } else {
-            Incomplete(Needed::Size(2))
+
+        let file = consume(input[0] as char);
+        let rank = consume(input[1] as char);
+        let consumed = &input[2..];
+        match (file, rank) {
+            (Token::File(f), Token::Rank(r))=> {
+                Done(consumed, Square64::from(f, r))
+            },
+            _ => {
+                return Error(Err::Position(ErrorKind::Custom(
+                    ParseCoordinateError::Unrecognized), consumed))
+            }
         }
     }
     pub fn to_exp(&self) -> SquareExp {
@@ -160,9 +141,8 @@ impl Square64 {
 
 #[derive(Debug, PartialEq)]
 pub enum ParseCoordinateError {
-    UnrecognizedToken,
+    Unrecognized,
     Incomplete,
-    RankFirst
 }
 enum Token {
     File(File),
@@ -304,14 +284,14 @@ mod test {
         assert_eq!(Square64::parse("h1").0, 63);
     }
     #[test]
-    fn rank_first() {
-        assert_eq!(Square64::try_parse("8").unwrap_err(), 
-            ParseCoordinateError::RankFirst);
+    fn incomplete() {
+        assert_eq!(Square64::try_parse("a").unwrap_err(),
+            ParseCoordinateError::Incomplete);
     }
     #[test]
-    fn rank_first() {
-        assert_eq!(Square64::try_parse("8").unwrap_err(),
-            ParseCoordinateError::RankFirst);
+    fn unrecognized() {
+        assert_eq!(Square64::try_parse("8a").unwrap_err(),
+            ParseCoordinateError::Unrecognized);
     }
 
     #[test]
