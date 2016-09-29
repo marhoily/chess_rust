@@ -6,5 +6,6 @@ extern crate bitflags;
 extern crate nom;
 
 pub mod sqares;
+pub mod moves;
 pub mod bit_board;
 pub mod fen;
