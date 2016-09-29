@@ -2,6 +2,9 @@ use std::fmt::Debug;
 use std::fmt::Result;
 use std::fmt::Display;
 use std::fmt::Formatter;
+use nom::IResult;
+use nom::IResult::*;
+use std;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct File(i8);
@@ -78,6 +81,7 @@ impl Color {
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
 pub struct Square64(i8);
 
+type Spr = std::result::Result<Square64,ParseCoordinateError>;
 impl Square64 {
     pub fn new(square_number: i8) -> Self {
         Square64(square_number)
@@ -85,58 +89,56 @@ impl Square64 {
     pub fn from(f: File, r: Rank) -> Self {
         Square64(f.0 + r.0 * 8)
     }
+    pub fn parse(coordinate: &str) -> Square64 {
+        Square64::try_parse(coordinate).unwrap()
+    }
+    pub fn try_parse(coordinate: &str) -> Spr {
+        use nom::{Err, ErrorKind};
+        match Square64::parse_nom(coordinate.as_bytes()) {
+            Done(_, square) => Ok(square),
+            Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
+            Incomplete(_) => Err(ParseCoordinateError::Incomplete),
+            _ => panic!("custom error!?")
+        }
+    }
     pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Square64, ParseCoordinateError> {
+        use nom::{Err, ErrorKind, Needed};
+        let mut consumed = 0;
+        let mut file: Option<File> = None;
+        let mut rank: Option<Rank> = None;
         for &e in input {
-            let token = if !square.is_out() {
-                consume(e as char)
-            } else {
-                Token::Slash
-            };
-            match token {
-                Token::Piece(p) => {
-                    if file > 7 {
-                        return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooLong),
-                                                   &input[consumed..]));
+            match consume(e as char) {
+                Token::File(f) => {
+                    if file.is_some() {
+                        panic!("1")
+                        //return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::UnrecognizedToken),
+                        //                           &input[consumed..]));
                     }
 
-                    result.set_piece(square, p);
-                    square.next();
-                    just_had_gap = false;
-                    file += 1;
+                    file = Some(f)
                 }
-                Token::Gap(size) => {
-                    if just_had_gap {
-                        return Error(Err::Position(ErrorKind::Custom(ParsingError::DoubleGap),
-                                                   &input[consumed..]));
+                Token::Rank(r) => {
+                    if rank.is_some() {
+                        panic!("2")
+                        //return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::UnrecognizedToken),
+                        //                           &input[consumed..]));
                     }
-                    square.forward(size);
-                    just_had_gap = true;
-                    file += size;
 
-                    if file > 8 {
-                        return Error(Err::Position(ErrorKind::Custom(ParsingError::GapIsTooBig),
-                                                   &input[consumed..]));
-                    }
-                }
-                Token::Slash => {
-                    if file < 8 {
-                        return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooShort),
-                                                   &input[consumed..]));
-                    }
-                    file = 0;
-                    just_had_gap = false;
+                    rank = Some(r)
                 }
                 Token::Other => {
-                    return Error(Err::Position(ErrorKind::Custom(ParsingError::UnrecognizedToken),
-                                               &input[consumed..]))
+                    panic!("3")
+                    //return Error(Err::Position(ErrorKind::Custom(ParseCoordinateError::UnrecognizedToken),
+                    //                           &input[consumed..]))
                 }
             }
             consumed += 1;
         }
-        if square.is_out() {
-            Done(&input[consumed..], result)
+        if consumed == 2 {
+            Done(&input[2..], Square64::from(file.unwrap(), rank.unwrap()))
         } else {
-            Incomplete(Needed::Unknown)
+            panic!("4")
+            //Incomplete(Needed::Size(2))
         }
     }
     pub fn to_exp(&self) -> SquareExp {
@@ -158,39 +160,21 @@ impl Square64 {
     }
 }
 
+#[derive(Debug)]
+pub enum ParseCoordinateError {
+    UnrecognizedToken,
+    Incomplete
+}
 enum Token {
-    Piece(Piece),
-    Gap(u8),
-    Slash,
+    File(File),
+    Rank(Rank),
     Other,
 }
 
 fn consume(c: char) -> Token {
     match c {
-        'P' => Token::Piece(WHITE_PAWN),
-        'N' => Token::Piece(WHITE_KNIGHT),
-        'B' => Token::Piece(WHITE_BISHOP),
-        'R' => Token::Piece(WHITE_ROOK),
-        'Q' => Token::Piece(WHITE_QUEEN),
-        'K' => Token::Piece(WHITE_KING),
-        'p' => Token::Piece(BLACK_PAWN),
-        'n' => Token::Piece(BLACK_KNIGHT),
-        'b' => Token::Piece(BLACK_BISHOP),
-        'r' => Token::Piece(BLACK_ROOK),
-        'q' => Token::Piece(BLACK_QUEEN),
-        'k' => Token::Piece(BLACK_KING),
-
-        '1' => Token::Gap(1),
-        '2' => Token::Gap(2),
-        '3' => Token::Gap(3),
-        '4' => Token::Gap(4),
-        '5' => Token::Gap(5),
-        '6' => Token::Gap(6),
-        '7' => Token::Gap(7),
-        '8' => Token::Gap(8),
-
-        '/' => Token::Slash,
-
+        'a'...'h' => Token::File(File::parse(c)),
+        '1'...'8' => Token::Rank(Rank::parse(c)),
         _ => Token::Other,
     }
 }
@@ -296,6 +280,7 @@ mod test {
         assert_eq!(File::parse('g').0, 6);
         assert_eq!(File::parse('h').0, 7);
     }
+
     #[test]
     fn rank_parse() {
         assert_eq!(Rank::parse('8').0, 0);
@@ -308,6 +293,18 @@ mod test {
         assert_eq!(Rank::parse('1').0, 7);
     }
 
+    #[test]
+    fn square_parse() {
+        assert_eq!(Square64::parse("a8").0, 0);
+        assert_eq!(Square64::parse("b7").0, 9);
+        assert_eq!(Square64::parse("c6").0, 18);
+        assert_eq!(Square64::parse("d5").0, 27);
+        assert_eq!(Square64::parse("e4").0, 36);
+        assert_eq!(Square64::parse("f3").0, 45);
+        assert_eq!(Square64::parse("g2").0, 54);
+        assert_eq!(Square64::parse("h1").0, 63);
+    }
+    
     #[test]
     fn all_squares_exp() {
         let all = AllSquaresExp.into_iter()
