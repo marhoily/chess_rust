@@ -3,42 +3,7 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-
-struct File(i8);
-struct Rank(i8);
-
-// Note that index 0 corresponds to a8, and NOT a1!
-// Indexes read left to right, top to bottom!
-#[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
-pub struct Square64(i8);
-
-impl Square64 {
-    pub fn new(square_number: i8) -> Self {
-        Square64(square_number)
-    }
-    pub fn to_exp(&self) -> SquareExp {
-        SquareExp(1 << self.0)
-    }
-}
-
-#[derive(PartialEq, Copy, Clone, Debug)]
-pub struct SquareExp(u64);
-
-impl SquareExp {
-    pub fn new(exp: u64) -> Self {
-        SquareExp(exp)
-    }
-    pub fn is_out(&self) -> bool {
-        self.0 == 0
-    }
-    pub fn next(&mut self) {
-        self.0 <<= 1;
-    }
-    pub fn forward(&mut self, count: u8) {
-        self.0 <<= count;
-    }
-}
-
+use coordinates::*;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(i32);
@@ -156,10 +121,10 @@ pub struct BitBoard([PieceTypeBits; PIECES_COUNT]);
 
 impl PieceTypeBits {
     fn test(self, square: SquareExp) -> bool {
-        self.0 & square.0 != 0
+        self.0 & square.bits() != 0
     }
     fn set(&mut self, square: SquareExp) {
-        self.0 |= square.0
+        self.0 |= square.bits()
     }
     fn count(self) -> u32 {
         self.0.count_ones()
@@ -192,38 +157,6 @@ impl Iterator for PieceIter {
     }
 }
 
-pub struct AllSquaresExp;
-
-impl IntoIterator for AllSquaresExp {
-    type Item = SquareExp;
-    type IntoIter = SquareExpIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        SquareExpIter::new()
-    }
-}
-
-pub struct SquareExpIter(u64);
-
-impl SquareExpIter {
-    pub fn new() -> Self {
-        SquareExpIter(1)
-    }
-}
-
-impl Iterator for SquareExpIter {
-    type Item = SquareExp;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 == 0 {
-            None
-        } else {
-            let result = SquareExp(self.0);
-            self.0 <<= 1;
-            Some(result)
-        }
-    }
-}
-
 impl BitBoard {
     pub fn new() -> Self {
         BitBoard([PieceTypeBits(0); PIECES_COUNT])
@@ -240,7 +173,7 @@ impl BitBoard {
         pieces::EMPTY
     }
     pub fn set_piece(&mut self, square: SquareExp, piece: Piece) {
-        self.0[piece.0 as usize].0 |= square.0;
+        self.0[piece.0 as usize].0 |= square.bits();
     }
     pub fn get_piece(&self, square: SquareExp) -> Piece {
         for probe in AllPieces {
@@ -270,6 +203,7 @@ impl<'a> Iterator for SquareIter<'a> {
         self.square_iter.next().map(|square| self.board.get_piece(square))
     }
 }
+
 bitflags! {
     pub flags Castling: u8 {
         //const None = 0,
@@ -325,18 +259,19 @@ const MOVE_FROM_MASK: u16 = 0b0000_0000_0000_1111;
 const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
 const MOVE_PROMOTE_TO_MASK: u16 = 0b0000_0011_0000_0000;
 
+
 impl Move {
     pub fn new(from: Square64, to: Square64) -> Self {
-        Move((from.0 as u16) | ((to.0 as u16) << 4))
+        Move((from.bits() as u16) | ((to.bits() as u16) << 4))
     }
     pub fn wiht_promotion(from: Square64, to: Square64, promote_to: PieceType) -> Self {
-        Move((from.0 as u16) | ((to.0 as u16) << 4) | ((promote_to.0 as u16) << 8))
+        Move((from.bits() as u16) | ((to.bits() as u16) << 4) | ((promote_to.0 as u16) << 8))
     }
     pub fn get_from(self) -> Square64 {
-        Square64(((self.0 as u16) & MOVE_FROM_MASK) as i8)
+        Square64::new(((self.0 as u16) & MOVE_FROM_MASK) as i8)
     }
     pub fn get_to(self) -> Square64 {
-        Square64((((self.0 as u16) & MOVE_TO_MASK) >> 4) as i8)
+        Square64::new((((self.0 as u16) & MOVE_TO_MASK) >> 4) as i8)
     }
     pub fn get_promote_to(self) -> PieceType {
         PieceType((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
@@ -352,11 +287,11 @@ struct Position {
 
 #[cfg(test)]
 mod test {
+    use coordinates::*;
     use super::*;
     use super::pieces::*;
     use super::piece_types::*;
     use std::iter::*;
-
 
     #[test]
     fn color_invert() {
@@ -444,10 +379,10 @@ mod test {
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
-        b.set_piece(SquareExp(0b0001), BLACK_ROOK);
-        b.set_piece(SquareExp(0b0100), BLACK_ROOK);
-        assert_eq!(b.check_square(SquareExp(0b0001)), BLACK_ROOK);
-        assert_eq!(b.check_square(SquareExp(0b0001)), BLACK_ROOK);
+        b.set_piece(SquareExp::new(0b0001), BLACK_ROOK);
+        b.set_piece(SquareExp::new(0b0100), BLACK_ROOK);
+        assert_eq!(b.check_square(SquareExp::new(0b0001)), BLACK_ROOK);
+        assert_eq!(b.check_square(SquareExp::new(0b0001)), BLACK_ROOK);
     }
 
     #[test]
@@ -460,18 +395,9 @@ mod test {
     }
 
     #[test]
-    fn all_squares_exp() {
-        let all = AllSquaresExp.into_iter()
-            .collect::<Vec<SquareExp>>();
-        assert_eq!(all.len(), 64);
-        assert_eq!(all[0], SquareExp(1));
-        assert_eq!(all[63], SquareExp(1 << 63));
-    }
-
-    #[test]
     fn bit_board_squares() {
         let mut b = BitBoard::new();
-        b.set_piece(SquareExp(0b0001), BLACK_ROOK);
+        b.set_piece(SquareExp::new(0b0001), BLACK_ROOK);
 
         let all = b.squares()
             .collect::<Vec<Piece>>();

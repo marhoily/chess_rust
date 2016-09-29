@@ -1,3 +1,4 @@
+use coordinates::*;
 use bit_board::*;
 use bit_board::pieces::*;
 use nom::IResult;
@@ -143,7 +144,8 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use bit_board::{BitBoard, Square64};
+    use coordinates::{Square64};
+    use bit_board::{BitBoard};
     use bit_board::pieces::*;
     use nom::{Err, ErrorKind, Needed};
     use super::board;
