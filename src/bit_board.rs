@@ -3,7 +3,7 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use coordinates::*;
+use sqares::*;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(i32);
@@ -271,7 +271,7 @@ struct Position {
 
 #[cfg(test)]
 mod test {
-    use coordinates::*;
+    use sqares::*;
     use super::*;
     use super::pieces::*;
     use super::piece_types::*;
