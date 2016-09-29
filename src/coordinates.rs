@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::fmt::Debug;
 use std::fmt::Result;
 use std::fmt::Display;
@@ -7,15 +5,10 @@ use std::fmt::Formatter;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct File(i8);
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct Rank(i8);
 
 impl File {
     pub fn new(num: i8) -> Self{
         File(num)
-    }
-    pub fn from(f: File, r: Rank) -> Self{
-        File(f.0 + r.0*8)
     }
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
@@ -31,12 +24,38 @@ impl Display for File {
         write!(f, "{:?}", self.char())
     }
 }
+
+#[derive(PartialEq, PartialOrd, Copy, Clone)]
+pub struct Rank(i8);
+
+impl Rank {
+    pub fn new(num: i8) -> Self{
+        Rank(num)
+    }
+    pub fn char(self) -> char {
+        ('1' as u8 + self.0 as u8) as char
+    }
+}
+impl Debug for Rank {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?}", self.char())
+    }
+}
+impl Display for Rank {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?}", self.char())
+    }
+}
+
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
 pub struct Square64(i8);
 
 impl Square64 {
+    pub fn from(f: File, r: Rank) -> Self{
+        Square64(f.0 + r.0*8)
+    }
     pub fn new(square_number: i8) -> Self {
         Square64(square_number)
     }
@@ -125,6 +144,17 @@ mod test {
         assert_eq!(File::new(5).char(), 'f');
         assert_eq!(File::new(6).char(), 'g');
         assert_eq!(File::new(7).char(), 'h');
+    }
+    #[test]
+    fn rank_char() {
+        assert_eq!(Rank::new(0).char(), '1');
+        assert_eq!(Rank::new(1).char(), '2');
+        assert_eq!(Rank::new(2).char(), '3');
+        assert_eq!(Rank::new(3).char(), '4');
+        assert_eq!(Rank::new(4).char(), '5');
+        assert_eq!(Rank::new(5).char(), '6');
+        assert_eq!(Rank::new(6).char(), '7');
+        assert_eq!(Rank::new(7).char(), '8');
     }
     #[test]
     fn all_squares_exp() {
