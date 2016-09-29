@@ -1,8 +1,36 @@
 #![allow(dead_code)]
 
+use std::fmt::Debug;
+use std::fmt::Result;
+use std::fmt::Display;
+use std::fmt::Formatter;
+
+#[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct File(i8);
+#[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Rank(i8);
 
+impl File {
+    pub fn new(num: i8) -> Self{
+        File(num)
+    }
+    pub fn from(f: File, r: Rank) -> Self{
+        File(f.0 + r.0*8)
+    }
+    pub fn char(self) -> char {
+        ('a' as u8 + self.0 as u8) as char
+    }
+}
+impl Debug for File {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?}", self.char())
+    }
+}
+impl Display for File {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{:?}", self.char())
+    }
+}
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
@@ -18,6 +46,14 @@ impl Square64 {
     pub fn bits(self) -> i8 {
         self.0
     }
+    pub fn humanize(self) -> (File, Rank) {
+        (File(self.0 % 8), Rank(self.0 / 8))
+    }
+    //pub fn color(self) -> Color {
+    //    let file, rank = Coordinate.FromIdx64 idx64
+    //    if (file % 2) = (rank % 2) then Color.White
+    //    else Color.Black
+    //}
 }
 
 #[derive(PartialEq, Copy, Clone, Debug)]
@@ -80,6 +116,17 @@ mod test {
     use std::iter::*;
 
     #[test]
+    fn file_char() {
+        assert_eq!(File::new(0).char(), 'a');
+        assert_eq!(File::new(1).char(), 'b');
+        assert_eq!(File::new(2).char(), 'c');
+        assert_eq!(File::new(3).char(), 'd');
+        assert_eq!(File::new(4).char(), 'e');
+        assert_eq!(File::new(5).char(), 'f');
+        assert_eq!(File::new(6).char(), 'g');
+        assert_eq!(File::new(7).char(), 'h');
+    }
+    #[test]
     fn all_squares_exp() {
         let all = AllSquaresExp.into_iter()
             .collect::<Vec<SquareExp>>();
@@ -87,6 +134,4 @@ mod test {
         assert_eq!(all[0], SquareExp(1));
         assert_eq!(all[63], SquareExp(1 << 63));
     }
-
-
 }
