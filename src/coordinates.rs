@@ -7,18 +7,23 @@ use std::fmt::Formatter;
 pub struct File(i8);
 
 impl File {
-    pub fn new(num: i8) -> Self{
+    pub fn new(num: i8) -> Self {
         File(num)
+    }
+    pub fn parse(letter: char) -> Self {
+        File(letter as i8 - 'a' as i8)
     }
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
     }
 }
+
 impl Debug for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{:?}", self.char())
     }
 }
+
 impl Display for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{:?}", self.char())
@@ -29,21 +34,42 @@ impl Display for File {
 pub struct Rank(i8);
 
 impl Rank {
-    pub fn new(num: i8) -> Self{
+    pub fn new(num: i8) -> Self {
         Rank(num)
     }
+    pub fn parse(number: char) -> Self {
+        Rank('8' as i8 - number as i8)
+    }
     pub fn char(self) -> char {
-        ('1' as u8 + self.0 as u8) as char
+        ('8' as u8 - self.0 as u8) as char
     }
 }
+
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{:?}", self.char())
     }
 }
+
 impl Display for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{:?}", self.char())
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum Color {
+    Black,
+    White,
+}
+
+impl Color {
+    pub fn invert(self) -> Self {
+        if self == Color::Black {
+            Color::White
+        } else {
+            Color::Black
+        }
     }
 }
 
@@ -53,8 +79,8 @@ impl Display for Rank {
 pub struct Square64(i8);
 
 impl Square64 {
-    pub fn from(f: File, r: Rank) -> Self{
-        Square64(f.0 + r.0*8)
+    pub fn from(f: File, r: Rank) -> Self {
+        Square64(f.0 + r.0 * 8)
     }
     pub fn new(square_number: i8) -> Self {
         Square64(square_number)
@@ -68,11 +94,14 @@ impl Square64 {
     pub fn humanize(self) -> (File, Rank) {
         (File(self.0 % 8), Rank(self.0 / 8))
     }
-    //pub fn color(self) -> Color {
-    //    let file, rank = Coordinate.FromIdx64 idx64
-    //    if (file % 2) = (rank % 2) then Color.White
-    //    else Color.Black
-    //}
+    pub fn color(self) -> Color {
+        let (file, rank) = self.humanize();
+        if (file.0 % 2) == (rank.0 % 2) {
+            Color::White
+        } else {
+            Color::Black
+        }
+    }
 }
 
 #[derive(PartialEq, Copy, Clone, Debug)]
@@ -135,6 +164,12 @@ mod test {
     use std::iter::*;
 
     #[test]
+    fn color_invert() {
+        assert_eq!(Color::White.invert(), Color::Black);
+        assert_eq!(Color::Black.invert(), Color::White);
+    }
+
+    #[test]
     fn file_char() {
         assert_eq!(File::new(0).char(), 'a');
         assert_eq!(File::new(1).char(), 'b');
@@ -145,17 +180,42 @@ mod test {
         assert_eq!(File::new(6).char(), 'g');
         assert_eq!(File::new(7).char(), 'h');
     }
+
     #[test]
     fn rank_char() {
-        assert_eq!(Rank::new(0).char(), '1');
-        assert_eq!(Rank::new(1).char(), '2');
-        assert_eq!(Rank::new(2).char(), '3');
-        assert_eq!(Rank::new(3).char(), '4');
-        assert_eq!(Rank::new(4).char(), '5');
-        assert_eq!(Rank::new(5).char(), '6');
-        assert_eq!(Rank::new(6).char(), '7');
-        assert_eq!(Rank::new(7).char(), '8');
+        assert_eq!(Rank::new(0).char(), '8');
+        assert_eq!(Rank::new(1).char(), '7');
+        assert_eq!(Rank::new(2).char(), '6');
+        assert_eq!(Rank::new(3).char(), '5');
+        assert_eq!(Rank::new(4).char(), '4');
+        assert_eq!(Rank::new(5).char(), '3');
+        assert_eq!(Rank::new(6).char(), '2');
+        assert_eq!(Rank::new(7).char(), '1');
     }
+
+    #[test]
+    fn file_parse() {
+        assert_eq!(File::parse('a').0, 0);
+        assert_eq!(File::parse('b').0, 1);
+        assert_eq!(File::parse('c').0, 2);
+        assert_eq!(File::parse('d').0, 3);
+        assert_eq!(File::parse('e').0, 4);
+        assert_eq!(File::parse('f').0, 5);
+        assert_eq!(File::parse('g').0, 6);
+        assert_eq!(File::parse('h').0, 7);
+    }
+    #[test]
+    fn rank_parse() {
+        assert_eq!(Rank::parse('8').0, 0);
+        assert_eq!(Rank::parse('7').0, 1);
+        assert_eq!(Rank::parse('6').0, 2);
+        assert_eq!(Rank::parse('5').0, 3);
+        assert_eq!(Rank::parse('4').0, 4);
+        assert_eq!(Rank::parse('3').0, 5);
+        assert_eq!(Rank::parse('2').0, 6);
+        assert_eq!(Rank::parse('1').0, 7);
+    }
+
     #[test]
     fn all_squares_exp() {
         let all = AllSquaresExp.into_iter()

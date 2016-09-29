@@ -36,22 +36,6 @@ impl Debug for PieceType {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum Color {
-    Black,
-    White,
-}
-
-impl Color {
-    pub fn invert(self) -> Self {
-        if self == Color::Black {
-            Color::White
-        } else {
-            Color::Black
-        }
-    }
-}
-
 const PIECE_TYPES_COUNT: i32 = 6;
 const PIECES_COUNT: usize = 12;
 
@@ -292,12 +276,6 @@ mod test {
     use super::pieces::*;
     use super::piece_types::*;
     use std::iter::*;
-
-    #[test]
-    fn color_invert() {
-        assert_eq!(Color::White.invert(), Color::Black);
-        assert_eq!(Color::Black.invert(), Color::White);
-    }
 
     #[test]
     fn piece_get_color() {
