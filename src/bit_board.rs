@@ -5,7 +5,6 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 
 struct File(i8);
-
 struct Rank(i8);
 
 // Note that index 0 corresponds to a8, and NOT a1!
@@ -21,6 +20,7 @@ impl Square64 {
         SquareExp(1 << self.0)
     }
 }
+
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct SquareExp(u64);
 
@@ -34,7 +34,7 @@ impl SquareExp {
     pub fn next(&mut self) {
         self.0 <<= 1;
     }
-    pub fn forward(&mut self, count : u8) {
+    pub fn forward(&mut self, count: u8) {
         self.0 <<= count;
     }
 }
@@ -46,10 +46,20 @@ pub struct Piece(i32);
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(i32);
 
+impl PieceType {
+    pub fn of(self, color: Color) -> Piece {
+        if color == Color::White {
+            Piece(self.0)
+        } else {
+            Piece(self.0 + PIECE_TYPES_COUNT)
+        }
+    }
+}
+
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
-            -1 => write!(f, "unknown"),
+            - 1 => write!(f, "unknown"),
             0 => write!(f, "pawn"),
             1 => write!(f, "knight"),
             2 => write!(f, "bishop"),
@@ -67,8 +77,19 @@ pub enum Color {
     White,
 }
 
+impl Color {
+    pub fn invert(self) -> Self {
+        if self == Color::Black {
+            Color::White
+        } else {
+            Color::Black
+        }
+    }
+}
+
 const PIECE_TYPES_COUNT: i32 = 6;
 const PIECES_COUNT: usize = 12;
+
 static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 impl Piece {
@@ -96,6 +117,7 @@ impl Debug for Piece {
         }
     }
 }
+
 pub mod piece_types {
     use super::PieceType;
 
@@ -107,6 +129,7 @@ pub mod piece_types {
     pub const KING: PieceType = PieceType(5);
     pub const UNKNOWN: PieceType = PieceType(-1);
 }
+
 pub mod pieces {
     use super::Piece;
 
@@ -181,8 +204,9 @@ impl IntoIterator for AllSquaresExp {
 }
 
 pub struct SquareExpIter(u64);
+
 impl SquareExpIter {
-    pub fn new() -> Self{
+    pub fn new() -> Self {
         SquareExpIter(1)
     }
 }
@@ -333,6 +357,13 @@ mod test {
     use super::piece_types::*;
     use std::iter::*;
 
+
+    #[test]
+    fn color_invert() {
+        assert_eq!(Color::White.invert(), Color::Black);
+        assert_eq!(Color::Black.invert(), Color::White);
+    }
+
     #[test]
     fn piece_get_color() {
         assert_eq!(WHITE_PAWN.get_color(), Color::White);
@@ -347,6 +378,22 @@ mod test {
         assert_eq!(BLACK_ROOK.get_color(), Color::Black);
         assert_eq!(BLACK_QUEEN.get_color(), Color::Black);
         assert_eq!(BLACK_KING.get_color(), Color::Black);
+    }
+
+    #[test]
+    fn of_color() {
+        assert_eq!(PAWN.of(Color::White),      WHITE_PAWN            );
+        assert_eq!(KNIGHT.of(Color::White),    WHITE_KNIGHT                 );
+        assert_eq!(BISHOP.of(Color::White),    WHITE_BISHOP                 );
+        assert_eq!(ROOK.of(Color::White),      WHITE_ROOK             );
+        assert_eq!(QUEEN.of(Color::White),     WHITE_QUEEN                );
+        assert_eq!(KING.of(Color::White),      WHITE_KING             );
+        assert_eq!(PAWN.of(Color::Black),      BLACK_PAWN              );
+        assert_eq!(KNIGHT.of(Color::Black),    BLACK_KNIGHT                 );
+        assert_eq!(BISHOP.of(Color::Black),    BLACK_BISHOP                 );
+        assert_eq!(ROOK.of(Color::Black),      BLACK_ROOK              );
+        assert_eq!(QUEEN.of(Color::Black),     BLACK_QUEEN                );
+        assert_eq!(KING.of(Color::Black),      BLACK_KING             );
     }
 
     #[test]
@@ -420,6 +467,7 @@ mod test {
         assert_eq!(all[0], SquareExp(1));
         assert_eq!(all[63], SquareExp(1 << 63));
     }
+
     #[test]
     fn bit_board_squares() {
         let mut b = BitBoard::new();
