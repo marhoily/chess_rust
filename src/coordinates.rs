@@ -79,11 +79,65 @@ impl Color {
 pub struct Square64(i8);
 
 impl Square64 {
+    pub fn new(square_number: i8) -> Self {
+        Square64(square_number)
+    }
     pub fn from(f: File, r: Rank) -> Self {
         Square64(f.0 + r.0 * 8)
     }
-    pub fn new(square_number: i8) -> Self {
-        Square64(square_number)
+    pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Square64, ParseCoordinateError> {
+        for &e in input {
+            let token = if !square.is_out() {
+                consume(e as char)
+            } else {
+                Token::Slash
+            };
+            match token {
+                Token::Piece(p) => {
+                    if file > 7 {
+                        return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooLong),
+                                                   &input[consumed..]));
+                    }
+
+                    result.set_piece(square, p);
+                    square.next();
+                    just_had_gap = false;
+                    file += 1;
+                }
+                Token::Gap(size) => {
+                    if just_had_gap {
+                        return Error(Err::Position(ErrorKind::Custom(ParsingError::DoubleGap),
+                                                   &input[consumed..]));
+                    }
+                    square.forward(size);
+                    just_had_gap = true;
+                    file += size;
+
+                    if file > 8 {
+                        return Error(Err::Position(ErrorKind::Custom(ParsingError::GapIsTooBig),
+                                                   &input[consumed..]));
+                    }
+                }
+                Token::Slash => {
+                    if file < 8 {
+                        return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooShort),
+                                                   &input[consumed..]));
+                    }
+                    file = 0;
+                    just_had_gap = false;
+                }
+                Token::Other => {
+                    return Error(Err::Position(ErrorKind::Custom(ParsingError::UnrecognizedToken),
+                                               &input[consumed..]))
+                }
+            }
+            consumed += 1;
+        }
+        if square.is_out() {
+            Done(&input[consumed..], result)
+        } else {
+            Incomplete(Needed::Unknown)
+        }
     }
     pub fn to_exp(&self) -> SquareExp {
         SquareExp(1 << self.0)
@@ -103,6 +157,44 @@ impl Square64 {
         }
     }
 }
+
+enum Token {
+    Piece(Piece),
+    Gap(u8),
+    Slash,
+    Other,
+}
+
+fn consume(c: char) -> Token {
+    match c {
+        'P' => Token::Piece(WHITE_PAWN),
+        'N' => Token::Piece(WHITE_KNIGHT),
+        'B' => Token::Piece(WHITE_BISHOP),
+        'R' => Token::Piece(WHITE_ROOK),
+        'Q' => Token::Piece(WHITE_QUEEN),
+        'K' => Token::Piece(WHITE_KING),
+        'p' => Token::Piece(BLACK_PAWN),
+        'n' => Token::Piece(BLACK_KNIGHT),
+        'b' => Token::Piece(BLACK_BISHOP),
+        'r' => Token::Piece(BLACK_ROOK),
+        'q' => Token::Piece(BLACK_QUEEN),
+        'k' => Token::Piece(BLACK_KING),
+
+        '1' => Token::Gap(1),
+        '2' => Token::Gap(2),
+        '3' => Token::Gap(3),
+        '4' => Token::Gap(4),
+        '5' => Token::Gap(5),
+        '6' => Token::Gap(6),
+        '7' => Token::Gap(7),
+        '8' => Token::Gap(8),
+
+        '/' => Token::Slash,
+
+        _ => Token::Other,
+    }
+}
+
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct SquareExp(u64);
