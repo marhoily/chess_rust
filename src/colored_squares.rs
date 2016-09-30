@@ -88,12 +88,12 @@ impl Square64 {
     pub fn from(f: File, r: Rank) -> Self {
         Square64(f.0 + r.0 * 8)
     }
-    pub fn parse(coordinate: &str) -> Self {
-        Square64::try_parse(coordinate).unwrap()
+    pub fn parse(input: &str) -> Self {
+        Square64::try_parse(input).unwrap()
     }
-    pub fn try_parse(coordinate: &str) -> std::result::Result<Square64, ParseSquareError> {
+    pub fn try_parse(input: &str) -> std::result::Result<Square64, ParseSquareError> {
         use nom::{Err, ErrorKind};
-        match Square64::parse_nom(coordinate.as_bytes()) {
+        match Square64::parse_nom(input.as_bytes()) {
             Done(_, square) => Ok(square),
             Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
             Incomplete(_) => Err(ParseSquareError::Incomplete),
