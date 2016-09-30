@@ -126,7 +126,7 @@ impl Square64 {
     }
 }
 
-named!(parse_square(&[u8]) -> Square64,
+named!(pub parse_square(&[u8]) -> Square64,
     chain!(
         file: parse_file ~
         rank: parse_rank,

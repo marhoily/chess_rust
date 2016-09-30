@@ -41,7 +41,17 @@ impl Move {
         }
         result
     }
+    pub fn parse(input: &str) -> Self {
+        parse_move(input.as_bytes()).unwrap().1
+    }
 }
+
+named!(pub parse_move(&[u8]) -> Move,
+    chain!(
+        from: parse_square ~
+        to: parse_square,
+        || Move::usual(from, to))
+    );
 
 
 #[cfg(test)]
@@ -82,5 +92,11 @@ mod test {
         let e2 = Square64::parse("e2");
         let e4 = Square64::parse("e4");
         assert_eq!(Move::with_promotion(e2, e4, QUEEN).string(), "e2-e4=Q");
+    }
+
+    #[test]
+    fn parse_usual_move() {
+        assert_eq!(Move::parse("e2e4").string(), "e2-e4");
+        assert_eq!(Move::parse("a1a8").string(), "a1-a8");
     }
 }
