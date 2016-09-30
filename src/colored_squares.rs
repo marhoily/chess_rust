@@ -21,16 +21,8 @@ impl File {
 }
 
 named!(parse_file(&[u8]) -> File,
-    alt! (
-        chain!(char!('a'), || File(0))|
-        chain!(char!('b'), || File(1))|
-        chain!(char!('c'), || File(2))|
-        chain!(char!('d'), || File(3))|
-        chain!(char!('e'), || File(4))|
-        chain!(char!('f'), || File(5))|
-        chain!(char!('g'), || File(6))|
-        chain!(char!('h'), || File(7))
-    ));
+    map!(is_a!("abcdefgh"),
+        |c| File((c as &[u8])[0] - ('a' as u8))));
 
 impl Debug for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
