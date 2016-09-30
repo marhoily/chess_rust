@@ -163,6 +163,7 @@ mod test {
     #[test]
     fn correct_fen() {
         check("8/p7/8/8/4Q3/8/8/8");
+        check("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
 
     #[test]
