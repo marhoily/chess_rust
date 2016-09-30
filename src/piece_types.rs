@@ -127,4 +127,14 @@ mod test {
         assert_eq!(QUEEN.of(Color::Black),     BLACK_QUEEN                );
         assert_eq!(KING.of(Color::Black),      BLACK_KING             );
     }
+
+    #[test]
+    fn parse() {
+        assert_eq!(PieceType::parse("P"), PAWN);
+        assert_eq!(PieceType::parse("N"), KNIGHT);
+        assert_eq!(PieceType::parse("B"), BISHOP);
+        assert_eq!(PieceType::parse("R"), ROOK);
+        assert_eq!(PieceType::parse("Q"), QUEEN);
+        assert_eq!(PieceType::parse("K"), KING);
+    }
 }
