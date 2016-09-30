@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use sqares::*;
+use colored_squares::*;
 use super::pieces::*;
 
 pub const PIECE_TYPES_COUNT: i32 = 6;
@@ -56,7 +56,7 @@ impl Debug for PieceType {
 #[cfg(test)]
 mod test {
     use super::*;
-    use sqares::*;
+    use colored_squares::*;
     use pieces::*;
 
     #[test]

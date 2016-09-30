@@ -2,7 +2,7 @@
 
 use pieces;
 use pieces::*;
-use sqares::*;
+use colored_squares::*;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct PieceTypeBits(u64);
@@ -127,7 +127,7 @@ struct Position {
 
 #[cfg(test)]
 mod test {
-    use sqares::*;
+    use colored_squares::*;
     use super::*;
     use std::iter::*;
     use pieces::*;

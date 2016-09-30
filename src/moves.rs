@@ -2,7 +2,7 @@
 
 use piece_types;
 use piece_types::*;
-use sqares::*;
+use colored_squares::*;
 
 const MOVE_FROM_MASK: u16 = 0b0000_0000_0000_1111;
 const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
@@ -44,7 +44,7 @@ impl Move {
 
 #[cfg(test)]
 mod test {
-    use sqares::*;
+    use colored_squares::*;
     use super::*;
     use piece_types::*;
 

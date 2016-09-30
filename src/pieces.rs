@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use sqares::*;
+use colored_squares::*;
 use super::piece_types::*;
 use super::*;
 
@@ -88,7 +88,7 @@ impl Iterator for PieceIter {
 mod test {
     use super::*;
     use std::iter::*;
-    use sqares::*;
+    use colored_squares::*;
     use piece_types::*;
 
     #[test]

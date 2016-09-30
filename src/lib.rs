@@ -3,7 +3,7 @@
 #[macro_use] extern crate bitflags;
 #[macro_use] extern crate nom;
 
-pub mod sqares;
+pub mod colored_squares;
 pub mod piece_types;
 pub mod pieces;
 pub mod moves;
