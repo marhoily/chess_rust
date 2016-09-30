@@ -25,6 +25,9 @@ impl PieceType {
             Piece(self.0 + PIECE_TYPES_COUNT)
         }
     }
+    pub fn char(self) -> char {
+        PIECE_CHARS[self.0 as usize] as char
+    }
 }
 
 impl Debug for PieceType {
@@ -129,28 +132,40 @@ impl Iterator for PieceIter {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Move(u16);
 
 const MOVE_FROM_MASK: u16 = 0b0000_0000_0000_1111;
 const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
 const MOVE_PROMOTE_TO_MASK: u16 = 0b0000_0011_0000_0000;
 
-
 impl Move {
-    pub fn new(from: Square64, to: Square64) -> Self {
-        Move((from.bits() as u16) | ((to.bits() as u16) << 4))
+    pub fn usual(from: Square64, to: Square64) -> Self {
+        Move::with_promotion(from, to, piece_types::UNKNOWN)
     }
-    pub fn wiht_promotion(from: Square64, to: Square64, promote_to: PieceType) -> Self {
+    pub fn with_promotion(from: Square64, to: Square64, promote_to: PieceType) -> Self {
         Move((from.bits() as u16) | ((to.bits() as u16) << 4) | ((promote_to.0 as u16) << 8))
     }
-    pub fn get_from(self) -> Square64 {
-        Square64::new(((self.0 as u16) & MOVE_FROM_MASK) as i8)
+    pub fn from(self) -> Square64 {
+        Square64::new((self.0 & MOVE_FROM_MASK) as i8)
     }
-    pub fn get_to(self) -> Square64 {
-        Square64::new((((self.0 as u16) & MOVE_TO_MASK) >> 4) as i8)
+    pub fn to(self) -> Square64 {
+        Square64::new(((self.0 & MOVE_TO_MASK) >> 4) as i8)
     }
-    pub fn get_promote_to(self) -> PieceType {
+    pub fn promote_to(self) -> PieceType {
         PieceType((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
+    }
+    pub fn string(self) -> String {
+        let mut result = String::with_capacity(6);
+        result.push_str(self.from().to_string().as_str());
+        result.push('-');
+        result.push_str(self.to().to_string().as_str());
+        let promote_to = self.promote_to();
+        if promote_to != piece_types::UNKNOWN {
+            result.push('=');
+            result.push(promote_to.char());
+        }
+        result
     }
 }
 
@@ -247,5 +262,26 @@ mod test {
         assert_eq!(all.len(), 12);
         assert_eq!(all[0], WHITE_PAWN);
         assert_eq!(all[11], BLACK_KING);
+    }
+
+    #[test]
+    fn usual_move() {
+        let e2 = Square64::parse("e2");
+        let e4 = Square64::parse("e4");
+        let m = Move::usual(e2, e4);
+        assert_eq!(m.0, 0);
+        assert_eq!(m.from().to_string(), "e2");
+    }
+    #[test]
+    fn usual_move_to_string() {
+        let e2 = Square64::parse("e2");
+        let e4 = Square64::parse("e4");
+        assert_eq!(Move::usual(e2, e4).string(), "e2-e4");
+    }
+    #[test]
+    fn promotion_move_to_string() {
+        let e2 = Square64::parse("e2");
+        let e4 = Square64::parse("e4");
+        assert_eq!(Move::with_promotion(e2, e4, piece_types::QUEEN).string(), "e2-e4=Q");
     }
 }

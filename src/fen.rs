@@ -160,27 +160,33 @@ mod test {
         b.set_piece(e4, WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
     }
+
     #[test]
     fn correct_fen() {
         check("8/p7/8/8/4Q3/8/8/8");
     }
+
     #[test]
     fn double_gap() {
         expect_error("pp51whatewer", super::ParsingError::DoubleGap, 3);
     }
+
     #[test]
     fn rank_is_too_long() {
         expect_error("p7Qwhatewer", super::ParsingError::RankIsTooLong, 2);
     }
+
     #[test]
     fn gap_is_too_big() {
         expect_error("pp7whatewer", super::ParsingError::GapIsTooBig, 2);
     }
+
     #[test]
     fn rank_is_too_short() {
         expect_error("p6/whatewer", super::ParsingError::RankIsTooShort, 2);
         expect_error("6p/whatewer", super::ParsingError::RankIsTooShort, 2);
     }
+
     #[test]
     fn incomplete() {
         expect_incomplete("8");
@@ -191,10 +197,12 @@ mod test {
         expect_incomplete("8/p7/8/8/4Q3/8/8/6p");
         expect_incomplete("8/p7/8/8/4Q3/8/8/6p");
     }
+
     #[test]
     fn unrecognized_token() {
         expect_error("p7/whatewer", super::ParsingError::UnrecognizedToken, 3);
     }
+
     #[test]
     fn extra_symbols() {
         check_extra("8/p7/8/8/4Q3/8/8/81", 18);
@@ -202,6 +210,7 @@ mod test {
         check_extra("8/p7/8/8/4Q3/8/8/8[", 18);
         check_extra("8/p7/8/8/4Q3/8/8/8 ", 18);
     }
+
     fn check(fen: &str) {
         let parse = board(fen.as_bytes());
         if parse.is_err() {
@@ -209,6 +218,7 @@ mod test {
         }
         assert_eq!(parse.unwrap().1.print_fen(), fen);
     }
+
     fn check_extra(fen: &str, expected_stop: usize) {
         let parse = board(fen.as_bytes());
         if parse.is_err() {
@@ -216,9 +226,11 @@ mod test {
         }
         assert_eq!(parse.unwrap().1.print_fen(), fen[..expected_stop]);
     }
+
     fn expect_incomplete(fen: &str) {
         assert_eq!(board(fen.as_bytes()).unwrap_inc(), Needed::Unknown);
     }
+
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
         let input = fen.as_bytes();
         assert_eq!(board(input).unwrap_err(),
