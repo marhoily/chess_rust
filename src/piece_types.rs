@@ -6,7 +6,7 @@ use super::pieces::*;
 
 pub const PIECE_TYPES_COUNT: u8 = 6;
 
-static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
+static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(u8);
@@ -31,7 +31,7 @@ impl PieceType {
         }
     }
     pub fn char(self) -> char {
-        PIECE_CHARS[self.0 as usize] as char
+        SYMBOLS[self.0 as usize] as char
     }
     pub fn bits(self) -> u8 {
         self.0
