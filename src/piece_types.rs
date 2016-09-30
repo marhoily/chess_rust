@@ -76,7 +76,6 @@ pub enum ParsePieceTypeError {
     Incomplete,
 }
 
-
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
