@@ -25,7 +25,7 @@ impl Mask {
     pub fn test(self, square: Mask) -> bool {
         self.0 & square.bits() != 0
     }
-    pub fn union(&mut self, another: Mask) -> Mask {
+    pub fn with(&mut self, another: Mask) -> Mask {
         Mask(self.0 | another.0)
     }
 }
@@ -61,8 +61,23 @@ impl Iterator for SquareMaskIter {
         }
     }
 }
+pub mod masks {
+    use super::Mask;
 
-pub const EMPTY: Mask = Mask(0);
+    pub const EMPTY: Mask = Mask(0);
+
+    pub mod files {
+        use super::super::Mask;
+
+        pub const A : Mask = Mask(0x1010101010101);
+        pub const B : Mask = Mask(0x2020202020202);
+        pub const C : Mask = Mask(0x4040404040404);
+        pub const D : Mask = Mask(0x8080808080808);
+        pub const E : Mask = Mask(0x10101010101010);
+        pub const F : Mask = Mask(0x20202020202020);
+        pub const G : Mask = Mask(0x40404040404040);
+    }
+}
 
 
 #[cfg(test)]
@@ -78,4 +93,24 @@ mod test {
         assert_eq!(all[0], Mask(1));
         assert_eq!(all[63], Mask(1 << 63));
     }
+
+    #[test]
+    fn print_const_files() {
+        use colored_square::{File, Rank, Square};
+        use std::ascii::AsciiExt;
+
+        println!("");
+
+        for file in 0..7 {
+            let mut mask = masks::EMPTY;
+            let f = File::new(file);
+            for rank in 0..7 {
+                let sq = Square::from(f, Rank::new(rank));
+                mask = mask.with(sq.to_mask());
+            }
+            println!("pub const {} : Mask = Mask(0x{:X});", f.char().to_ascii_uppercase(), mask.bits());
+        }
+        println!("");
+    }
+
 }

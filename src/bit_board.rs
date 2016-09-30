@@ -1,6 +1,5 @@
 use piece::{Piece, pieces, AllPieces};
-use mask;
-use mask::{Mask, SquareMaskIter};
+use mask::{Mask, SquareMaskIter, masks};
 use colored_square::*;
 
 #[derive(Debug, PartialEq)]
@@ -8,7 +7,7 @@ pub struct BitBoard([Mask; pieces::COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([mask::EMPTY; pieces::COUNT])
+        BitBoard([masks::EMPTY; pieces::COUNT])
     }
     fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
@@ -23,7 +22,7 @@ impl BitBoard {
     }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
-        self.0[idx] = self.0[idx].union(square);
+        self.0[idx] = self.0[idx].with(square);
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
         for probe in AllPieces {
