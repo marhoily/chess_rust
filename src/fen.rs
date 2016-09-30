@@ -1,5 +1,4 @@
 use sqares::*;
-use moves::*;
 use moves::pieces::*;
 use bit_board::*;
 use nom::IResult;

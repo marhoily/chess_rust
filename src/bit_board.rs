@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use moves::*;
+use moves::pieces::*;
 use sqares::*;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
@@ -129,7 +130,6 @@ mod test {
     use sqares::*;
     use super::*;
     use std::iter::*;
-    use moves::*;
     use moves::pieces::*;
 
     #[test]

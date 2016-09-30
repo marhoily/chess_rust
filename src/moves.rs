@@ -1,83 +1,52 @@
 #![allow(dead_code)]
 
-use std::fmt::Debug;
-use std::fmt::Formatter;
-use std::fmt::Result;
-use sqares::*;
-
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct Piece(i32);
-
-impl Piece {
-    pub fn bits(self) -> i32 {
-        self.0
-    }
-}
-
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct PieceType(i32);
-
-impl PieceType {
-    pub fn of(self, color: Color) -> Piece {
-        if color == Color::White {
-            Piece(self.0)
-        } else {
-            Piece(self.0 + PIECE_TYPES_COUNT)
-        }
-    }
-    pub fn char(self) -> char {
-        PIECE_CHARS[self.0 as usize] as char
-    }
-}
-
-impl Debug for PieceType {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        match self.0 {
-            - 1 => write!(f, "unknown"),
-            0 => write!(f, "pawn"),
-            1 => write!(f, "knight"),
-            2 => write!(f, "bishop"),
-            3 => write!(f, "rook"),
-            4 => write!(f, "queen"),
-            5 => write!(f, "king"),
-            _ => panic!(),
-        }
-    }
-}
-
-const PIECE_TYPES_COUNT: i32 = 6;
-pub const PIECES_COUNT: usize = 12;
-
-static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
-
-impl Piece {
-    pub fn get_color(&self) -> Color {
-        if self.0 >= PIECE_TYPES_COUNT {
-            Color::Black
-        } else {
-            Color::White
-        }
-    }
-    pub fn get_type(&self) -> PieceType {
-        PieceType(self.0 % PIECE_TYPES_COUNT)
-    }
-    pub fn as_char(&self) -> char {
-        PIECE_CHARS[self.0 as usize] as char
-    }
-}
-
-impl Debug for Piece {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        if *self == pieces::EMPTY {
-            write!(f, "Empty")
-        } else {
-            write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
-        }
-    }
-}
+pub static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 pub mod piece_types {
-    use super::PieceType;
+    use std::fmt::Debug;
+    use std::fmt::Formatter;
+    use std::fmt::Result;
+    use sqares::*;
+    use super::pieces::*;
+
+    pub const PIECE_TYPES_COUNT: i32 = 6;
+
+    #[derive(PartialEq, PartialOrd, Copy, Clone)]
+    pub struct PieceType(i32);
+
+    impl PieceType {
+        pub fn new(bits: i32) -> Self {
+            PieceType(bits)
+        }
+        pub fn of(self, color: Color) -> Piece {
+            if color == Color::White {
+                Piece::new(self.0)
+            } else {
+                Piece::new(self.bits() + PIECE_TYPES_COUNT)
+            }
+        }
+        pub fn char(self) -> char {
+            super::PIECE_CHARS[self.0 as usize] as char
+        }
+        pub fn bits(self) -> i32 {
+            self.0
+        }
+    }
+
+    impl Debug for PieceType {
+        fn fmt(&self, f: &mut Formatter) -> Result {
+            match self.0 {
+                - 1 => write!(f, "unknown"),
+                0 => write!(f, "pawn"),
+                1 => write!(f, "knight"),
+                2 => write!(f, "bishop"),
+                3 => write!(f, "rook"),
+                4 => write!(f, "queen"),
+                5 => write!(f, "king"),
+                _ => panic!(),
+            }
+        }
+    }
 
     pub const PAWN: PieceType = PieceType(0);
     pub const KNIGHT: PieceType = PieceType(1);
@@ -85,11 +54,21 @@ pub mod piece_types {
     pub const ROOK: PieceType = PieceType(3);
     pub const QUEEN: PieceType = PieceType(4);
     pub const KING: PieceType = PieceType(5);
-    pub const UNKNOWN: PieceType = PieceType(-1);
+    pub const UNKNOWN: PieceType = PieceType(16);
 }
 
 pub mod pieces {
-    use super::Piece;
+    use std::fmt::Debug;
+    use std::fmt::Formatter;
+    use std::fmt::Result;
+    use sqares::*;
+    use super::piece_types::*;
+    use super::*;
+
+    #[derive(PartialEq, PartialOrd, Copy, Clone)]
+    pub struct Piece(i32);
+
+    pub const PIECES_COUNT: usize = 12;
 
     pub const WHITE_PAWN: Piece = Piece(0);
     pub const WHITE_KNIGHT: Piece = Piece(1);
@@ -104,56 +83,92 @@ pub mod pieces {
     pub const BLACK_QUEEN: Piece = Piece(10);
     pub const BLACK_KING: Piece = Piece(11);
     pub const EMPTY: Piece = Piece(-1);
-}
 
-pub struct AllPieces;
+    impl Piece {
+        pub fn new(bits: i32) -> Self {
+            Piece(bits)
+        }
+        pub fn bits(self) -> i32 {
+            self.0
+        }
 
-impl IntoIterator for AllPieces {
-    type Item = Piece;
-    type IntoIter = PieceIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        PieceIter(0)
-    }
-}
-
-pub struct PieceIter(i32);
-
-impl Iterator for PieceIter {
-    type Item = Piece;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 < 12 {
-            let result = Piece(self.0);
-            self.0 += 1;
-            Some(result)
-        } else {
-            None
+        pub fn get_color(&self) -> Color {
+            if self.0 >= PIECE_TYPES_COUNT {
+                Color::Black
+            } else {
+                Color::White
+            }
+        }
+        pub fn get_type(&self) -> PieceType {
+            PieceType::new(self.bits() % PIECE_TYPES_COUNT)
+        }
+        pub fn as_char(&self) -> char {
+            PIECE_CHARS[self.0 as usize] as char
         }
     }
+
+    impl Debug for Piece {
+        fn fmt(&self, f: &mut Formatter) -> Result {
+            if *self == pieces::EMPTY {
+                write!(f, "Empty")
+            } else {
+                write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
+            }
+        }
+    }
+    pub struct AllPieces;
+
+    impl IntoIterator for AllPieces {
+        type Item = Piece;
+        type IntoIter = PieceIter;
+
+        fn into_iter(self) -> Self::IntoIter {
+            PieceIter(0)
+        }
+    }
+
+    pub struct PieceIter(i32);
+
+    impl Iterator for PieceIter {
+        type Item = Piece;
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 < 12 {
+                let result = Piece(self.0);
+                self.0 += 1;
+                Some(result)
+            } else {
+                None
+            }
+        }
+    }
+
 }
 
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub struct Move(u16);
+use self::piece_types::*;
+use sqares::*;
 
 const MOVE_FROM_MASK: u16 = 0b0000_0000_0000_1111;
 const MOVE_TO_MASK: u16 = 0b0000_0000_1111_0000;
 const MOVE_PROMOTE_TO_MASK: u16 = 0b0000_0011_0000_0000;
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Move(u16);
 
 impl Move {
     pub fn usual(from: Square64, to: Square64) -> Self {
         Move::with_promotion(from, to, piece_types::UNKNOWN)
     }
     pub fn with_promotion(from: Square64, to: Square64, promote_to: PieceType) -> Self {
-        Move((from.bits() as u16) | ((to.bits() as u16) << 4) | ((promote_to.0 as u16) << 8))
+        Move((from.bits() as u16) | ((to.bits() as u16) << 4) | ((promote_to.bits() as u16) << 8))
     }
     pub fn from(self) -> Square64 {
-        Square64::new((self.0 & MOVE_FROM_MASK) as i8)
+        Square64::new((self.0 & MOVE_FROM_MASK) as u8)
     }
     pub fn to(self) -> Square64 {
-        Square64::new(((self.0 & MOVE_TO_MASK) >> 4) as i8)
+        Square64::new(((self.0 & MOVE_TO_MASK) >> 4) as u8)
     }
     pub fn promote_to(self) -> PieceType {
-        PieceType((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
+        PieceType::new((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
     }
     pub fn string(self) -> String {
         let mut result = String::with_capacity(6);

@@ -7,14 +7,14 @@ use nom::IResult::*;
 use std;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct File(i8);
+pub struct File(u8);
 
 impl File {
-    pub fn new(num: i8) -> Self {
+    pub fn new(num: u8) -> Self {
         File(num)
     }
     pub fn parse(letter: char) -> Self {
-        File(letter as i8 - 'a' as i8)
+        File(letter as u8 - 'a' as u8)
     }
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
@@ -34,14 +34,14 @@ impl Display for File {
 }
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct Rank(i8);
+pub struct Rank(u8);
 
 impl Rank {
-    pub fn new(num: i8) -> Self {
+    pub fn new(num: u8) -> Self {
         Rank(num)
     }
     pub fn parse(number: char) -> Self {
-        Rank('8' as i8 - number as i8)
+        Rank('8' as u8 - number as u8)
     }
     pub fn char(self) -> char {
         ('8' as u8 - self.0 as u8) as char
@@ -79,11 +79,11 @@ impl Color {
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
-pub struct Square64(i8);
+pub struct Square64(u8);
 
 type Spr = std::result::Result<Square64,ParseCoordinateError>;
 impl Square64 {
-    pub fn new(square_number: i8) -> Self {
+    pub fn new(square_number: u8) -> Self {
         Square64(square_number)
     }
     pub fn from(f: File, r: Rank) -> Self {
@@ -123,7 +123,7 @@ impl Square64 {
     pub fn to_exp(&self) -> SquareExp {
         SquareExp(1 << self.0)
     }
-    pub fn bits(self) -> i8 {
+    pub fn bits(self) -> u8 {
         self.0
     }
     pub fn humanize(self) -> (File, Rank) {
