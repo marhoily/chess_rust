@@ -7,6 +7,7 @@ pub mod colored_squares;
 pub mod piece_types;
 pub mod pieces;
 pub mod moves;
+pub mod masks;
 pub mod bit_board;
 pub mod fen;
 pub mod position;

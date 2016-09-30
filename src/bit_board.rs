@@ -1,33 +1,20 @@
 use pieces;
 use pieces::*;
+use masks;
+use masks::{Mask, SquareMaskIter};
 use colored_squares::*;
 
-#[derive(PartialEq, Copy, Clone, Debug)]
-struct Line(u64);
-
 #[derive(Debug, PartialEq)]
-pub struct BitBoard([Line; COUNT]);
-
-impl Line {
-    fn test(self, square: SquareExp) -> bool {
-        self.0 & square.bits() != 0
-    }
-    //fn set(&mut self, square: SquareExp) {
-    //    self.0 |= square.bits()
-    //}
-    //fn count(self) -> u32 {
-    //    self.0.count_ones()
-    //}
-}
+pub struct BitBoard([Mask; COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([Line(0); COUNT])
+        BitBoard([masks::EMPTY; COUNT])
     }
-    fn line(&self, piece: Piece) -> Line {
+    fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
     }
-    pub fn check_square(&self, square: SquareExp) -> Piece {
+    pub fn check_square(&self, square: Mask) -> Piece {
         for piece in AllPieces {
             if self.line(piece).test(square) {
                 return piece;
@@ -35,10 +22,11 @@ impl BitBoard {
         }
         pieces::EMPTY
     }
-    pub fn set_piece(&mut self, square: SquareExp, piece: Piece) {
-        self.0[piece.bits() as usize].0 |= square.bits();
+    pub fn set_piece(&mut self, square: Mask, piece: Piece) {
+        let idx = piece.bits() as usize;
+        self.0[idx] = self.0[idx].union(square);
     }
-    pub fn get_piece(&self, square: SquareExp) -> Piece {
+    pub fn get_piece(&self, square: Mask) -> Piece {
         for probe in AllPieces {
             if self.line(probe).test(square) {
                 return probe;
@@ -49,7 +37,7 @@ impl BitBoard {
     pub fn squares<'a>(&'a self) -> SquareIter<'a> {
         SquareIter {
             board: &self,
-            square_iter: SquareExpIter::new(),
+            square_iter: SquareMaskIter::new(),
         }
     }
     pub fn dump(&self) -> String {
@@ -77,7 +65,7 @@ impl BitBoard {
 
         for index in 0..63 {
             let square = Square64::new(index);
-            let piece = self.get_piece(square.to_exp());
+            let piece = self.get_piece(square.to_mask());
             let (file, rank) = square.humanize();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
             if piece != EMPTY {
@@ -95,7 +83,7 @@ impl BitBoard {
 
 pub struct SquareIter<'a> {
     board: &'a BitBoard,
-    square_iter: SquareExpIter,
+    square_iter: SquareMaskIter,
 }
 
 impl<'a> Iterator for SquareIter<'a> {
@@ -108,24 +96,24 @@ impl<'a> Iterator for SquareIter<'a> {
 
 #[cfg(test)]
 mod test {
-    use colored_squares::*;
     use super::*;
     use std::iter::*;
     use pieces::*;
+    use masks::Mask;
 
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
-        b.set_piece(SquareExp::new(0b0001), BLACK_ROOK);
-        b.set_piece(SquareExp::new(0b0100), BLACK_ROOK);
-        assert_eq!(b.check_square(SquareExp::new(0b0001)), BLACK_ROOK);
-        assert_eq!(b.check_square(SquareExp::new(0b0001)), BLACK_ROOK);
+        b.set_piece(Mask::new(0b0001), BLACK_ROOK);
+        b.set_piece(Mask::new(0b0100), BLACK_ROOK);
+        assert_eq!(b.check_square(Mask::new(0b0001)), BLACK_ROOK);
+        assert_eq!(b.check_square(Mask::new(0b0001)), BLACK_ROOK);
     }
 
     #[test]
     fn bit_board_squares() {
         let mut b = BitBoard::new();
-        b.set_piece(SquareExp::new(0b0001), BLACK_ROOK);
+        b.set_piece(Mask::new(0b0001), BLACK_ROOK);
 
         let all = b.squares()
             .collect::<Vec<Piece>>();

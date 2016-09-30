@@ -1,5 +1,6 @@
 use colored_squares::*;
 use pieces::*;
+use masks::{Mask};
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -46,7 +47,7 @@ pub enum ParsingError {
 pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
-    let mut square = SquareExp::new(1);
+    let mut square = Mask::square(squares::FIRST);
     let mut file = 0;
     let mut just_had_gap = false;
     let mut consumed = 0;
@@ -153,8 +154,8 @@ mod test {
     #[test]
     fn print_fen() {
         let mut b = BitBoard::new();
-        let a7 = Square64::new(0 + 8).to_exp();
-        let e4 = Square64::new(4 + 32).to_exp();
+        let a7 = Square64::new(0 + 8).to_mask();
+        let e4 = Square64::new(4 + 32).to_mask();
         b.set_piece(a7, BLACK_PAWN);
         b.set_piece(e4, WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
