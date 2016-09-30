@@ -54,13 +54,27 @@ impl Rank {
     pub fn new(num: u8) -> Self {
         Rank(num)
     }
-    pub fn parse(number: char) -> Self {
-        Rank('8' as u8 - number as u8)
+    pub fn parse(input: char) -> Self {
+        let mut str = String::with_capacity(1);
+        str.push(input);
+        parse_rank(str.as_bytes()).unwrap().1
     }
     pub fn char(self) -> char {
         ('8' as u8 - self.0 as u8) as char
     }
 }
+
+named!(parse_rank(&[u8]) -> Rank,
+    alt! (
+        chain!(char!('8'), || Rank(0))|
+        chain!(char!('7'), || Rank(1))|
+        chain!(char!('6'), || Rank(2))|
+        chain!(char!('5'), || Rank(3))|
+        chain!(char!('4'), || Rank(4))|
+        chain!(char!('3'), || Rank(5))|
+        chain!(char!('2'), || Rank(6))|
+        chain!(char!('1'), || Rank(7))
+    ));
 
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
