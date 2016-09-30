@@ -81,7 +81,7 @@ impl Color {
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
 pub struct Square64(u8);
 
-type Spr = std::result::Result<Square64,ParseCoordinateError>;
+type Spr = std::result::Result<Square64, ParseSquareError>;
 impl Square64 {
     pub fn new(square_number: u8) -> Self {
         Square64(square_number)
@@ -89,7 +89,7 @@ impl Square64 {
     pub fn from(f: File, r: Rank) -> Self {
         Square64(f.0 + r.0 * 8)
     }
-    pub fn parse(coordinate: &str) -> Square64 {
+    pub fn parse(coordinate: &str) -> Self {
         Square64::try_parse(coordinate).unwrap()
     }
     pub fn try_parse(coordinate: &str) -> Spr {
@@ -97,11 +97,11 @@ impl Square64 {
         match Square64::parse_nom(coordinate.as_bytes()) {
             Done(_, square) => Ok(square),
             Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
-            Incomplete(_) => Err(ParseCoordinateError::Incomplete),
+            Incomplete(_) => Err(ParseSquareError::Incomplete),
             _ => panic!("custom error!?")
         }
     }
-    pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Square64, ParseCoordinateError> {
+    pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Self, ParseSquareError> {
         use nom::{Err, ErrorKind, Needed};
         if input.len() < 2 {
             return Incomplete(Needed::Size(2))
@@ -116,7 +116,7 @@ impl Square64 {
             },
             _ => {
                 return Error(Err::Position(ErrorKind::Custom(
-                    ParseCoordinateError::Unrecognized), consumed))
+                    ParseSquareError::Unrecognized), consumed))
             }
         }
     }
@@ -147,7 +147,7 @@ impl Square64 {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum ParseCoordinateError {
+pub enum ParseSquareError {
     Unrecognized,
     Incomplete,
 }
