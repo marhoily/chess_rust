@@ -46,12 +46,23 @@ impl Move {
     }
 }
 
+named!(parse_promotion(&[u8]) -> PieceType,
+    complete!(chain!(
+        char!('=') ~
+        result: alt!(
+            value!(KNIGHT, char!('N')) |
+            value!(BISHOP, char!('B')) |
+            value!(ROOK, char!('R')) |
+            value!(QUEEN, char!('Q')) ),
+    || result)));
+
 named!(pub parse_move(&[u8]) -> Move,
     chain!(
         from: parse_square ~
         alt!(char!('-') | char!(':')) ? ~
-        to: parse_square,
-        || Move::usual(from, to))
+        to: parse_square ~
+        promotion: opt!(parse_promotion),
+        || Move::with_promotion(from, to, promotion.unwrap_or(UNKNOWN)))
     );
 
 
@@ -101,5 +112,10 @@ mod test {
         assert_eq!(Move::parse("a1a8").string(), "a1-a8");
         assert_eq!(Move::parse("c3-f2").string(), "c3-f2");
         assert_eq!(Move::parse("a8:h1").string(), "a8-h1");
+    }
+
+    #[test]
+    fn parse_promotion_move() {
+        assert_eq!(Move::parse("e2-e4=Q").string(), "e2-e4=Q");
     }
 }
