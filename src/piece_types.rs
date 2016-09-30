@@ -39,6 +39,7 @@ impl PieceType {
         parse_piece_type(input.as_bytes()).unwrap().1
     }
 }
+
 named!(parse_piece_type(&[u8]) -> PieceType,
     alt! (
         chain!(char!('P'), || PAWN) |
