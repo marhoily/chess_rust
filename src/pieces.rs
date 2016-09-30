@@ -47,6 +47,7 @@ impl Piece {
         }
     }
     pub fn as_char(&self) -> char {
+        debug_assert!(*self != EMPTY, "attempt to pieces::EMPTY.as_char()");
         SYMBOLS[self.0 as usize] as char
     }
     pub fn parse(input: &str) -> Self {

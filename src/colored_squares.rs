@@ -18,6 +18,9 @@ impl File {
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
     }
+    pub fn bits(self) -> u8 {
+        self.0
+    }
 }
 
 named!(parse_file(&[u8]) -> File,
@@ -50,6 +53,9 @@ impl Rank {
     }
     pub fn char(self) -> char {
         ('8' as u8 - self.0 as u8) as char
+    }
+    pub fn bits(self) -> u8 {
+        self.0
     }
 }
 
