@@ -145,7 +145,7 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use colored_squares::{Square64};
+    use colored_squares::{Square};
     use bit_board::{BitBoard};
     use pieces::*;
     use nom::{Err, ErrorKind, Needed};
@@ -154,8 +154,8 @@ mod test {
     #[test]
     fn print_fen() {
         let mut b = BitBoard::new();
-        let a7 = Square64::new(0 + 8).to_mask();
-        let e4 = Square64::new(4 + 32).to_mask();
+        let a7 = Square::new(0 + 8).to_mask();
+        let e4 = Square::new(4 + 32).to_mask();
         b.set_piece(a7, BLACK_PAWN);
         b.set_piece(e4, WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");

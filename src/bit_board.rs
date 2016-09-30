@@ -64,7 +64,7 @@ impl BitBoard {
              .unwrap().chars().collect();
 
         for index in 0..63 {
-            let square = Square64::new(index);
+            let square = Square::new(index);
             let piece = self.get_piece(square.to_mask());
             let (file, rank) = square.humanize();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;

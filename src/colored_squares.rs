@@ -95,14 +95,14 @@ impl Color {
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
 #[derive(PartialEq, PartialOrd, Debug, Copy, Clone)]
-pub struct Square64(u8);
+pub struct Square(u8);
 
-impl Square64 {
+impl Square {
     pub fn new(square_number: u8) -> Self {
-        Square64(square_number)
+        Square(square_number)
     }
     pub fn from(f: File, r: Rank) -> Self {
-        Square64(f.0 + r.0 * 8)
+        Square(f.0 + r.0 * 8)
     }
     pub fn parse(input: &str) -> Self {
         parse_square(input.as_bytes()).unwrap().1
@@ -133,16 +133,16 @@ impl Square64 {
     }
 }
 
-named!(pub parse_square(&[u8]) -> Square64,
+named!(pub parse_square(&[u8]) -> Square,
     chain!(
         file: parse_file ~
         rank: parse_rank,
-        || Square64::from(file, rank))
+        || Square::from(file, rank))
     );
 
 pub mod squares {
-    use super::{Square64};
-    pub const FIRST: Square64 = Square64(0);
+    use super::{Square};
+    pub const FIRST: Square = Square(0);
 }
 
 #[cfg(test)]
@@ -205,25 +205,25 @@ mod test {
 
     #[test]
     fn square_parse() {
-        assert_eq!(Square64::parse("a8").0, 0);
-        assert_eq!(Square64::parse("b7").0, 9);
-        assert_eq!(Square64::parse("c6").0, 18);
-        assert_eq!(Square64::parse("d5").0, 27);
-        assert_eq!(Square64::parse("e4").0, 36);
-        assert_eq!(Square64::parse("f3").0, 45);
-        assert_eq!(Square64::parse("g2").0, 54);
-        assert_eq!(Square64::parse("h1").0, 63);
+        assert_eq!(Square::parse("a8").0, 0);
+        assert_eq!(Square::parse("b7").0, 9);
+        assert_eq!(Square::parse("c6").0, 18);
+        assert_eq!(Square::parse("d5").0, 27);
+        assert_eq!(Square::parse("e4").0, 36);
+        assert_eq!(Square::parse("f3").0, 45);
+        assert_eq!(Square::parse("g2").0, 54);
+        assert_eq!(Square::parse("h1").0, 63);
     }
 
     #[test]
     fn square_to_string() {
-        assert_eq!(Square64::parse("a8").to_string(), "a8");
-        assert_eq!(Square64::parse("b7").to_string(), "b7");
-        assert_eq!(Square64::parse("c6").to_string(), "c6");
-        assert_eq!(Square64::parse("d5").to_string(), "d5");
-        assert_eq!(Square64::parse("e4").to_string(), "e4");
-        assert_eq!(Square64::parse("f3").to_string(), "f3");
-        assert_eq!(Square64::parse("g2").to_string(), "g2");
-        assert_eq!(Square64::parse("h1").to_string(), "h1");
+        assert_eq!(Square::parse("a8").to_string(), "a8");
+        assert_eq!(Square::parse("b7").to_string(), "b7");
+        assert_eq!(Square::parse("c6").to_string(), "c6");
+        assert_eq!(Square::parse("d5").to_string(), "d5");
+        assert_eq!(Square::parse("e4").to_string(), "e4");
+        assert_eq!(Square::parse("f3").to_string(), "f3");
+        assert_eq!(Square::parse("g2").to_string(), "g2");
+        assert_eq!(Square::parse("h1").to_string(), "h1");
     }
 }

@@ -1,4 +1,4 @@
-use colored_squares::{Square64};
+use colored_squares::{Square};
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Mask(u64);
@@ -7,7 +7,7 @@ impl Mask {
     pub fn new(exp: u64) -> Self {
         Mask(exp)
     }
-    pub fn square(square: Square64) -> Self {
+    pub fn square(square: Square) -> Self {
         Mask(1 << square.bits())
     }
     pub fn bits(self) -> u64 {
