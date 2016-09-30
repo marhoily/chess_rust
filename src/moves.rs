@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-use piece_type;
 use piece_type::*;
 use colored_square::*;
 
@@ -9,7 +8,7 @@ pub struct Move(u32);
 
 impl Move {
     pub fn usual(from: Square, to: Square) -> Self {
-        Move::with_promotion(from, to, piece_type::UNKNOWN)
+        Move::with_promotion(from, to, piece_types::UNKNOWN)
     }
     pub fn with_promotion(from: Square, to: Square, promote_to: PieceType) -> Self {
         let mut bits: u32 = 0;
@@ -35,7 +34,7 @@ impl Move {
         result.push('-');
         result.push_str(self.to().to_string().as_str());
         let promote_to = self.promote_to();
-        if promote_to != piece_type::UNKNOWN {
+        if promote_to != piece_types::UNKNOWN {
             result.push('=');
             result.push(promote_to.char());
         }
@@ -50,10 +49,10 @@ named!(parse_promotion(&[u8]) -> PieceType,
     complete!(chain!(
         char!('=') ~
         result: alt!(
-            value!(KNIGHT, char!('N')) |
-            value!(BISHOP, char!('B')) |
-            value!(ROOK, char!('R')) |
-            value!(QUEEN, char!('Q')) ),
+            value!(piece_types::KNIGHT, char!('N')) |
+            value!(piece_types::BISHOP, char!('B')) |
+            value!(piece_types::ROOK, char!('R')) |
+            value!(piece_types::QUEEN, char!('Q')) ),
     || result)));
 
 named!(pub parse_move(&[u8]) -> Move,
@@ -62,7 +61,8 @@ named!(pub parse_move(&[u8]) -> Move,
         alt!(char!('-') | char!(':')) ? ~
         to: parse_square ~
         promotion: opt!(parse_promotion),
-        || Move::with_promotion(from, to, promotion.unwrap_or(UNKNOWN)))
+        || Move::with_promotion(from, to, promotion
+                .unwrap_or(piece_types::UNKNOWN)))
     );
 
 
@@ -79,17 +79,17 @@ mod test {
         let m = Move::usual(e2, e4);
         assert_eq!(m.from().to_string(), "e2");
         assert_eq!(m.to().to_string(), "e4");
-        assert_eq!(m.promote_to(), UNKNOWN);
+        assert_eq!(m.promote_to(), piece_types::UNKNOWN);
     }
 
     #[test]
     fn promotion_move() {
         let e2 = Square::parse("e2");
         let e4 = Square::parse("e4");
-        let m = Move::with_promotion(e2, e4, QUEEN);
+        let m = Move::with_promotion(e2, e4, piece_types::QUEEN);
         assert_eq!(m.from().to_string(), "e2");
         assert_eq!(m.to().to_string(), "e4");
-        assert_eq!(m.promote_to(), QUEEN);
+        assert_eq!(m.promote_to(), piece_types::QUEEN);
     }
 
     #[test]
@@ -103,7 +103,7 @@ mod test {
     fn promotion_move_to_string() {
         let e2 = Square::parse("e2");
         let e4 = Square::parse("e4");
-        assert_eq!(Move::with_promotion(e2, e4, QUEEN).string(), "e2-e4=Q");
+        assert_eq!(Move::with_promotion(e2, e4, piece_types::QUEEN).string(), "e2-e4=Q");
     }
 
     #[test]

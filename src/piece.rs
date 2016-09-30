@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 use colored_square::*;
-use piece_type;
 use piece_type::{PieceType, piece_types};
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
@@ -12,6 +11,7 @@ pub mod pieces {
     use super::Piece;
 
     pub const COUNT: usize = 12;
+    pub const TYPES: u8 = 6;
 
     pub const WHITE_PAWN: Piece = Piece(0);
     pub const WHITE_KNIGHT: Piece = Piece(1);
@@ -37,7 +37,7 @@ impl Piece {
     }
 
     pub fn get_color(&self) -> Color {
-        if self.0 >= piece_types::COUNT {
+        if self.0 >= pieces::TYPES {
             Color::Black
         } else {
             Color::White
@@ -45,9 +45,9 @@ impl Piece {
     }
     pub fn get_type(&self) -> PieceType {
         if *self == pieces::EMPTY {
-            piece_type::UNKNOWN
+            piece_types::UNKNOWN
         } else {
-            PieceType::new(self.bits() % piece_types::COUNT)
+            PieceType::new(self.bits() % pieces::TYPES)
         }
     }
     pub fn as_char(&self) -> char {
@@ -108,15 +108,7 @@ mod test {
     use super::pieces::*;
     use std::iter::*;
     use colored_square::*;
-    use piece_type::{
-        PAWN,
-        KNIGHT,
-        BISHOP,
-        ROOK,
-        QUEEN,
-        KING,
-        UNKNOWN
-    };
+    use piece_type::piece_types::*;
 
     #[test]
     fn piece_get_color() {

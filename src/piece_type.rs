@@ -1,24 +1,24 @@
 use colored_square::*;
-use piece::{Piece};
+use piece::{Piece, pieces};
 
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-pub mod piece_types {
-    pub const COUNT: u8 = 6;
-}
-
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(u8);
 
-pub const PAWN: PieceType = PieceType(0);
-pub const KNIGHT: PieceType = PieceType(1);
-pub const BISHOP: PieceType = PieceType(2);
-pub const ROOK: PieceType = PieceType(3);
-pub const QUEEN: PieceType = PieceType(4);
-pub const KING: PieceType = PieceType(5);
-pub const UNKNOWN: PieceType = PieceType(16);
+pub mod piece_types {
+    use super::PieceType;
+
+    pub const PAWN: PieceType = PieceType(0);
+    pub const KNIGHT: PieceType = PieceType(1);
+    pub const BISHOP: PieceType = PieceType(2);
+    pub const ROOK: PieceType = PieceType(3);
+    pub const QUEEN: PieceType = PieceType(4);
+    pub const KING: PieceType = PieceType(5);
+    pub const UNKNOWN: PieceType = PieceType(16);
+}
 
 impl PieceType {
     pub fn new(bits: u8) -> Self {
@@ -28,7 +28,7 @@ impl PieceType {
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + piece_types::COUNT)
+            Piece::new(self.bits() + pieces::TYPES)
         }
     }
     pub fn char(self) -> char {
@@ -67,6 +67,7 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::piece_types::*;
     use colored_square::*;
     use piece::pieces::*;
 
