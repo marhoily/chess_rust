@@ -8,7 +8,7 @@ use colored_squares::*;
 pub struct PieceTypeBits(u64);
 
 #[derive(Debug, PartialEq)]
-pub struct BitBoard([PieceTypeBits; PIECES_COUNT]);
+pub struct BitBoard([PieceTypeBits; COUNT]);
 
 impl PieceTypeBits {
     fn test(self, square: SquareExp) -> bool {
@@ -24,7 +24,7 @@ impl PieceTypeBits {
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([PieceTypeBits(0); PIECES_COUNT])
+        BitBoard([PieceTypeBits(0); COUNT])
     }
     pub fn for_piece(&self, piece: Piece) -> PieceTypeBits {
         self.0[piece.bits() as usize]

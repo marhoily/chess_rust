@@ -2,15 +2,13 @@ use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 use colored_squares::*;
-use super::piece_types::*;
-use super::*;
+use piece_types;
+use piece_types::{PieceType};
 
-static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
+pub const COUNT: usize = 12;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(u8);
-
-pub const PIECES_COUNT: usize = 12;
 
 pub const WHITE_PAWN: Piece = Piece(0);
 pub const WHITE_KNIGHT: Piece = Piece(1);
@@ -35,34 +33,34 @@ impl Piece {
     }
 
     pub fn get_color(&self) -> Color {
-        if self.0 >= PIECE_TYPES_COUNT {
+        if self.0 >= piece_types::COUNT {
             Color::Black
         } else {
             Color::White
         }
     }
     pub fn get_type(&self) -> PieceType {
-        if  *self == EMPTY {
+        if *self == EMPTY {
             piece_types::UNKNOWN
-        }
-        else {
-            PieceType::new(self.bits() % PIECE_TYPES_COUNT)
+        } else {
+            PieceType::new(self.bits() % piece_types::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
-        PIECE_CHARS[self.0 as usize] as char
+        SYMBOLS[self.0 as usize] as char
     }
 }
 
 impl Debug for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        if *self == pieces::EMPTY {
+        if *self == EMPTY {
             write!(f, "Empty")
         } else {
             write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
         }
     }
 }
+
 pub struct AllPieces;
 
 impl IntoIterator for AllPieces {
@@ -89,12 +87,23 @@ impl Iterator for PieceIter {
     }
 }
 
+static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
+
 #[cfg(test)]
 mod test {
     use super::*;
     use std::iter::*;
     use colored_squares::*;
-    use piece_types::*;
+    use piece_types::{
+        PieceType,
+        PAWN,
+        KNIGHT,
+        BISHOP,
+        ROOK,
+        QUEEN,
+        KING,
+        UNKNOWN
+    };
 
     #[test]
     fn piece_get_color() {
