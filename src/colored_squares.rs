@@ -54,17 +54,8 @@ impl Rank {
 }
 
 named!(parse_rank(&[u8]) -> Rank,
-    alt! (
-        chain!(char!('8'), || Rank(0))|
-        chain!(char!('7'), || Rank(1))|
-        chain!(char!('6'), || Rank(2))|
-        chain!(char!('5'), || Rank(3))|
-        chain!(char!('4'), || Rank(4))|
-        chain!(char!('3'), || Rank(5))|
-        chain!(char!('2'), || Rank(6))|
-        chain!(char!('1'), || Rank(7))
-    ));
-// use map!() from http://rust.unhandledexpression.com/nom/macro.chain!.html
+    map!(is_a!("87654321"),
+        |c| Rank(('8' as u8) - (c as &[u8])[0])));
 
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
