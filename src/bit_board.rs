@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use moves::*;
-use moves::pieces::*;
+use pieces;
+use pieces::*;
 use sqares::*;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
@@ -130,7 +130,7 @@ mod test {
     use sqares::*;
     use super::*;
     use std::iter::*;
-    use moves::pieces::*;
+    use pieces::*;
 
     #[test]
     fn check_square() {

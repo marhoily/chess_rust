@@ -1,5 +1,5 @@
 use sqares::*;
-use moves::pieces::*;
+use pieces::*;
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -146,7 +146,7 @@ fn consume(c: char) -> Token {
 mod test {
     use sqares::{Square64};
     use bit_board::{BitBoard};
-    use moves::pieces::*;
+    use pieces::*;
     use nom::{Err, ErrorKind, Needed};
     use super::board;
 
