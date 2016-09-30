@@ -1,15 +1,14 @@
-use piece;
-use piece::*;
+use piece::{Piece, pieces, AllPieces};
 use mask;
 use mask::{Mask, SquareMaskIter};
 use colored_square::*;
 
 #[derive(Debug, PartialEq)]
-pub struct BitBoard([Mask; COUNT]);
+pub struct BitBoard([Mask; pieces::COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([mask::EMPTY; COUNT])
+        BitBoard([mask::EMPTY; pieces::COUNT])
     }
     fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
@@ -20,7 +19,7 @@ impl BitBoard {
                 return piece;
             }
         }
-        piece::EMPTY
+        pieces::EMPTY
     }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
@@ -32,7 +31,7 @@ impl BitBoard {
                 return probe;
             }
         }
-        piece::EMPTY
+        pieces::EMPTY
     }
     pub fn squares<'a>(&'a self) -> SquareIter<'a> {
         SquareIter {
@@ -68,7 +67,7 @@ impl BitBoard {
             let piece = self.get_piece(square.to_mask());
             let (file, rank) = square.humanize();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
-            if piece != EMPTY {
+            if piece != pieces::EMPTY {
                 result[i] = piece.as_char();
             }
         }
@@ -104,22 +103,22 @@ mod test {
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
-        b.set_piece(Mask::new(0b0001), BLACK_ROOK);
-        b.set_piece(Mask::new(0b0100), BLACK_ROOK);
-        assert_eq!(b.check_square(Mask::new(0b0001)), BLACK_ROOK);
-        assert_eq!(b.check_square(Mask::new(0b0001)), BLACK_ROOK);
+        b.set_piece(Mask::new(0b0001), pieces::BLACK_ROOK);
+        b.set_piece(Mask::new(0b0100), pieces::BLACK_ROOK);
+        assert_eq!(b.check_square(Mask::new(0b0001)), pieces::BLACK_ROOK);
+        assert_eq!(b.check_square(Mask::new(0b0001)), pieces::BLACK_ROOK);
     }
 
     #[test]
     fn bit_board_squares() {
         let mut b = BitBoard::new();
-        b.set_piece(Mask::new(0b0001), BLACK_ROOK);
+        b.set_piece(Mask::new(0b0001), pieces::BLACK_ROOK);
 
         let all = b.squares()
             .collect::<Vec<Piece>>();
         assert_eq!(all.len(), 64);
-        assert_eq!(all[0], BLACK_ROOK);
-        assert_eq!(all[63], EMPTY);
+        assert_eq!(all[0], pieces::BLACK_ROOK);
+        assert_eq!(all[63], pieces::EMPTY);
     }
 
     #[test]

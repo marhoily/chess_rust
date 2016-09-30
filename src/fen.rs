@@ -17,7 +17,7 @@ impl BitBoard {
                 file = 0;
             }
             file += 1;
-            if square == EMPTY {
+            if square == pieces::EMPTY {
                 gap += 1;
             } else {
                 if gap > 0 {
@@ -113,6 +113,7 @@ enum Token {
 }
 
 fn consume(c: char) -> Token {
+    use piece::pieces::*;
     match c {
         'P' => Token::Piece(WHITE_PAWN),
         'N' => Token::Piece(WHITE_KNIGHT),
@@ -147,7 +148,7 @@ fn consume(c: char) -> Token {
 mod test {
     use colored_square::{Square};
     use bit_board::{BitBoard};
-    use piece::*;
+    use piece::pieces;
     use nom::{Err, ErrorKind, Needed};
     use super::parse_bit_borad;
 
@@ -156,8 +157,8 @@ mod test {
         let mut b = BitBoard::new();
         let a7 = Square::new(0 + 8).to_mask();
         let e4 = Square::new(4 + 32).to_mask();
-        b.set_piece(a7, BLACK_PAWN);
-        b.set_piece(e4, WHITE_QUEEN);
+        b.set_piece(a7, pieces::BLACK_PAWN);
+        b.set_piece(e4, pieces::WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
     }
 

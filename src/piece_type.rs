@@ -5,7 +5,9 @@ use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-pub const COUNT: u8 = 6;
+pub mod piece_types {
+    pub const COUNT: u8 = 6;
+}
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct PieceType(u8);
@@ -26,7 +28,7 @@ impl PieceType {
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + COUNT)
+            Piece::new(self.bits() + piece_types::COUNT)
         }
     }
     pub fn char(self) -> char {
@@ -66,20 +68,7 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 mod test {
     use super::*;
     use colored_square::*;
-    use piece::{
-        WHITE_PAWN,
-        WHITE_KNIGHT,
-        WHITE_BISHOP,
-        WHITE_ROOK,
-        WHITE_QUEEN,
-        WHITE_KING,
-        BLACK_PAWN,
-        BLACK_KNIGHT,
-        BLACK_BISHOP,
-        BLACK_ROOK,
-        BLACK_QUEEN,
-        BLACK_KING
-    };
+    use piece::pieces::*;
 
     #[test]
     fn of_color() {

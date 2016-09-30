@@ -3,26 +3,30 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 use colored_square::*;
 use piece_type;
-use piece_type::{PieceType};
-
-pub const COUNT: usize = 12;
+use piece_type::{PieceType, piece_types};
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(u8);
 
-pub const WHITE_PAWN: Piece = Piece(0);
-pub const WHITE_KNIGHT: Piece = Piece(1);
-pub const WHITE_BISHOP: Piece = Piece(2);
-pub const WHITE_ROOK: Piece = Piece(3);
-pub const WHITE_QUEEN: Piece = Piece(4);
-pub const WHITE_KING: Piece = Piece(5);
-pub const BLACK_PAWN: Piece = Piece(6);
-pub const BLACK_KNIGHT: Piece = Piece(7);
-pub const BLACK_BISHOP: Piece = Piece(8);
-pub const BLACK_ROOK: Piece = Piece(9);
-pub const BLACK_QUEEN: Piece = Piece(10);
-pub const BLACK_KING: Piece = Piece(11);
-pub const EMPTY: Piece = Piece(16);
+pub mod pieces {
+    use super::Piece;
+
+    pub const COUNT: usize = 12;
+
+    pub const WHITE_PAWN: Piece = Piece(0);
+    pub const WHITE_KNIGHT: Piece = Piece(1);
+    pub const WHITE_BISHOP: Piece = Piece(2);
+    pub const WHITE_ROOK: Piece = Piece(3);
+    pub const WHITE_QUEEN: Piece = Piece(4);
+    pub const WHITE_KING: Piece = Piece(5);
+    pub const BLACK_PAWN: Piece = Piece(6);
+    pub const BLACK_KNIGHT: Piece = Piece(7);
+    pub const BLACK_BISHOP: Piece = Piece(8);
+    pub const BLACK_ROOK: Piece = Piece(9);
+    pub const BLACK_QUEEN: Piece = Piece(10);
+    pub const BLACK_KING: Piece = Piece(11);
+    pub const EMPTY: Piece = Piece(16);
+}
 
 impl Piece {
     pub fn new(bits: u8) -> Self {
@@ -33,21 +37,21 @@ impl Piece {
     }
 
     pub fn get_color(&self) -> Color {
-        if self.0 >= piece_type::COUNT {
+        if self.0 >= piece_types::COUNT {
             Color::Black
         } else {
             Color::White
         }
     }
     pub fn get_type(&self) -> PieceType {
-        if *self == EMPTY {
+        if *self == pieces::EMPTY {
             piece_type::UNKNOWN
         } else {
-            PieceType::new(self.bits() % piece_type::COUNT)
+            PieceType::new(self.bits() % piece_types::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
-        debug_assert!(*self != EMPTY, "attempt to pieces::EMPTY.as_char()");
+        debug_assert!(*self != pieces::EMPTY, "attempt to pieces::EMPTY.as_char()");
         SYMBOLS[self.0 as usize] as char
     }
     pub fn parse(input: &str) -> Self {
@@ -62,7 +66,7 @@ named!(parse_piece(&[u8]) -> Piece,
 
 impl Debug for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        if *self == EMPTY {
+        if *self == pieces::EMPTY {
             write!(f, "Empty")
         } else {
             write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
@@ -101,6 +105,7 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::pieces::*;
     use std::iter::*;
     use colored_square::*;
     use piece_type::{
