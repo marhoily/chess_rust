@@ -49,6 +49,7 @@ impl Move {
 named!(pub parse_move(&[u8]) -> Move,
     chain!(
         from: parse_square ~
+        alt!(char!('-') | char!(':')) ? ~
         to: parse_square,
         || Move::usual(from, to))
     );
@@ -98,5 +99,7 @@ mod test {
     fn parse_usual_move() {
         assert_eq!(Move::parse("e2e4").string(), "e2-e4");
         assert_eq!(Move::parse("a1a8").string(), "a1-a8");
+        assert_eq!(Move::parse("c3-f2").string(), "c3-f2");
+        assert_eq!(Move::parse("a8:h1").string(), "a8-h1");
     }
 }
