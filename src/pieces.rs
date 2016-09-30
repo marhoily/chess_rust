@@ -55,20 +55,9 @@ impl Piece {
 }
 
 named!(parse_piece(&[u8]) -> Piece,
-    alt! (
-        chain!(char!('P'), || WHITE_PAWN) |
-        chain!(char!('N'), || WHITE_KNIGHT) |
-        chain!(char!('B'), || WHITE_BISHOP) |
-        chain!(char!('R'), || WHITE_ROOK) |
-        chain!(char!('Q'), || WHITE_QUEEN) |
-        chain!(char!('K'), || WHITE_KING) |
-        chain!(char!('p'), || BLACK_PAWN) |
-        chain!(char!('n'), || BLACK_KNIGHT) |
-        chain!(char!('b'), || BLACK_BISHOP) |
-        chain!(char!('r'), || BLACK_ROOK) |
-        chain!(char!('q'), || BLACK_QUEEN) |
-        chain!(char!('k'), || BLACK_KING)
-    ));
+    map!(is_a!(SYMBOLS), |c| {
+        Piece(SYMBOLS.iter().position(|x| {
+            *x == (c as &[u8])[0]}).unwrap() as u8)}));
 
 impl Debug for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
