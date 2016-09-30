@@ -4,12 +4,12 @@ use std::fmt::Result;
 use colored_squares::*;
 use super::pieces::*;
 
-pub const PIECE_TYPES_COUNT: i32 = 6;
+pub const PIECE_TYPES_COUNT: u8 = 6;
 
 static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct PieceType(i32);
+pub struct PieceType(u8);
 
 pub const PAWN: PieceType = PieceType(0);
 pub const KNIGHT: PieceType = PieceType(1);
@@ -20,7 +20,7 @@ pub const KING: PieceType = PieceType(5);
 pub const UNKNOWN: PieceType = PieceType(16);
 
 impl PieceType {
-    pub fn new(bits: i32) -> Self {
+    pub fn new(bits: u8) -> Self {
         PieceType(bits)
     }
     pub fn of(self, color: Color) -> Piece {
@@ -33,7 +33,7 @@ impl PieceType {
     pub fn char(self) -> char {
         PIECE_CHARS[self.0 as usize] as char
     }
-    pub fn bits(self) -> i32 {
+    pub fn bits(self) -> u8 {
         self.0
     }
 }
@@ -41,13 +41,13 @@ impl PieceType {
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
-            - 1 => write!(f, "unknown"),
             0 => write!(f, "pawn"),
             1 => write!(f, "knight"),
             2 => write!(f, "bishop"),
             3 => write!(f, "rook"),
             4 => write!(f, "queen"),
             5 => write!(f, "king"),
+            16 => write!(f, "unknown"),
             _ => panic!(),
         }
     }

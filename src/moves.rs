@@ -25,7 +25,7 @@ impl Move {
         Square64::new(((self.0 & MOVE_TO_MASK) >> 4) as u8)
     }
     pub fn promote_to(self) -> PieceType {
-        PieceType::new((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as i32)
+        PieceType::new((((self.0 as u16) & MOVE_PROMOTE_TO_MASK) >> 8) as u8)
     }
     pub fn string(self) -> String {
         let mut result = String::with_capacity(6);

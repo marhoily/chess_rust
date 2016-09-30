@@ -8,7 +8,7 @@ use super::*;
 static PIECE_CHARS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
-pub struct Piece(i32);
+pub struct Piece(u8);
 
 pub const PIECES_COUNT: usize = 12;
 
@@ -24,13 +24,13 @@ pub const BLACK_BISHOP: Piece = Piece(8);
 pub const BLACK_ROOK: Piece = Piece(9);
 pub const BLACK_QUEEN: Piece = Piece(10);
 pub const BLACK_KING: Piece = Piece(11);
-pub const EMPTY: Piece = Piece(-1);
+pub const EMPTY: Piece = Piece(16);
 
 impl Piece {
-    pub fn new(bits: i32) -> Self {
+    pub fn new(bits: u8) -> Self {
         Piece(bits)
     }
-    pub fn bits(self) -> i32 {
+    pub fn bits(self) -> u8 {
         self.0
     }
 
@@ -42,7 +42,12 @@ impl Piece {
         }
     }
     pub fn get_type(&self) -> PieceType {
-        PieceType::new(self.bits() % PIECE_TYPES_COUNT)
+        if  *self == EMPTY {
+            piece_types::UNKNOWN
+        }
+        else {
+            PieceType::new(self.bits() % PIECE_TYPES_COUNT)
+        }
     }
     pub fn as_char(&self) -> char {
         PIECE_CHARS[self.0 as usize] as char
@@ -69,7 +74,7 @@ impl IntoIterator for AllPieces {
     }
 }
 
-pub struct PieceIter(i32);
+pub struct PieceIter(u8);
 
 impl Iterator for PieceIter {
     type Item = Piece;
@@ -155,11 +160,9 @@ mod test {
 
     #[test]
     fn all_pieces() {
-        let all = AllPieces.into_iter()
-            .collect::<Vec<Piece>>();
+        let all = AllPieces.into_iter().collect::<Vec<Piece>>();
         assert_eq!(all.len(), 12);
         assert_eq!(all[0], WHITE_PAWN);
         assert_eq!(all[11], BLACK_KING);
     }
-
 }
