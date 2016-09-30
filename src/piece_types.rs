@@ -41,14 +41,9 @@ impl PieceType {
 }
 
 named!(parse_piece_type(&[u8]) -> PieceType,
-    alt! (
-        chain!(char!('P'), || PAWN) |
-        chain!(char!('N'), || KNIGHT) |
-        chain!(char!('B'), || BISHOP) |
-        chain!(char!('R'), || ROOK) |
-        chain!(char!('Q'), || QUEEN) |
-        chain!(char!('K'), || KING)
-    ));
+    map!(is_a!(SYMBOLS), |c| {
+        PieceType(SYMBOLS.iter().position(|x| {
+            *x == (c as &[u8])[0]}).unwrap() as u8)}));
 
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
