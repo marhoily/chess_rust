@@ -13,13 +13,27 @@ impl File {
     pub fn new(num: u8) -> Self {
         File(num)
     }
-    pub fn parse(letter: char) -> Self {
-        File(letter as u8 - 'a' as u8)
+    pub fn parse(input: char) -> Self {
+        let mut str = String::with_capacity(1);
+        str.push(input);
+        parse_file(str.as_bytes()).unwrap().1
     }
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
     }
 }
+
+named!(parse_file(&[u8]) -> File,
+    alt! (
+        chain!(char!('a'), || File(0))|
+        chain!(char!('b'), || File(1))|
+        chain!(char!('c'), || File(2))|
+        chain!(char!('d'), || File(3))|
+        chain!(char!('e'), || File(4))|
+        chain!(char!('f'), || File(5))|
+        chain!(char!('g'), || File(6))|
+        chain!(char!('h'), || File(7))
+    ));
 
 impl Debug for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
