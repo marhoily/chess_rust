@@ -2,9 +2,6 @@ use std::fmt::Debug;
 use std::fmt::Result;
 use std::fmt::Display;
 use std::fmt::Formatter;
-use nom::IResult;
-use nom::IResult::*;
-use std;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct File(u8);
@@ -75,6 +72,7 @@ named!(parse_rank(&[u8]) -> Rank,
         chain!(char!('2'), || Rank(6))|
         chain!(char!('1'), || Rank(7))
     ));
+// use map!() from http://rust.unhandledexpression.com/nom/macro.chain!.html
 
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -117,35 +115,7 @@ impl Square64 {
         Square64(f.0 + r.0 * 8)
     }
     pub fn parse(input: &str) -> Self {
-        Self::try_parse(input).unwrap()
-    }
-    pub fn try_parse(input: &str) -> std::result::Result<Self, ParseSquareError> {
-        use nom::{Err, ErrorKind};
-        match Self::parse_nom(input.as_bytes()) {
-            Done(_, square) => Ok(square),
-            Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
-            Incomplete(_) => Err(ParseSquareError::Incomplete),
-            _ => panic!("custom error!?")
-        }
-    }
-    pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Self, ParseSquareError> {
-        use nom::{Err, ErrorKind, Needed};
-        if input.len() < 2 {
-            return Incomplete(Needed::Size(2))
-        }
-
-        let file = consume(input[0] as char);
-        let rank = consume(input[1] as char);
-        let consumed = &input[2..];
-        match (file, rank) {
-            (Token::File(f), Token::Rank(r))=> {
-                Done(consumed, Self::from(f, r))
-            },
-            _ => {
-                return Error(Err::Position(ErrorKind::Custom(
-                    ParseSquareError::Unrecognized), consumed))
-            }
-        }
+        parse_square(input.as_bytes()).unwrap().1
     }
     pub fn to_exp(&self) -> SquareExp {
         SquareExp(1 << self.0)
@@ -173,24 +143,13 @@ impl Square64 {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum ParseSquareError {
-    Unrecognized,
-    Incomplete,
-}
-enum Token {
-    File(File),
-    Rank(Rank),
-    Other,
-}
+named!(parse_square(&[u8]) -> Square64,
+    chain!(
+        file: parse_file ~
+        rank: parse_rank,
+        || Square64::from(file, rank))
+    );
 
-fn consume(c: char) -> Token {
-    match c {
-        'a'...'h' => Token::File(File::parse(c)),
-        '1'...'8' => Token::Rank(Rank::parse(c)),
-        _ => Token::Other,
-    }
-}
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct SquareExp(u64);
@@ -328,16 +287,16 @@ mod test {
         assert_eq!(Square64::parse("g2").to_string(), "g2");
         assert_eq!(Square64::parse("h1").to_string(), "h1");
     }
-    #[test]
-    fn incomplete() {
-        assert_eq!(Square64::try_parse("a").unwrap_err(),
-            ParseSquareError::Incomplete);
-    }
-    #[test]
-    fn unrecognized() {
-        assert_eq!(Square64::try_parse("8a").unwrap_err(),
-            ParseSquareError::Unrecognized);
-    }
+   // #[test]
+   // fn incomplete() {
+   //     assert_eq!(Square64::try_parse("a").unwrap_err(),
+   //         ParseSquareError::Incomplete);
+   // }
+   // #[test]
+   // fn unrecognized() {
+   //     assert_eq!(Square64::try_parse("8a").unwrap_err(),
+   //         ParseSquareError::Unrecognized);
+   // }
 
     #[test]
     fn all_squares_exp() {
