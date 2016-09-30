@@ -1,37 +1,35 @@
-#![allow(dead_code)]
-
 use pieces;
 use pieces::*;
 use colored_squares::*;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
-pub struct PieceTypeBits(u64);
+struct Line(u64);
 
 #[derive(Debug, PartialEq)]
-pub struct BitBoard([PieceTypeBits; COUNT]);
+pub struct BitBoard([Line; COUNT]);
 
-impl PieceTypeBits {
+impl Line {
     fn test(self, square: SquareExp) -> bool {
         self.0 & square.bits() != 0
     }
-    fn set(&mut self, square: SquareExp) {
-        self.0 |= square.bits()
-    }
-    fn count(self) -> u32 {
-        self.0.count_ones()
-    }
+    //fn set(&mut self, square: SquareExp) {
+    //    self.0 |= square.bits()
+    //}
+    //fn count(self) -> u32 {
+    //    self.0.count_ones()
+    //}
 }
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([PieceTypeBits(0); COUNT])
+        BitBoard([Line(0); COUNT])
     }
-    pub fn for_piece(&self, piece: Piece) -> PieceTypeBits {
+    fn line(&self, piece: Piece) -> Line {
         self.0[piece.bits() as usize]
     }
     pub fn check_square(&self, square: SquareExp) -> Piece {
         for piece in AllPieces {
-            if self.for_piece(piece).test(square) {
+            if self.line(piece).test(square) {
                 return piece;
             }
         }
@@ -42,7 +40,7 @@ impl BitBoard {
     }
     pub fn get_piece(&self, square: SquareExp) -> Piece {
         for probe in AllPieces {
-            if self.for_piece(probe).test(square) {
+            if self.line(probe).test(square) {
                 return probe;
             }
         }
@@ -67,62 +65,6 @@ impl<'a> Iterator for SquareIter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         self.square_iter.next().map(|square| self.board.get_piece(square))
     }
-}
-
-bitflags! {
-    pub flags Castling: u8 {
-        //const None = 0,
-        const Q = WQ.bits | BQ.bits,
-        const K = WK.bits | BK.bits,
-        const W = WQ.bits | WK.bits,
-        const B = BQ.bits | BK.bits,
-        const WQ = 1 << 0,
-        const WK = 1 << 2,
-        const BQ = 1 << 3,
-        const BK = 1 << 4,
-        const ALL = Q.bits | K.bits,
-    }
-}
-
-enum MoveAnnotations {
-    None,
-    Promotion,
-    Capture,
-    EnPassant,
-    DoublePush,
-}
-
-enum Warnings {
-    None,
-    MissingPromotionHint,
-    SparePromotion,
-}
-
-enum Errors {
-    None,
-
-    MoveToCheck,
-    FromEmptyCell,
-    ToOccupiedCell,
-    WrongSideToMove,
-
-    CastleFromCheck,
-    CastleThroughCheck,
-    HasNoCastling,
-
-    HasNoEnPassant,
-
-    DoesNotMoveThisWay,
-    DoesNotCaptureThisWay,
-    OnlyCapturesThisWay,
-    JumpsOverPieces,
-}
-
-struct Position {
-    board: BitBoard,
-    active: Color,
-    available: Castling,
-    en_passant: Option<File>,
 }
 
 #[cfg(test)]

@@ -9,3 +9,5 @@ pub mod pieces;
 pub mod moves;
 pub mod bit_board;
 pub mod fen;
+pub mod position;
+pub mod analysis;
