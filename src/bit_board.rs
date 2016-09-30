@@ -86,6 +86,11 @@ impl BitBoard {
         }
         String::from(result)
     }
+    pub fn parse(input: &str) -> Self {
+        use fen;
+
+        fen::parse_bit_borad(input.as_bytes()).unwrap().1
+    }
 }
 
 pub struct SquareIter<'a> {
@@ -131,9 +136,8 @@ mod test {
 
     #[test]
     fn dump() {
-        use fen;
-        let sample = b"1r2k2r/p2n1p1p/np4p1/2p1B1b1/7P/1P1P4/P1PN3P/RNQ2RK1";
-        assert_eq!(fen::parse_bit_borad(sample).unwrap().1.dump(),
+        let sample = "1r2k2r/p2n1p1p/np4p1/2p1B1b1/7P/1P1P4/P1PN3P/RNQ2RK1";
+        assert_eq!(BitBoard::parse(sample).dump(),
            " ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\r\n\
             8║   │ r │   │   │ k │   │   │ r ║\r\n \
              ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
