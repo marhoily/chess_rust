@@ -57,7 +57,7 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 mod test {
     use super::*;
     use colored_squares::*;
-    use pieces::{Piece,
+    use pieces::{
         WHITE_PAWN,
         WHITE_KNIGHT,
         WHITE_BISHOP,

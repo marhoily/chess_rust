@@ -95,7 +95,6 @@ mod test {
     use std::iter::*;
     use colored_squares::*;
     use piece_types::{
-        PieceType,
         PAWN,
         KNIGHT,
         BISHOP,
