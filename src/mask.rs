@@ -1,4 +1,4 @@
-use colored_squares::{Square};
+use colored_square::{Square};
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Mask(u64);

@@ -1,15 +1,15 @@
-use pieces;
-use pieces::*;
-use masks;
-use masks::{Mask, SquareMaskIter};
-use colored_squares::*;
+use piece;
+use piece::*;
+use mask;
+use mask::{Mask, SquareMaskIter};
+use colored_square::*;
 
 #[derive(Debug, PartialEq)]
 pub struct BitBoard([Mask; COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([masks::EMPTY; COUNT])
+        BitBoard([mask::EMPTY; COUNT])
     }
     fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
@@ -20,7 +20,7 @@ impl BitBoard {
                 return piece;
             }
         }
-        pieces::EMPTY
+        piece::EMPTY
     }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
@@ -32,7 +32,7 @@ impl BitBoard {
                 return probe;
             }
         }
-        pieces::EMPTY
+        piece::EMPTY
     }
     pub fn squares<'a>(&'a self) -> SquareIter<'a> {
         SquareIter {
@@ -98,8 +98,8 @@ impl<'a> Iterator for SquareIter<'a> {
 mod test {
     use super::*;
     use std::iter::*;
-    use pieces::*;
-    use masks::Mask;
+    use piece::*;
+    use mask::Mask;
 
     #[test]
     fn check_square() {

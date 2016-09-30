@@ -1,5 +1,5 @@
-use colored_squares::*;
-use pieces::{Piece};
+use colored_square::*;
+use piece::{Piece};
 
 use std::fmt::Debug;
 use std::fmt::Formatter;
@@ -65,8 +65,8 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 #[cfg(test)]
 mod test {
     use super::*;
-    use colored_squares::*;
-    use pieces::{
+    use colored_square::*;
+    use piece::{
         WHITE_PAWN,
         WHITE_KNIGHT,
         WHITE_BISHOP,

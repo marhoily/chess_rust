@@ -1,15 +1,15 @@
 #![allow(dead_code)]
 
-use piece_types;
-use piece_types::*;
-use colored_squares::*;
+use piece_type;
+use piece_type::*;
+use colored_square::*;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Move(u32);
 
 impl Move {
     pub fn usual(from: Square, to: Square) -> Self {
-        Move::with_promotion(from, to, piece_types::UNKNOWN)
+        Move::with_promotion(from, to, piece_type::UNKNOWN)
     }
     pub fn with_promotion(from: Square, to: Square, promote_to: PieceType) -> Self {
         let mut bits: u32 = 0;
@@ -35,7 +35,7 @@ impl Move {
         result.push('-');
         result.push_str(self.to().to_string().as_str());
         let promote_to = self.promote_to();
-        if promote_to != piece_types::UNKNOWN {
+        if promote_to != piece_type::UNKNOWN {
             result.push('=');
             result.push(promote_to.char());
         }
@@ -68,9 +68,9 @@ named!(pub parse_move(&[u8]) -> Move,
 
 #[cfg(test)]
 mod test {
-    use colored_squares::*;
+    use colored_square::*;
     use super::*;
-    use piece_types::*;
+    use piece_type::*;
 
     #[test]
     fn usual_move() {

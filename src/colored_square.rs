@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::fmt::Result;
 use std::fmt::Display;
 use std::fmt::Formatter;
-use masks::Mask;
+use mask::Mask;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct File(u8);

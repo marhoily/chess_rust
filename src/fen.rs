@@ -1,6 +1,6 @@
-use colored_squares::*;
-use pieces::*;
-use masks::{Mask};
+use colored_square::*;
+use piece::*;
+use mask::{Mask};
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -145,9 +145,9 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use colored_squares::{Square};
+    use colored_square::{Square};
     use bit_board::{BitBoard};
-    use pieces::*;
+    use piece::*;
     use nom::{Err, ErrorKind, Needed};
     use super::parse_bit_borad;
 

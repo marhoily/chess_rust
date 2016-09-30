@@ -1,9 +1,9 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use colored_squares::*;
-use piece_types;
-use piece_types::{PieceType};
+use colored_square::*;
+use piece_type;
+use piece_type::{PieceType};
 
 pub const COUNT: usize = 12;
 
@@ -33,7 +33,7 @@ impl Piece {
     }
 
     pub fn get_color(&self) -> Color {
-        if self.0 >= piece_types::COUNT {
+        if self.0 >= piece_type::COUNT {
             Color::Black
         } else {
             Color::White
@@ -41,9 +41,9 @@ impl Piece {
     }
     pub fn get_type(&self) -> PieceType {
         if *self == EMPTY {
-            piece_types::UNKNOWN
+            piece_type::UNKNOWN
         } else {
-            PieceType::new(self.bits() % piece_types::COUNT)
+            PieceType::new(self.bits() % piece_type::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
@@ -102,8 +102,8 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 mod test {
     use super::*;
     use std::iter::*;
-    use colored_squares::*;
-    use piece_types::{
+    use colored_square::*;
+    use piece_type::{
         PAWN,
         KNIGHT,
         BISHOP,
