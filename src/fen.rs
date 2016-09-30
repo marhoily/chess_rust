@@ -43,7 +43,7 @@ pub enum ParsingError {
     UnrecognizedToken,
 }
 
-pub fn board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
+pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
     let mut square = SquareExp::new(1);
@@ -148,7 +148,7 @@ mod test {
     use bit_board::{BitBoard};
     use pieces::*;
     use nom::{Err, ErrorKind, Needed};
-    use super::board;
+    use super::parse_bit_borad;
 
     #[test]
     fn print_fen() {
@@ -212,7 +212,7 @@ mod test {
     }
 
     fn check(fen: &str) {
-        let parse = board(fen.as_bytes());
+        let parse = parse_bit_borad(fen.as_bytes());
         if parse.is_err() {
             panic!("{:?}", parse.unwrap_err());
         }
@@ -220,7 +220,7 @@ mod test {
     }
 
     fn check_extra(fen: &str, expected_stop: usize) {
-        let parse = board(fen.as_bytes());
+        let parse = parse_bit_borad(fen.as_bytes());
         if parse.is_err() {
             panic!("{:?}", parse.unwrap_err());
         }
@@ -228,12 +228,12 @@ mod test {
     }
 
     fn expect_incomplete(fen: &str) {
-        assert_eq!(board(fen.as_bytes()).unwrap_inc(), Needed::Unknown);
+        assert_eq!(parse_bit_borad(fen.as_bytes()).unwrap_inc(), Needed::Unknown);
     }
 
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
         let input = fen.as_bytes();
-        assert_eq!(board(input).unwrap_err(),
+        assert_eq!(parse_bit_borad(input).unwrap_err(),
                    Err::Position(ErrorKind::Custom(expected_error),
                                  &input[expected_position..]));
     }
