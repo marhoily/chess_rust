@@ -89,11 +89,11 @@ impl Square64 {
         Square64(f.0 + r.0 * 8)
     }
     pub fn parse(input: &str) -> Self {
-        Square64::try_parse(input).unwrap()
+        Self::try_parse(input).unwrap()
     }
-    pub fn try_parse(input: &str) -> std::result::Result<Square64, ParseSquareError> {
+    pub fn try_parse(input: &str) -> std::result::Result<Self, ParseSquareError> {
         use nom::{Err, ErrorKind};
-        match Square64::parse_nom(input.as_bytes()) {
+        match Self::parse_nom(input.as_bytes()) {
             Done(_, square) => Ok(square),
             Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
             Incomplete(_) => Err(ParseSquareError::Incomplete),
@@ -111,7 +111,7 @@ impl Square64 {
         let consumed = &input[2..];
         match (file, rank) {
             (Token::File(f), Token::Rank(r))=> {
-                Done(consumed, Square64::from(f, r))
+                Done(consumed, Self::from(f, r))
             },
             _ => {
                 return Error(Err::Position(ErrorKind::Custom(

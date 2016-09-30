@@ -1,8 +1,13 @@
+use colored_squares::*;
+use pieces::{Piece};
+
+use std;
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use colored_squares::*;
-use pieces::{Piece};
+
+use nom::IResult;
+use nom::IResult::*;
 
 pub const COUNT: u8 = 6;
 
@@ -34,7 +39,43 @@ impl PieceType {
     pub fn bits(self) -> u8 {
         self.0
     }
+    pub fn parse(input: &str) -> Self {
+        Self::try_parse(input).unwrap()
+    }
+    pub fn try_parse(input: &str) -> std::result::Result<Self, ParsePieceTypeError> {
+        use nom::{Err, ErrorKind};
+        match Self::parse_nom(input.as_bytes()) {
+            Done(_, square) => Ok(square),
+            Error(Err::Position(ErrorKind::Custom(code), _)) => Err(code),
+            Incomplete(_) => Err(ParsePieceTypeError::Incomplete),
+            _ => panic!("custom error!?")
+        }
+    }
+    pub fn parse_nom(input: &[u8]) -> IResult<&[u8], Self, ParsePieceTypeError> {
+        use nom::{Err, ErrorKind, Needed};
+        if input.len() < 1 {
+            return Incomplete(Needed::Size(1))
+        }
+
+        match input[0] as char {
+            'P' => Done(&input[1..], PAWN),
+            'N' => Done(&input[1..], KNIGHT),
+            'B' => Done(&input[1..], BISHOP),
+            'R' => Done(&input[1..], ROOK),
+            'Q' => Done(&input[1..], QUEEN),
+            'K' => Done(&input[1..], KING),
+            _ => Error(Err::Position(ErrorKind::Custom(
+                ParsePieceTypeError::Unrecognized), &input[1..]))
+        }
+    }
 }
+
+#[derive(Debug, PartialEq)]
+pub enum ParsePieceTypeError {
+    Unrecognized,
+    Incomplete,
+}
+
 
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
