@@ -192,8 +192,7 @@ impl Square {
 impl Display for Square {
     fn fmt(&self, f: &mut Formatter) -> Result {
         let (file, rank) = self.file_rank();
-        try!(write!(f, "{}", file.char()));
-        write!(f, "{}", rank.char())
+        write!(f, "{}{}", file, rank)
     }
 }
 
@@ -357,6 +356,22 @@ mod test {
             map(|f| format!("{:?}", f)).collect::<Vec<String>>(),
             ["Rank(7)", "Rank(0)"]);
     }
+    #[test]
+    fn square_display() {
+        use super::squares::*;
+
+        assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
+            map(|s| format!("{}", s)).collect::<Vec<String>>(),
+            ["h8","g7","f6","e5","d4","c3","b2","a1"]);
+    }
+    #[test]
+    fn square_debug() {
+        use super::squares::*;
+
+        assert_eq!([A8, H8, A1, H1].into_iter().
+            map(|s| format!("{:?}", s)).collect::<Vec<String>>(),
+            ["Square(0)", "Square(7)", "Square(56)", "Square(63)"]);
+    }
 
     #[test]
     fn all_files() {
@@ -374,7 +389,6 @@ mod test {
             All.into_iter().collect::<Vec<Rank>>(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
-
     #[test]
     fn all_squares() {
         use super::squares::*;
@@ -398,7 +412,6 @@ mod test {
             map(|f| File::parse(*f)).collect::<Vec<File>>(),
             [A, B, C, D, E, F, G, H]);
     }
-
     #[test]
     fn rank_parse() {
         use super::ranks::*;
@@ -407,7 +420,6 @@ mod test {
             map(|f| Rank::parse(*f)).collect::<Vec<Rank>>(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
-
     #[test]
     fn square_parse() {
         use super::squares::*;
@@ -418,24 +430,17 @@ mod test {
     }
 
     #[test]
-    fn square_display() {
+    fn file_rank() {
         use super::squares::*;
-
-        assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
-            map(|s| format!("{}", s)).collect::<Vec<String>>(),
-            ["h8","g7","f6","e5","d4","c3","b2","a1"]);
-    }
-    #[test]
-    fn square_debug() {
-        use super::squares::*;
-
-        assert_eq!([A8, H8, A1, H1].into_iter().
-            map(|s| format!("{:?}", s)).collect::<Vec<String>>(),
-            ["Square(0)", "Square(7)", "Square(56)", "Square(63)"]);
+        assert_eq!(All.into_iter().collect::<Vec<Square>>(),
+            All.into_iter().map(|square| {
+                    let (f, r) = square.file_rank();
+                    Square::from(f,r)
+                }).collect::<Vec<Square>>());
     }
 
     #[test]
-    fn print_squares() {
+    fn print_const_squares() {
         for s in squares::All {
             println!("pub const {} : Square = Square({});",
                      s.to_string().to_uppercase(), s.bits());
