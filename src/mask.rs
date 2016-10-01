@@ -48,7 +48,8 @@ impl Mask {
         (self << 7) & !masks::files::H
     }
     pub fn dump(self) -> String {
-        let mut result = String::with_capacity(64);
+        let mut result = String::with_capacity(100);
+        result.push('|');
         for rank in masks::ranks::ALL {
             for file in masks::files::ALL {
                 if self.has_any(*file & *rank) {
@@ -57,8 +58,13 @@ impl Mask {
                     result.push('^');
                 }
             }
-      //      result.push('\n');
+            result.push('|');
+            result.push('.');
+            result.push('.');
+            result.push('.');
+            result.push('|');
         }
+        result.pop();
         result
     }
 }
@@ -265,14 +271,14 @@ mod test {
     fn dump() {
         let mask = masks::files::E | masks::ranks::_4;
         assert_eq!(mask.dump(),
-                "^^^^@^^^\
-                 ^^^^@^^^\
-                 ^^^^@^^^\
-                 @@@@@@@@\
-                 ^^^^@^^^\
-                 ^^^^@^^^\
-                 ^^^^@^^^\
-                 ^^^^@^^^");
+                   "|^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |@@@@@@@@|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...");
     }
 
     #[test]
