@@ -16,7 +16,7 @@ impl BitBoard {
     }
     pub fn check_square(&self, square: Mask) -> Piece {
         for piece in All {
-            if self.line(piece).test(square) {
+            if self.line(piece).has_any(square) {
                 return piece;
             }
         }
@@ -24,11 +24,11 @@ impl BitBoard {
     }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
-        self.0[idx] = self.0[idx].with(square);
+        self.0[idx] |= square;
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
         for probe in All {
-            if self.line(probe).test(square) {
+            if self.line(probe).has_any(square) {
                 return probe;
             }
         }

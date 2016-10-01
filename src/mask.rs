@@ -17,11 +17,11 @@ impl Mask {
     pub fn empty(self) -> bool {
         self.0 == 0
     }
-    pub fn test(self, square: Mask) -> bool {
-        self.0 & square.bits() != 0
+    pub fn has_all(self, another: Mask) -> bool {
+        self.0 & another.bits() == another.bits()
     }
-    pub fn with(self, another: Mask) -> Mask {
-        Mask(self.0 | another.0)
+    pub fn has_any(self, another: Mask) -> bool {
+        self.0 & another.bits() != 0
     }
 }
 impl BitOr<Mask> for Mask {
@@ -218,7 +218,7 @@ mod test {
             let f = File::new(file);
             for rank in 0..8 {
                 let sq = Square::from(f, Rank::new(rank));
-                mask = mask.with(sq.mask());
+                mask |= sq.mask();
             }
             println!("pub const {} : Mask = Mask(0x{:X});",
                      f.char().to_ascii_uppercase(),
@@ -238,7 +238,7 @@ mod test {
             let r = Rank::new(rank);
             for file in 0..8 {
                 let sq = Square::from(File::new(file), r);
-                mask = mask.with(sq.mask());
+                mask |= sq.mask();
             }
             println!("pub const _{} : Mask = Mask(0x{:X});",
                      r.char(),
