@@ -42,10 +42,10 @@ impl Mask {
         (self >> 1) & !masks::files::H
     }
     pub fn shift_north_west(self) -> Mask {
-        (self >> 9) & !masks::files::H
+        (self << 7) & !masks::files::H
     }
     pub fn shift_south_west(self) -> Mask {
-        (self << 7) & !masks::files::H
+        (self >> 9) & !masks::files::H
     }
     pub fn dump(self) -> String {
         let mut result = String::with_capacity(100);
@@ -281,6 +281,19 @@ mod test {
                     |^^^^@^^^|...");
     }
     #[test]
+    fn shift_north() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_north().dump(),
+                   "|^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |@@@@@@@@|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^^^^^|...");
+    }
+    #[test]
     fn shift_south() {
         let mask = masks::files::E | masks::ranks::_4;
         assert_eq!(mask.shift_south().dump(),
@@ -294,17 +307,83 @@ mod test {
                     |^^^^@^^^|...");
     }
     #[test]
-    fn shift_north() {
+    fn shift_east() {
         let mask = masks::files::E | masks::ranks::_4;
-        assert_eq!(mask.shift_north().dump(),
-                   "|^^^^@^^^|...\
-                    |^^^^@^^^|...\
-                    |@@@@@@@@|...\
-                    |^^^^@^^^|...\
-                    |^^^^@^^^|...\
-                    |^^^^@^^^|...\
-                    |^^^^@^^^|...\
+        assert_eq!(mask.shift_east().dump(),
+                   "|^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^@@@@@@@|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...");
+    }
+    #[test]
+    fn shift_south_east() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_south_east().dump(),
+                   "|^^^^^^^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^@@@@@@@|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...");
+    }
+    #[test]
+    fn shift_north_east() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_north_east().dump(),
+                   "|^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^@@@@@@@|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
                     |^^^^^^^^|...");
+    }
+    #[test]
+    fn shift_west() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_west().dump(),
+                   "|^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |@@@@@@@^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...");
+    }
+    #[test]
+    fn shift_south_west() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_south_west().dump(),
+                   "|^^^^^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |@@@@@@@^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...");
+    }
+    #[test]
+    fn shift_north_west() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_north_west().dump(),
+                   "|^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |@@@@@@@^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^@^^^^|...\
+                    |^^^^^^^^|...");
+
     }
 
     #[test]
