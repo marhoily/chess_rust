@@ -17,7 +17,7 @@ impl File {
         parse_file(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
-        ('a' as u8 + self.0 as u8) as char
+        (A + self.0) as char
     }
     pub fn bits(self) -> u8 {
         self.0
@@ -25,6 +25,7 @@ impl File {
 }
 
 const A: u8 = 'a' as u8;
+
 named!(parse_file(&[u8]) -> File,
     map!(is_a!("abcdefgh"), |c: &[u8]| File(c[0] - A)));
 
@@ -81,16 +82,16 @@ pub mod files {
 pub struct Rank(u8);
 
 impl Rank {
-    pub fn new(num: u8) -> Self {
-        Rank(num)
+    pub fn new(bits: u8) -> Self {
+        debug_assert!(bits < 8);
+        Rank(bits)
     }
     pub fn parse(input: char) -> Self {
-        let mut str = String::with_capacity(1);
-        str.push(input);
-        parse_rank(str.as_bytes()).unwrap().1
+        debug_assert!((input as u32) < 128, "it is not even an ASCII character!");
+        parse_rank(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
-        ('8' as u8 - self.0 as u8) as char
+        (B - self.0) as char
     }
     pub fn bits(self) -> u8 {
         self.0
@@ -98,6 +99,7 @@ impl Rank {
 }
 
 const B: u8 = '8' as u8;
+
 named!(parse_rank(&[u8]) -> Rank,
     map!(is_a!("87654321"), |c:&[u8]| Rank(B - c[0])));
 
