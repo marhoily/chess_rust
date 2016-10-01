@@ -11,6 +11,9 @@ impl Piece {
     pub fn new(bits: u8) -> Self {
         Piece(bits)
     }
+    pub fn parse(input: char) -> Self {
+        parse_piece(&[input as u8]).unwrap().1
+    }
     pub fn bits(self) -> u8 {
         self.0
     }
@@ -31,9 +34,6 @@ impl Piece {
     pub fn char(self) -> char {
         debug_assert!(self != pieces::VOID, "attempt to pieces::VOID.char()");
         SYMBOLS[self.0 as usize] as char
-    }
-    pub fn parse(input: &str) -> Self {
-        parse_piece(input.as_bytes()).unwrap().1
     }
 }
 
