@@ -30,38 +30,6 @@ impl Mask {
     }
 }
 
-pub struct AllSquaresExp;
-
-impl IntoIterator for AllSquaresExp {
-    type Item = Mask;
-    type IntoIter = SquareMaskIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        SquareMaskIter::new()
-    }
-}
-
-pub struct SquareMaskIter(u64);
-
-impl SquareMaskIter {
-    pub fn new() -> Self {
-        SquareMaskIter(1)
-    }
-}
-
-impl Iterator for SquareMaskIter {
-    type Item = Mask;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 == 0 {
-            None
-        } else {
-            let result = Mask(self.0);
-            self.0 <<= 1;
-            Some(result)
-        }
-    }
-}
-
 pub mod masks {
     use super::Mask;
 
@@ -160,6 +128,38 @@ pub mod masks {
     pub const F1: Mask = Mask(0x2000000000000000);
     pub const G1: Mask = Mask(0x4000000000000000);
     pub const H1: Mask = Mask(0x8000000000000000);
+
+    pub struct All;
+
+    impl IntoIterator for All {
+        type Item = Mask;
+        type IntoIter = SquareMaskIter;
+
+        fn into_iter(self) -> Self::IntoIter {
+            SquareMaskIter::new()
+        }
+    }
+
+    pub struct SquareMaskIter(u64);
+
+    impl SquareMaskIter {
+        pub fn new() -> Self {
+            SquareMaskIter(1)
+        }
+    }
+
+    impl Iterator for SquareMaskIter {
+        type Item = Mask;
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 == 0 {
+                None
+            } else {
+                let result = Mask(self.0);
+                self.0 <<= 1;
+                Some(result)
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -169,7 +169,7 @@ mod test {
 
     #[test]
     fn all_squares_exp() {
-        let all = AllSquaresExp.into_iter()
+        let all = masks::All.into_iter()
             .collect::<Vec<Mask>>();
         assert_eq!(all.len(), 64);
         assert_eq!(all[0], Mask(1));
