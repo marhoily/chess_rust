@@ -3,7 +3,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use mask::Mask;
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Ord, Eq)]
 pub struct File(u8);
 
 impl File {
@@ -71,7 +71,7 @@ pub mod files {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Ord, Eq)]
 pub struct Rank(u8);
 
 impl Rank {
