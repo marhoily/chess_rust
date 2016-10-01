@@ -38,9 +38,9 @@ impl Piece {
 }
 
 named!(parse_piece(&[u8]) -> Piece,
-    map!(is_a!(SYMBOLS), |c| {
+    map!(is_a!(SYMBOLS), |c: &[u8]| {
         Piece(SYMBOLS.iter().position(|x| {
-            *x == (c as &[u8])[0]}).unwrap() as u8)}));
+            *x == c[0]}).unwrap() as u8)}));
 
 impl Display for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {

@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(trivial_casts, trivial_numeric_casts)]
 
 use bit_board::BitBoard;
 use geometry::{File, Color};
