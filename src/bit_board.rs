@@ -1,6 +1,6 @@
 use piece::{Piece, pieces, AllPieces};
 use mask::{masks, Mask};
-use mask::masks::{MaskIter};
+use mask::masks::MaskIter;
 use colored_square::*;
 
 #[derive(Debug, PartialEq)]
