@@ -430,13 +430,29 @@ mod test {
     }
 
     #[test]
-    fn file_rank() {
+    fn square_file_rank() {
         use super::squares::*;
         assert_eq!(All.into_iter().collect::<Vec<Square>>(),
             All.into_iter().map(|square| {
                     let (f, r) = square.file_rank();
                     Square::from(f,r)
                 }).collect::<Vec<Square>>());
+    }
+    //noinspection SpellCheckingInspection
+    #[test]
+    fn square_color() {
+        use super::squares::*;
+        assert_eq!(All.into_iter().map(|square| {
+                    if square.color() == Color::White { 'w' } else { 'b' }
+                }).collect::<String>(),
+                "wbwbwbwb\
+                 bwbwbwbw\
+                 wbwbwbwb\
+                 bwbwbwbw\
+                 wbwbwbwb\
+                 bwbwbwbw\
+                 wbwbwbwb\
+                 bwbwbwbw");
     }
 
     #[test]
