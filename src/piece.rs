@@ -124,7 +124,6 @@ mod test {
         assert_eq!(BLACK_KING.get_color(), Color::Black);
     }
 
-
     #[test]
     fn piece_get_type() {
         assert_eq!(EMPTY.get_type(), UNKNOWN);

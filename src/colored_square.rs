@@ -39,6 +39,33 @@ impl Display for File {
         write!(f, "{:?}", self.char())
     }
 }
+pub mod files {
+    use super::File;
+
+    pub struct All;
+
+    impl IntoIterator for All {
+        type Item = File;
+        type IntoIter = File;
+
+        fn into_iter(self) -> Self::IntoIter {
+            File(0)
+        }
+    }
+    impl Iterator for File {
+        type Item = File;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 == 8 {
+                None
+            }else{
+                let result = *self;
+                self.0 += 1;
+                Some(result)
+            }
+        }
+    }
+}
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Rank(u8);
