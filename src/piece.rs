@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::fmt::Result;
-use colored_square::*;
+use geometry::*;
 use piece_type::{PieceType, piece_types};
 
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
@@ -105,7 +105,7 @@ mod test {
     use super::*;
     use super::pieces::*;
     use std::iter::*;
-    use colored_square::*;
+    use geometry::*;
     use piece_type::piece_types::*;
 
     #[test]

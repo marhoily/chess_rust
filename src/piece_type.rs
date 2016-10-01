@@ -1,4 +1,4 @@
-use colored_square::*;
+use geometry::*;
 use piece::{Piece, pieces};
 
 use std::fmt::Debug;
@@ -68,7 +68,7 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 mod test {
     use super::*;
     use super::piece_types::*;
-    use colored_square::*;
+    use geometry::*;
     use piece::pieces::*;
 
     #[test]

@@ -5,7 +5,7 @@ extern crate bitflags;
 #[macro_use]
 extern crate nom;
 
-pub mod colored_square;
+pub mod geometry;
 pub mod piece_type;
 pub mod piece;
 pub mod mask;

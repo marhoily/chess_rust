@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use bit_board::BitBoard;
-use colored_square::{File, Color};
+use geometry::{File, Color};
 
 bitflags! {
     pub flags Castling: u8 {

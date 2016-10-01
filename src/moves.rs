@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use piece_type::*;
-use colored_square::*;
+use geometry::*;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Move(u32);
@@ -68,7 +68,7 @@ named!(pub parse_move(&[u8]) -> Move,
 
 #[cfg(test)]
 mod test {
-    use colored_square::*;
+    use geometry::*;
     use super::*;
     use piece_type::*;
 

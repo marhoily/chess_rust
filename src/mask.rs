@@ -1,4 +1,4 @@
-use colored_square::Square;
+use geometry::Square;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Mask(u64);
@@ -178,7 +178,7 @@ mod test {
 
     #[test]
     fn print_const_files() {
-        use colored_square::{File, Rank, Square};
+        use geometry::{File, Rank, Square};
         use std::ascii::AsciiExt;
 
         println!("");
@@ -199,7 +199,7 @@ mod test {
 
     #[test]
     fn print_const_ranks() {
-        use colored_square::{File, Rank, Square};
+        use geometry::{File, Rank, Square};
 
         println!("");
 
@@ -218,7 +218,7 @@ mod test {
     }
     #[test]
     fn print_const_masks() {
-        use colored_square::squares;
+        use geometry::squares;
         println!("");
 
         for s in squares::All {

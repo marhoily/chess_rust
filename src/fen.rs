@@ -1,4 +1,4 @@
-use colored_square::*;
+use geometry::*;
 use piece::*;
 use mask::{Mask};
 use bit_board::*;
@@ -146,7 +146,7 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use colored_square::{Square};
+    use geometry::{Square};
     use bit_board::{BitBoard};
     use piece::pieces;
     use nom::{Err, ErrorKind, Needed};

@@ -2,7 +2,7 @@ use piece::{Piece, pieces};
 use piece::pieces::All;
 use mask::{masks, Mask};
 use mask::masks::MaskIter;
-use colored_square::*;
+use geometry::*;
 
 #[derive(Debug, PartialEq)]
 pub struct BitBoard([Mask; pieces::COUNT]);
