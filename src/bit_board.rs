@@ -69,7 +69,7 @@ impl BitBoard {
             let (file, rank) = square.file_rank();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
             if piece != pieces::VOID {
-                result[i] = piece.as_char();
+                result[i] = piece.char();
             }
         }
         String::from(result)

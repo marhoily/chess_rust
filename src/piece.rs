@@ -28,8 +28,8 @@ impl Piece {
             Kind::new(self.bits() % kinds::COUNT)
         }
     }
-    pub fn as_char(&self) -> char {
-        debug_assert!(*self != pieces::VOID, "attempt to pieces::VOID.as_char()");
+    pub fn char(self) -> char {
+        debug_assert!(self != pieces::VOID, "attempt to pieces::VOID.char()");
         SYMBOLS[self.0 as usize] as char
     }
     pub fn parse(input: &str) -> Self {

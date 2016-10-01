@@ -24,7 +24,7 @@ impl BitBoard {
                     sb.push_str(format!("{}", gap).as_str());
                     gap = 0;
                 }
-                sb.push(square.as_char())
+                sb.push(square.char())
             }
             if file == 8 && gap > 0 {
                 sb.push_str(format!("{}", gap).as_str());
