@@ -43,9 +43,9 @@ impl PieceType {
 }
 
 named!(parse_piece_type(&[u8]) -> PieceType,
-    map!(is_a!(SYMBOLS), |c| {
+    map!(is_a!(SYMBOLS), |c: &[u8]| {
         PieceType(SYMBOLS.iter().position(|x| {
-            *x == (c as &[u8])[0]}).unwrap() as u8)}));
+            *x == c[0]}).unwrap() as u8)}));
 
 impl Debug for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
