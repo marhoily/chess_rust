@@ -6,32 +6,32 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 
 #[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
-pub struct PieceType(u8);
+pub struct Kind(u8);
 
-pub mod piece_types {
-    use super::PieceType;
+pub mod kinds {
+    use super::Kind;
 
     pub const COUNT: u8 = 6;
 
-    pub const PAWN: PieceType = PieceType(0);
-    pub const KNIGHT: PieceType = PieceType(1);
-    pub const BISHOP: PieceType = PieceType(2);
-    pub const ROOK: PieceType = PieceType(3);
-    pub const QUEEN: PieceType = PieceType(4);
-    pub const KING: PieceType = PieceType(5);
-    pub const UNKNOWN: PieceType = PieceType(16);
+    pub const PAWN: Kind = Kind(0);
+    pub const KNIGHT: Kind = Kind(1);
+    pub const BISHOP: Kind = Kind(2);
+    pub const ROOK: Kind = Kind(3);
+    pub const QUEEN: Kind = Kind(4);
+    pub const KING: Kind = Kind(5);
+    pub const UNKNOWN: Kind = Kind(16);
 
     pub struct All;
     impl IntoIterator for All {
-        type Item = PieceType;
-        type IntoIter = PieceType;
+        type Item = Kind;
+        type IntoIter = Kind;
 
         fn into_iter(self) -> Self::IntoIter {
-            PieceType(0)
+            Kind(0)
         }
     }
-    impl Iterator for PieceType {
-        type Item = PieceType;
+    impl Iterator for Kind {
+        type Item = Kind;
 
         fn next(&mut self) -> Option<Self::Item> {
             if self.0 < COUNT {
@@ -45,12 +45,12 @@ pub mod piece_types {
     }
 }
 
-impl PieceType {
+impl Kind {
     pub fn new(bits: u8) -> Self {
-        PieceType(bits)
+        Kind(bits)
     }
     pub fn parse(input: char) -> Self {
-        parse_piece_type(&[input as u8]).unwrap().1
+        parse_kind(&[input as u8]).unwrap().1
     }
     pub fn bits(self) -> u8 {
         self.0
@@ -59,7 +59,7 @@ impl PieceType {
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + piece_types::COUNT)
+            Piece::new(self.bits() + kinds::COUNT)
         }
     }
     pub fn char(self) -> char {
@@ -67,12 +67,12 @@ impl PieceType {
     }
 }
 
-named!(parse_piece_type(&[u8]) -> PieceType,
+named!(parse_kind(&[u8]) -> Kind,
     map!(is_a!(SYMBOLS), |c: &[u8]| {
-        PieceType(SYMBOLS.iter().position(|x| {
+        Kind(SYMBOLS.iter().position(|x| {
             *x == c[0]}).unwrap() as u8)}));
 
-impl Display for PieceType {
+impl Display for Kind {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
             0 => write!(f, "pawn"),
@@ -98,11 +98,11 @@ mod test {
     fn of_color() {
         use piece::pieces::*;
 
-        assert_eq!(piece_types::All.into_iter()
+        assert_eq!(kinds::All.into_iter()
                        .map(|pt| pt.of(Color::White))
                        .collect::<Vec<_>>(),
                    [WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING]);
-        assert_eq!(piece_types::All.into_iter()
+        assert_eq!(kinds::All.into_iter()
                        .map(|pt| pt.of(Color::Black))
                        .collect::<Vec<_>>(),
                    [BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING]);
@@ -110,7 +110,7 @@ mod test {
 
     #[test]
     fn all() {
-        use super::piece_types::*;
+        use super::kinds::*;
 
         assert_eq!(All.into_iter().collect::<Vec<_>>(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
@@ -118,7 +118,7 @@ mod test {
 
     #[test]
     fn display() {
-        use super::piece_types::*;
+        use super::kinds::*;
 
         assert_eq!([PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, UNKNOWN]
                        .into_iter()
@@ -128,23 +128,23 @@ mod test {
     }
     #[test]
     fn debug() {
-        use super::piece_types::*;
+        use super::kinds::*;
 
         assert_eq!([PAWN, KING, UNKNOWN]
                        .into_iter()
                        .map(|pt| format!("{:?}", pt))
                        .collect::<Vec<_>>(),
-                   ["PieceType(0)", "PieceType(5)", "PieceType(16)"]);
+                   ["Kind(0)", "Kind(5)", "Kind(16)"]);
     }
     // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
-        use super::piece_types::*;
+        use super::kinds::*;
 
         assert_eq!("PNBRQK"
                        .chars()
                        .into_iter()
-                       .map(|c| PieceType::parse(c))
+                       .map(|c| Kind::parse(c))
                        .collect::<Vec<_>>(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }

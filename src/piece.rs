@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 use geometry::*;
-use piece_type::{PieceType, piece_types};
+use kind::{Kind, kinds};
 
 #[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct Piece(u8);
@@ -15,17 +15,17 @@ impl Piece {
         self.0
     }
     pub fn color(self) -> Color {
-        if self.0 >= piece_types::COUNT {
+        if self.0 >= kinds::COUNT {
             Color::Black
         } else {
             Color::White
         }
     }
-    pub fn get_type(&self) -> PieceType {
+    pub fn get_type(&self) -> Kind {
         if *self == pieces::EMPTY {
-            piece_types::UNKNOWN
+            kinds::UNKNOWN
         } else {
-            PieceType::new(self.bits() % piece_types::COUNT)
+            Kind::new(self.bits() % kinds::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
@@ -104,7 +104,7 @@ mod test {
     use super::pieces::*;
     use std::iter::*;
     use geometry::*;
-    use piece_type::piece_types;
+    use kind::kinds;
 
     #[test]
     fn piece_color() {
@@ -124,19 +124,19 @@ mod test {
 
     #[test]
     fn piece_get_type() {
-        assert_eq!(EMPTY.get_type(), piece_types::UNKNOWN);
-        assert_eq!(WHITE_PAWN.get_type(), piece_types::PAWN);
-        assert_eq!(WHITE_KNIGHT.get_type(), piece_types::KNIGHT);
-        assert_eq!(WHITE_BISHOP.get_type(), piece_types::BISHOP);
-        assert_eq!(WHITE_ROOK.get_type(), piece_types::ROOK);
-        assert_eq!(WHITE_QUEEN.get_type(), piece_types::QUEEN);
-        assert_eq!(WHITE_KING.get_type(), piece_types::KING);
-        assert_eq!(BLACK_PAWN.get_type(), piece_types::PAWN);
-        assert_eq!(BLACK_KNIGHT.get_type(), piece_types::KNIGHT);
-        assert_eq!(BLACK_BISHOP.get_type(), piece_types::BISHOP);
-        assert_eq!(BLACK_ROOK.get_type(), piece_types::ROOK);
-        assert_eq!(BLACK_QUEEN.get_type(), piece_types::QUEEN);
-        assert_eq!(BLACK_KING.get_type(), piece_types::KING);
+        assert_eq!(EMPTY.get_type(), kinds::UNKNOWN);
+        assert_eq!(WHITE_PAWN.get_type(), kinds::PAWN);
+        assert_eq!(WHITE_KNIGHT.get_type(), kinds::KNIGHT);
+        assert_eq!(WHITE_BISHOP.get_type(), kinds::BISHOP);
+        assert_eq!(WHITE_ROOK.get_type(), kinds::ROOK);
+        assert_eq!(WHITE_QUEEN.get_type(), kinds::QUEEN);
+        assert_eq!(WHITE_KING.get_type(), kinds::KING);
+        assert_eq!(BLACK_PAWN.get_type(), kinds::PAWN);
+        assert_eq!(BLACK_KNIGHT.get_type(), kinds::KNIGHT);
+        assert_eq!(BLACK_BISHOP.get_type(), kinds::BISHOP);
+        assert_eq!(BLACK_ROOK.get_type(), kinds::ROOK);
+        assert_eq!(BLACK_QUEEN.get_type(), kinds::QUEEN);
+        assert_eq!(BLACK_KING.get_type(), kinds::KING);
     }
 
     #[test]

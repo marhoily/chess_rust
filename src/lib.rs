@@ -6,7 +6,7 @@ extern crate bitflags;
 extern crate nom;
 
 pub mod geometry;
-pub mod piece_type;
+pub mod kind;
 pub mod piece;
 pub mod mask;
 pub mod bit_board;
