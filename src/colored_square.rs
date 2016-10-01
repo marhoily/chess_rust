@@ -24,9 +24,9 @@ impl File {
     }
 }
 
+const A: u8 = 'a' as u8;
 named!(parse_file(&[u8]) -> File,
-    map!(is_a!("abcdefgh"),
-        |c| File((c as &[u8])[0] - ('a' as u8))));
+    map!(is_a!("abcdefgh"), |c: &[u8]| File(c[0] - A)));
 
 impl Debug for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -97,9 +97,9 @@ impl Rank {
     }
 }
 
+const B: u8 = '8' as u8;
 named!(parse_rank(&[u8]) -> Rank,
-    map!(is_a!("87654321"),
-        |c| Rank(('8' as u8) - (c as &[u8])[0])));
+    map!(is_a!("87654321"), |c:&[u8]| Rank(B - c[0])));
 
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
