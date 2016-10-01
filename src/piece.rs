@@ -4,7 +4,7 @@ use std::fmt::Result;
 use geometry::*;
 use kind::{Kind, kinds};
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+#[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
 pub struct Piece(u8);
 
 impl Piece {
@@ -39,8 +39,9 @@ impl Piece {
 
 named!(parse_piece(&[u8]) -> Piece,
     map!(is_a!(SYMBOLS), |c: &[u8]| {
-        Piece(SYMBOLS.iter().position(|x| {
-            *x == c[0]}).unwrap() as u8)}));
+            let idx = SYMBOLS.iter().position(|x| *x == c[0]);
+            Piece(idx.unwrap() as u8)
+        }));
 
 impl Display for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {

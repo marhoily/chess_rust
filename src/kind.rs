@@ -5,7 +5,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+#[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
 pub struct Kind(u8);
 
 pub mod kinds {

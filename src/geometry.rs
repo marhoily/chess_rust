@@ -3,7 +3,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use mask::Mask;
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Ord, Eq)]
+#[derive(Default, Eq, Ord, Copy, Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct File(u8);
 
 impl File {
@@ -72,7 +72,7 @@ pub mod files {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug, Default, Ord, Eq)]
+#[derive(Default, Eq, Ord, Copy, Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct Rank(u8);
 
 impl Rank {
@@ -141,7 +141,7 @@ pub mod ranks {
     }
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]
 pub enum Color {
     Black,
     White,
@@ -159,7 +159,7 @@ impl Color {
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
-#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+#[derive(Default, Eq, Ord, Copy, Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct Square(u8);
 
 impl Square {
