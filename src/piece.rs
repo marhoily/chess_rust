@@ -73,9 +73,9 @@ pub mod pieces {
     pub const BLACK_KING: Piece = Piece(11);
     pub const EMPTY: Piece = Piece(16);
 
-    pub struct AllPieces;
+    pub struct All;
 
-    impl IntoIterator for AllPieces {
+    impl IntoIterator for All {
         type Item = Piece;
         type IntoIter = PieceIter;
 
@@ -175,7 +175,7 @@ mod test {
 
     #[test]
     fn all_pieces() {
-        let all = AllPieces.into_iter().collect::<Vec<Piece>>();
+        let all = All.into_iter().collect::<Vec<Piece>>();
         assert_eq!(all.len(), 12);
         assert_eq!(all[0], WHITE_PAWN);
         assert_eq!(all[11], BLACK_KING);

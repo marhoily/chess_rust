@@ -1,5 +1,5 @@
 use piece::{Piece, pieces};
-use piece::pieces::AllPieces;
+use piece::pieces::All;
 use mask::{masks, Mask};
 use mask::masks::MaskIter;
 use colored_square::*;
@@ -15,7 +15,7 @@ impl BitBoard {
         self.0[piece.bits() as usize]
     }
     pub fn check_square(&self, square: Mask) -> Piece {
-        for piece in AllPieces {
+        for piece in All {
             if self.line(piece).test(square) {
                 return piece;
             }
@@ -27,7 +27,7 @@ impl BitBoard {
         self.0[idx] = self.0[idx].with(square);
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
-        for probe in AllPieces {
+        for probe in All {
             if self.line(probe).test(square) {
                 return probe;
             }
