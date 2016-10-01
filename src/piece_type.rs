@@ -49,8 +49,8 @@ impl PieceType {
     pub fn new(bits: u8) -> Self {
         PieceType(bits)
     }
-    pub fn parse(input: &str) -> Self {
-        parse_piece_type(input.as_bytes()).unwrap().1
+    pub fn parse(input: char) -> Self {
+        parse_piece_type(&[input as u8]).unwrap().1
     }
     pub fn bits(self) -> u8 {
         self.0
@@ -92,47 +92,50 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::piece_types::*;
     use geometry::*;
-    use piece::pieces;
 
     #[test]
     fn of_color() {
-        assert_eq!(PAWN.of(Color::White), pieces::WHITE_PAWN);
-        assert_eq!(KNIGHT.of(Color::White), pieces::WHITE_KNIGHT);
-        assert_eq!(BISHOP.of(Color::White), pieces::WHITE_BISHOP);
-        assert_eq!(ROOK.of(Color::White), pieces::WHITE_ROOK);
-        assert_eq!(QUEEN.of(Color::White), pieces::WHITE_QUEEN);
-        assert_eq!(KING.of(Color::White), pieces::WHITE_KING);
-        assert_eq!(PAWN.of(Color::Black), pieces::BLACK_PAWN);
-        assert_eq!(KNIGHT.of(Color::Black), pieces::BLACK_KNIGHT);
-        assert_eq!(BISHOP.of(Color::Black), pieces::BLACK_BISHOP);
-        assert_eq!(ROOK.of(Color::Black), pieces::BLACK_ROOK);
-        assert_eq!(QUEEN.of(Color::Black), pieces::BLACK_QUEEN);
-        assert_eq!(KING.of(Color::Black), pieces::BLACK_KING);
+        use piece::pieces::*;
+
+        assert_eq!(piece_types::All.into_iter()
+                       .map(|pt| pt.of(Color::White))
+                       .collect::<Vec<_>>(),
+                   [WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING]);
+        assert_eq!(piece_types::All.into_iter()
+                       .map(|pt| pt.of(Color::Black))
+                       .collect::<Vec<_>>(),
+                   [BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING]);
     }
 
     #[test]
     fn all() {
+        use super::piece_types::*;
+
         assert_eq!(All.into_iter().collect::<Vec<_>>(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
 
     #[test]
     fn display() {
+        use super::piece_types::*;
+
         assert_eq!([PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, UNKNOWN]
                        .into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<Vec<_>>(),
                    ["pawn", "knight", "bishop", "rook", "queen", "king", "unknown"]);
     }
+    // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
-        assert_eq!(PieceType::parse("P"), PAWN);
-        assert_eq!(PieceType::parse("N"), KNIGHT);
-        assert_eq!(PieceType::parse("B"), BISHOP);
-        assert_eq!(PieceType::parse("R"), ROOK);
-        assert_eq!(PieceType::parse("Q"), QUEEN);
-        assert_eq!(PieceType::parse("K"), KING);
+        use super::piece_types::*;
+
+        assert_eq!("PNBRQK"
+                       .chars()
+                       .into_iter()
+                       .map(|c| PieceType::parse(c))
+                       .collect::<Vec<_>>(),
+                   [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
 }
