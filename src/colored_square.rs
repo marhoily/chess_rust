@@ -275,8 +275,9 @@ mod test {
 
     #[test]
     fn color_invert() {
-        assert_eq!(Color::White.invert(), Color::Black);
-        assert_eq!(Color::Black.invert(), Color::White);
+        use super::Color::*;
+        assert_eq!(White.invert(), Black);
+        assert_eq!(Black.invert(), White);
     }
 
     #[test]
