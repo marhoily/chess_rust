@@ -13,7 +13,7 @@ impl Mask {
     pub fn bits(self) -> u64 {
         self.0
     }
-    pub fn empty(&self) -> bool {
+    pub fn empty(self) -> bool {
         self.0 == 0
     }
     pub fn next(&mut self) {
@@ -25,7 +25,7 @@ impl Mask {
     pub fn test(self, square: Mask) -> bool {
         self.0 & square.bits() != 0
     }
-    pub fn with(&mut self, another: Mask) -> Mask {
+    pub fn with(self, another: Mask) -> Mask {
         Mask(self.0 | another.0)
     }
 }
