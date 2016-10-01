@@ -114,7 +114,7 @@ mod test {
 
     #[test]
     fn all() {
-        assert_eq!(All.into_iter().collect::<Vec<PieceType>>(),
+        assert_eq!(All.into_iter().collect::<Vec<_>>(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
 
@@ -122,7 +122,7 @@ mod test {
     fn display() {
         assert_eq!(All.into_iter()
                        .map(|pt| format!("{}", pt))
-                       .collect::<Vec<String>>(),
+                       .collect::<Vec<_>>(),
                    ["pawn", "knight", "bishop", "rook", "queen", "king"]);
 
         assert_eq!(format!("{}", UNKNOWN), "unknown");

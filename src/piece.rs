@@ -102,7 +102,6 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use super::pieces::*;
     use std::iter::*;
     use geometry::*;
@@ -160,7 +159,7 @@ mod test {
 
     #[test]
     fn all_pieces() {
-        let all = All.into_iter().collect::<Vec<Piece>>();
+        let all = All.into_iter().collect::<Vec<_>>();
         assert_eq!(all.len(), 12);
         assert_eq!(all[0], WHITE_PAWN);
         assert_eq!(all[11], BLACK_KING);

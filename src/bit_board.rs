@@ -115,8 +115,7 @@ mod test {
         let mut b = BitBoard::new();
         b.set_piece(Mask::new(0b0001), pieces::BLACK_ROOK);
 
-        let all = b.squares()
-            .collect::<Vec<Piece>>();
+        let all = b.squares().collect::<Vec<_>>();
         assert_eq!(all.len(), 64);
         assert_eq!(all[0], pieces::BLACK_ROOK);
         assert_eq!(all[63], pieces::EMPTY);

@@ -313,7 +313,7 @@ mod test {
         use super::files::*;
 
         assert_eq!(All.into_iter().
-            map(|f| f.char()).collect::<Vec<char>>(),
+            map(|f| f.char()).collect::<Vec<_>>(),
             ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
     }
     #[test]
@@ -321,7 +321,7 @@ mod test {
         use super::files::*;
 
         assert_eq!(All.into_iter().
-            map(|f| format!("{}", f)).collect::<Vec<String>>(),
+            map(|f| format!("{}", f)).collect::<Vec<_>>(),
             ["a", "b", "c", "d", "e", "f", "g", "h"]);
     }
     #[test]
@@ -329,7 +329,7 @@ mod test {
         use super::files::*;
 
         assert_eq!([A, H].into_iter().
-            map(|f| format!("{:?}", f)).collect::<Vec<String>>(),
+            map(|f| format!("{:?}", f)).collect::<Vec<_>>(),
             ["File(0)", "File(7)"]);
     }
     #[test]
@@ -337,7 +337,7 @@ mod test {
         use super::ranks::*;
 
         assert_eq!(All.into_iter().
-            map(|f| f.char()).collect::<Vec<char>>(),
+            map(|f| f.char()).collect::<Vec<_>>(),
             ['8', '7', '6', '5', '4', '3', '2', '1']);
     }
     #[test]
@@ -345,7 +345,7 @@ mod test {
         use super::ranks::*;
 
         assert_eq!(All.into_iter().
-            map(|f| format!("{}", f)).collect::<Vec<String>>(),
+            map(|f| format!("{}", f)).collect::<Vec<_>>(),
             ["8", "7", "6", "5", "4", "3", "2", "1"]);
     }
     #[test]
@@ -353,7 +353,7 @@ mod test {
         use super::ranks::*;
 
         assert_eq!([_1, _8].into_iter().
-            map(|f| format!("{:?}", f)).collect::<Vec<String>>(),
+            map(|f| format!("{:?}", f)).collect::<Vec<_>>(),
             ["Rank(7)", "Rank(0)"]);
     }
     #[test]
@@ -361,7 +361,7 @@ mod test {
         use super::squares::*;
 
         assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
-            map(|s| format!("{}", s)).collect::<Vec<String>>(),
+            map(|s| format!("{}", s)).collect::<Vec<_>>(),
             ["h8","g7","f6","e5","d4","c3","b2","a1"]);
     }
     #[test]
@@ -369,7 +369,7 @@ mod test {
         use super::squares::*;
 
         assert_eq!([A8, H8, A1, H1].into_iter().
-            map(|s| format!("{:?}", s)).collect::<Vec<String>>(),
+            map(|s| format!("{:?}", s)).collect::<Vec<_>>(),
             ["Square(0)", "Square(7)", "Square(56)", "Square(63)"]);
     }
 
@@ -378,7 +378,7 @@ mod test {
         use super::files::*;
 
         assert_eq!(
-            All.into_iter().collect::<Vec<File>>(),
+            All.into_iter().collect::<Vec<_>>(),
             [A, B, C, D, E, F, G, H]);
     }
     #[test]
@@ -386,14 +386,14 @@ mod test {
         use super::ranks::*;
 
         assert_eq!(
-            All.into_iter().collect::<Vec<Rank>>(),
+            All.into_iter().collect::<Vec<_>>(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
     #[test]
     fn all_squares() {
         use super::squares::*;
 
-        assert_eq!(All.into_iter().collect::<Vec<Square>>(), vec!(
+        assert_eq!(All.into_iter().collect::<Vec<_>>(), vec!(
             A8,B8,C8,D8,E8,F8,G8,H8,
             A7,B7,C7,D7,E7,F7,G7,H7,
             A6,B6,C6,D6,E6,F6,G6,H6,
@@ -409,7 +409,7 @@ mod test {
         use super::files::*;
 
         assert_eq!(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].into_iter().
-            map(|f| File::parse(*f)).collect::<Vec<File>>(),
+            map(|f| File::parse(*f)).collect::<Vec<_>>(),
             [A, B, C, D, E, F, G, H]);
     }
     #[test]
@@ -417,7 +417,7 @@ mod test {
         use super::ranks::*;
 
         assert_eq!(['8', '7', '6', '5', '4', '3', '2', '1'].into_iter().
-            map(|f| Rank::parse(*f)).collect::<Vec<Rank>>(),
+            map(|f| Rank::parse(*f)).collect::<Vec<_>>(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
     #[test]
@@ -425,18 +425,18 @@ mod test {
         use super::squares::*;
 
         assert_eq!(["a8","b7","c6","d5","e4","f3","g2","h1"].into_iter().
-            map(|f| Square::parse(*f)).collect::<Vec<Square>>(),
+            map(|f| Square::parse(*f)).collect::<Vec<_>>(),
             [A8, B7, C6, D5, E4, F3, G2, H1]);
     }
 
     #[test]
     fn square_file_rank() {
         use super::squares::*;
-        assert_eq!(All.into_iter().collect::<Vec<Square>>(),
+        assert_eq!(All.into_iter().collect::<Vec<_>>(),
             All.into_iter().map(|square| {
                     let (f, r) = square.file_rank();
                     Square::from(f,r)
-                }).collect::<Vec<Square>>());
+                }).collect::<Vec<_>>());
     }
     // noinspection SpellCheckingInspection
     #[test]

@@ -170,7 +170,7 @@ mod test {
     #[test]
     fn all_squares_exp() {
         let all = masks::All.into_iter()
-            .collect::<Vec<Mask>>();
+            .collect::<Vec<_>>();
         assert_eq!(all.len(), 64);
         assert_eq!(all[0], Mask(1));
         assert_eq!(all[63], Mask(1 << 63));
