@@ -94,16 +94,16 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 mod test {
     use super::*;
     use geometry::*;
-    use std::iter::FromIterator;
+
     #[test]
     fn of_color() {
         use piece::pieces;
 
         let white = kinds::All.into_iter().map(|pt| pt.of(Color::White));
         let black = kinds::All.into_iter().map(|pt| pt.of(Color::Black));
-        let together = Vec::from_iter(white.chain(black));
+        let together = white.chain(black).collect::<Vec<_>>();
 
-        assert_eq!(together, Vec::from_iter(pieces::All));
+        assert_eq!(together, pieces::All.into_iter().collect::<Vec<_>>());
     }
 
     #[test]
