@@ -91,17 +91,17 @@ impl Rank {
         parse_rank(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
-        (B - self.0) as char
+        (RANKS[0] - self.0) as char
     }
     pub fn bits(self) -> u8 {
         self.0
     }
 }
 
-const B: u8 = '8' as u8;
+static RANKS: &'static [u8; 8] = b"87654321";
 
 named!(parse_rank(&[u8]) -> Rank,
-    map!(is_a!("87654321"), |c:&[u8]| Rank(B - c[0])));
+    map!(is_a!(RANKS), |c:&[u8]| Rank(RANKS[0] - c[0])));
 
 impl Debug for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
