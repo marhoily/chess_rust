@@ -1,10 +1,9 @@
-use std::fmt::Debug;
 use std::fmt::Result;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use mask::Mask;
 
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct File(u8);
 
 impl File {
@@ -28,12 +27,6 @@ static FILES: &'static [u8; 8] = b"abcdefgh";
 
 named!(parse_file(&[u8]) -> File,
     map!(is_a!(FILES), |c: &[u8]| File(c[0] - FILES[0])));
-
-impl Debug for File {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{:?}", self.char())
-    }
-}
 
 impl Display for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -78,7 +71,7 @@ pub mod files {
     }
 }
 
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct Rank(u8);
 
 impl Rank {
@@ -102,12 +95,6 @@ static RANKS: &'static [u8; 8] = b"87654321";
 
 named!(parse_rank(&[u8]) -> Rank,
     map!(is_a!(RANKS), |c:&[u8]| Rank(RANKS[0] - c[0])));
-
-impl Debug for Rank {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{:?}", self.char())
-    }
-}
 
 impl Display for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -200,7 +187,6 @@ impl Square {
             Color::Black
         }
     }
-
 }
 
 impl Display for Square {
@@ -330,6 +316,22 @@ mod test {
         assert_eq!(All.into_iter().
             map(|f| f.char()).collect::<Vec<char>>(),
             ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
+    }
+    #[test]
+    fn file_display() {
+        use super::files::*;
+
+        assert_eq!(All.into_iter().
+            map(|f| format!("{}", f)).collect::<Vec<String>>(),
+            ["a", "b", "c", "d", "e", "f", "g", "h"]);
+    }
+    #[test]
+    fn file_debug() {
+        use super::files::*;
+
+        assert_eq!([A, H].into_iter().
+            map(|f| format!("{:?}", f)).collect::<Vec<String>>(),
+            ["File(0)", "File(7)"]);
     }
     #[test]
     fn rank_char() {
