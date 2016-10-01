@@ -33,4 +33,3 @@ enum Errors {
     OnlyCapturesThisWay,
     JumpsOverPieces,
 }
-

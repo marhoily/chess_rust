@@ -6,7 +6,7 @@ use geometry::{File, Color};
 
 bitflags! {
     pub flags Castling: u8 {
-        //const None = 0,
+        const NONE = 0,
         const Q = WQ.bits | BQ.bits,
         const K = WK.bits | BK.bits,
         const W = WQ.bits | WK.bits,

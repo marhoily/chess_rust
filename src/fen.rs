@@ -230,7 +230,8 @@ mod test {
     }
 
     fn expect_incomplete(fen: &str) {
-        assert_eq!(parse_bit_borad(fen.as_bytes()).unwrap_inc(), Needed::Unknown);
+        assert_eq!(parse_bit_borad(fen.as_bytes()).unwrap_inc(),
+                   Needed::Unknown);
     }
 
     fn expect_error(fen: &str, expected_error: super::ParsingError, expected_position: usize) {
