@@ -104,12 +104,12 @@ impl ShlAssign<u8> for Mask {
 impl Shr<u8> for Mask {
     type Output = Mask;
     fn shr(self, rhs: u8) -> Self::Output {
-        Mask(self.0 << rhs)
+        Mask(self.0 >> rhs)
     }
 }
 impl ShrAssign<u8> for Mask {
     fn shr_assign(&mut self, rhs: u8) {
-        self.0 <<= rhs
+        self.0 >>= rhs
     }
 }
 impl Not for Mask {
@@ -279,6 +279,32 @@ mod test {
                     |^^^^@^^^|...\
                     |^^^^@^^^|...\
                     |^^^^@^^^|...");
+    }
+    #[test]
+    fn shift_south() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_south().dump(),
+                   "|^^^^^^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |@@@@@@@@|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...");
+    }
+    #[test]
+    fn shift_north() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.shift_north().dump(),
+                   "|^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |@@@@@@@@|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^@^^^|...\
+                    |^^^^^^^^|...");
     }
 
     #[test]
