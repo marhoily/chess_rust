@@ -111,7 +111,6 @@ mod test {
 
     #[test]
     fn display() {
-
         assert_eq!(super::kinds::All.into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<String>(),

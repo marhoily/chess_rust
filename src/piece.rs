@@ -45,11 +45,7 @@ named!(parse_piece(&[u8]) -> Piece,
 
 impl Display for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        if *self == pieces::VOID {
-            write!(f, "Void")
-        } else {
-            write!(f, "{:?}-{}", self.color(), self.kind())
-        }
+        write!(f, "{}", self.char())
     }
 }
 
@@ -125,22 +121,12 @@ mod test {
     }
 
     #[test]
-    fn piece_fmt() {
-        use super::pieces::*;
+    fn display() {
+        assert_eq!(super::pieces::All.into_iter()
+                       .map(|pt| format!("{}", pt))
+                       .collect::<String>(),
+                   "PNBRQKpnbrqk");
 
-        assert_eq!(format!("{}", VOID), "Void");
-        assert_eq!(format!("{}", WHITE_PAWN), "White-P");
-        assert_eq!(format!("{}", WHITE_KNIGHT), "White-N");
-        assert_eq!(format!("{}", WHITE_BISHOP), "White-B");
-        assert_eq!(format!("{}", WHITE_ROOK), "White-R");
-        assert_eq!(format!("{}", WHITE_QUEEN), "White-Q");
-        assert_eq!(format!("{}", WHITE_KING), "White-K");
-        assert_eq!(format!("{}", BLACK_PAWN), "Black-P");
-        assert_eq!(format!("{}", BLACK_KNIGHT), "Black-N");
-        assert_eq!(format!("{}", BLACK_BISHOP), "Black-B");
-        assert_eq!(format!("{}", BLACK_ROOK), "Black-R");
-        assert_eq!(format!("{}", BLACK_QUEEN), "Black-Q");
-        assert_eq!(format!("{}", BLACK_KING), "Black-K");
     }
 
     #[test]
