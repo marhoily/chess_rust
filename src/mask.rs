@@ -4,8 +4,8 @@ use geometry::Square;
 pub struct Mask(u64);
 
 impl Mask {
-    pub fn new(exp: u64) -> Self {
-        Mask(exp)
+    pub fn new(bits: u64) -> Self {
+        Mask(bits)
     }
     pub fn from(square: Square) -> Self {
         Mask(1 << square.bits())
@@ -13,7 +13,7 @@ impl Mask {
     pub fn bits(self) -> u64 {
         self.0
     }
-    pub fn is_out(&self) -> bool {
+    pub fn empty(&self) -> bool {
         self.0 == 0
     }
     pub fn next(&mut self) {
