@@ -47,6 +47,20 @@ impl Mask {
     pub fn shift_south_west(self) -> Mask {
         (self << 7) & !masks::files::H
     }
+    pub fn dump(self) -> String {
+        let mut result = String::with_capacity(64);
+        for rank in masks::ranks::ALL {
+            for file in masks::files::ALL {
+                if self.has_any(*file & *rank) {
+                    result.push('@');
+                } else {
+                    result.push('^');
+                }
+            }
+      //      result.push('\n');
+        }
+        result
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -248,6 +262,20 @@ mod test {
     }
 
     #[test]
+    fn dump() {
+        let mask = masks::files::E | masks::ranks::_4;
+        assert_eq!(mask.dump(),
+                "^^^^@^^^\
+                 ^^^^@^^^\
+                 ^^^^@^^^\
+                 @@@@@@@@\
+                 ^^^^@^^^\
+                 ^^^^@^^^\
+                 ^^^^@^^^\
+                 ^^^^@^^^");
+    }
+
+    #[test]
     fn print_const_files() {
         use geometry::{File, Rank, Square};
         use std::ascii::AsciiExt;
@@ -267,7 +295,6 @@ mod test {
         }
         println!("");
     }
-
     #[test]
     fn print_const_ranks() {
         use geometry::{File, Rank, Square};
