@@ -1,10 +1,10 @@
-use std::fmt::Debug;
+use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 use geometry::*;
 use piece_type::{PieceType, piece_types};
 
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct Piece(u8);
 
 impl Piece {
@@ -43,12 +43,12 @@ named!(parse_piece(&[u8]) -> Piece,
         Piece(SYMBOLS.iter().position(|x| {
             *x == (c as &[u8])[0]}).unwrap() as u8)}));
 
-impl Debug for Piece {
+impl Display for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
         if *self == pieces::EMPTY {
             write!(f, "Empty")
         } else {
-            write!(f, "{:?}-{:?}", self.get_color(), self.get_type())
+            write!(f, "{:?}-{}", self.get_color(), self.get_type())
         }
     }
 }
@@ -142,31 +142,20 @@ mod test {
     }
 
     #[test]
-    fn piece_type_fmt() {
-        assert_eq!(format!("{:?}", UNKNOWN), "unknown");
-        assert_eq!(format!("{:?}", PAWN), "pawn");
-        assert_eq!(format!("{:?}", KNIGHT), "knight");
-        assert_eq!(format!("{:?}", BISHOP), "bishop");
-        assert_eq!(format!("{:?}", ROOK), "rook");
-        assert_eq!(format!("{:?}", QUEEN), "queen");
-        assert_eq!(format!("{:?}", KING), "king");
-    }
-
-    #[test]
     fn piece_fmt() {
-        assert_eq!(format!("{:?}", EMPTY), "Empty");
-        assert_eq!(format!("{:?}", WHITE_PAWN), "White-pawn");
-        assert_eq!(format!("{:?}", WHITE_KNIGHT), "White-knight");
-        assert_eq!(format!("{:?}", WHITE_BISHOP), "White-bishop");
-        assert_eq!(format!("{:?}", WHITE_ROOK), "White-rook");
-        assert_eq!(format!("{:?}", WHITE_QUEEN), "White-queen");
-        assert_eq!(format!("{:?}", WHITE_KING), "White-king");
-        assert_eq!(format!("{:?}", BLACK_PAWN), "Black-pawn");
-        assert_eq!(format!("{:?}", BLACK_KNIGHT), "Black-knight");
-        assert_eq!(format!("{:?}", BLACK_BISHOP), "Black-bishop");
-        assert_eq!(format!("{:?}", BLACK_ROOK), "Black-rook");
-        assert_eq!(format!("{:?}", BLACK_QUEEN), "Black-queen");
-        assert_eq!(format!("{:?}", BLACK_KING), "Black-king");
+        assert_eq!(format!("{}", EMPTY), "Empty");
+        assert_eq!(format!("{}", WHITE_PAWN), "White-pawn");
+        assert_eq!(format!("{}", WHITE_KNIGHT), "White-knight");
+        assert_eq!(format!("{}", WHITE_BISHOP), "White-bishop");
+        assert_eq!(format!("{}", WHITE_ROOK), "White-rook");
+        assert_eq!(format!("{}", WHITE_QUEEN), "White-queen");
+        assert_eq!(format!("{}", WHITE_KING), "White-king");
+        assert_eq!(format!("{}", BLACK_PAWN), "Black-pawn");
+        assert_eq!(format!("{}", BLACK_KNIGHT), "Black-knight");
+        assert_eq!(format!("{}", BLACK_BISHOP), "Black-bishop");
+        assert_eq!(format!("{}", BLACK_ROOK), "Black-rook");
+        assert_eq!(format!("{}", BLACK_QUEEN), "Black-queen");
+        assert_eq!(format!("{}", BLACK_KING), "Black-king");
     }
 
     #[test]

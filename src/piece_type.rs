@@ -1,11 +1,11 @@
 use geometry::*;
 use piece::{Piece, pieces};
 
-use std::fmt::Debug;
+use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct PieceType(u8);
 
 pub mod piece_types {
@@ -18,6 +18,7 @@ pub mod piece_types {
     pub const QUEEN: PieceType = PieceType(4);
     pub const KING: PieceType = PieceType(5);
     pub const UNKNOWN: PieceType = PieceType(16);
+
 }
 
 impl PieceType {
@@ -47,7 +48,7 @@ named!(parse_piece_type(&[u8]) -> PieceType,
         PieceType(SYMBOLS.iter().position(|x| {
             *x == c[0]}).unwrap() as u8)}));
 
-impl Debug for PieceType {
+impl Display for PieceType {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.0 {
             0 => write!(f, "pawn"),
@@ -85,6 +86,17 @@ mod test {
         assert_eq!(ROOK.of(Color::Black),      BLACK_ROOK              );
         assert_eq!(QUEEN.of(Color::Black),     BLACK_QUEEN                );
         assert_eq!(KING.of(Color::Black),      BLACK_KING             );
+    }
+
+    #[test]
+    fn piece_type_fmt() {
+        assert_eq!(format!("{}", UNKNOWN), "unknown");
+        assert_eq!(format!("{}", PAWN), "pawn");
+        assert_eq!(format!("{}", KNIGHT), "knight");
+        assert_eq!(format!("{}", BISHOP), "bishop");
+        assert_eq!(format!("{}", ROOK), "rook");
+        assert_eq!(format!("{}", QUEEN), "queen");
+        assert_eq!(format!("{}", KING), "king");
     }
 
     #[test]
