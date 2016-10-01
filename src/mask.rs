@@ -67,6 +67,16 @@ impl Mask {
         result.pop();
         result
     }
+    pub fn flip_horizontally(self) -> Mask {
+        let x = Mask(0x5555555555555555);
+        let y = Mask(0x3333333333333333);
+        let z = Mask(0x0F0F0F0F0F0F0F0F);
+        let mut n = self;
+        n = ((n >> 1) & x) | ((n & x) << 1);
+        n = ((n >> 2) & y) | ((n & y) << 2);
+        n = ((n >> 4) & z) | ((n & z) << 4);
+        n
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -141,16 +151,16 @@ pub mod masks {
     pub mod ranks {
         use super::super::Mask;
 
-        pub const _8: Mask = Mask(0xFF);
-        pub const _7: Mask = Mask(0xFF00);
-        pub const _6: Mask = Mask(0xFF0000);
-        pub const _5: Mask = Mask(0xFF000000);
-        pub const _4: Mask = Mask(0xFF00000000);
-        pub const _3: Mask = Mask(0xFF0000000000);
-        pub const _2: Mask = Mask(0xFF000000000000);
-        pub const _1: Mask = Mask(0xFF00000000000000);
+        pub const _1: Mask = Mask(0xFF);
+        pub const _2: Mask = Mask(0xFF00);
+        pub const _3: Mask = Mask(0xFF0000);
+        pub const _4: Mask = Mask(0xFF000000);
+        pub const _5: Mask = Mask(0xFF00000000);
+        pub const _6: Mask = Mask(0xFF0000000000);
+        pub const _7: Mask = Mask(0xFF000000000000);
+        pub const _8: Mask = Mask(0xFF00000000000000);
 
-        pub static ALL: &'static [Mask] = &[_1, _2, _3, _4, _5, _6, _7, _8];
+        pub static ALL: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
     }
 
     pub const A8: Mask = Mask(0x1);
@@ -269,7 +279,7 @@ mod test {
 
     #[test]
     fn dump() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.dump(),
                    "|^^^^@^^^|...\
                     |^^^^@^^^|...\
@@ -282,7 +292,7 @@ mod test {
     }
     #[test]
     fn shift_north() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_north().dump(),
                    "|^^^^@^^^|...\
                     |^^^^@^^^|...\
@@ -295,7 +305,7 @@ mod test {
     }
     #[test]
     fn shift_south() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_south().dump(),
                    "|^^^^^^^^|...\
                     |^^^^@^^^|...\
@@ -308,7 +318,7 @@ mod test {
     }
     #[test]
     fn shift_east() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_east().dump(),
                    "|^^^^^@^^|...\
                     |^^^^^@^^|...\
@@ -321,7 +331,7 @@ mod test {
     }
     #[test]
     fn shift_south_east() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_south_east().dump(),
                    "|^^^^^^^^|...\
                     |^^^^^@^^|...\
@@ -334,7 +344,7 @@ mod test {
     }
     #[test]
     fn shift_north_east() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_north_east().dump(),
                    "|^^^^^@^^|...\
                     |^^^^^@^^|...\
@@ -347,7 +357,7 @@ mod test {
     }
     #[test]
     fn shift_west() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_west().dump(),
                    "|^^^@^^^^|...\
                     |^^^@^^^^|...\
@@ -360,7 +370,7 @@ mod test {
     }
     #[test]
     fn shift_south_west() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_south_west().dump(),
                    "|^^^^^^^^|...\
                     |^^^@^^^^|...\
@@ -373,7 +383,7 @@ mod test {
     }
     #[test]
     fn shift_north_west() {
-        let mask = masks::files::E | masks::ranks::_4;
+        let mask = masks::files::E | masks::ranks::_5;
         assert_eq!(mask.shift_north_west().dump(),
                    "|^^^@^^^^|...\
                     |^^^@^^^^|...\
@@ -385,6 +395,21 @@ mod test {
                     |^^^^^^^^|...");
 
     }
+
+    #[test]
+    fn flip_horizontally() {
+        let mask = masks::files::B | masks::ranks::_2;
+        assert_eq!(mask.dump(),
+                   "|^@^^^^^^|...\
+                    |^@^^^^^^|...\
+                    |^@^^^^^^|...\
+                    |^@^^^^^^|...\
+                    |^@^^^^^^|...\
+                    |^@^^^^^^|...\
+                    |@@@@@@@@|...\
+                    |^@^^^^^^|...");
+    }
+
 
     #[test]
     fn print_const_files() {
