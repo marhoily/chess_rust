@@ -39,6 +39,7 @@ impl Display for File {
         write!(f, "{}", self.char())
     }
 }
+
 pub mod files {
     use super::File;
 
@@ -112,6 +113,43 @@ impl Display for Rank {
     }
 }
 
+pub mod ranks {
+    use super::Rank;
+
+    pub const _1: Rank = Rank(7);
+    pub const _2: Rank = Rank(6);
+    pub const _3: Rank = Rank(5);
+    pub const _4: Rank = Rank(4);
+    pub const _5: Rank = Rank(3);
+    pub const _6: Rank = Rank(2);
+    pub const _7: Rank = Rank(1);
+    pub const _8: Rank = Rank(0);
+
+    pub struct All;
+
+    impl IntoIterator for All {
+        type Item = Rank;
+        type IntoIter = Rank;
+
+        fn into_iter(self) -> Self::IntoIter {
+            Rank(0)
+        }
+    }
+    impl Iterator for Rank {
+        type Item = Rank;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 == 8 {
+                None
+            } else {
+                let result = *self;
+                self.0 += 1;
+                Some(result)
+            }
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum Color {
     Black,
@@ -179,7 +217,6 @@ impl Display for Square {
         write!(f, "{}", self.to_string())
     }
 }
-
 
 named!(pub parse_square(&[u8]) -> Square,
     chain!(
@@ -309,6 +346,14 @@ mod test {
         assert_eq!(
             All.into_iter().collect::<Vec<File>>(),
             [A, B, C, D, E, F, G, H]);
+    }
+    #[test]
+    fn all_ranks() {
+        use super::ranks::*;
+
+        assert_eq!(
+            All.into_iter().collect::<Vec<Rank>>(),
+            [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
 
     #[test]
