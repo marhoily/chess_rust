@@ -9,13 +9,12 @@ pub struct File(u8);
 
 impl File {
     pub fn new(bits: u8) -> Self {
-        debug_assert!(num < 8);
+        debug_assert!(bits < 8);
         File(bits)
     }
     pub fn parse(input: char) -> Self {
-        let mut str = String::with_capacity(1);
-        str.push(input);
-        parse_file(str.as_bytes()).unwrap().1
+        debug_assert!((input as u32) < 128, "it is not even an ASCII character!");
+        parse_file(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
         ('a' as u8 + self.0 as u8) as char
