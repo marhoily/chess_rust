@@ -17,17 +17,17 @@ impl File {
         parse_file(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
-        (A + self.0) as char
+        (FILES[0] + self.0) as char
     }
     pub fn bits(self) -> u8 {
         self.0
     }
 }
 
-const A: u8 = 'a' as u8;
+static FILES: &'static [u8; 8] = b"abcdefgh";
 
 named!(parse_file(&[u8]) -> File,
-    map!(is_a!("abcdefgh"), |c: &[u8]| File(c[0] - A)));
+    map!(is_a!(FILES), |c: &[u8]| File(c[0] - FILES[0])));
 
 impl Debug for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
