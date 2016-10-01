@@ -341,14 +341,11 @@ mod test {
 
     #[test]
     fn square_to_string() {
-        assert_eq!(Square::parse("a8").to_string(), "a8");
-        assert_eq!(Square::parse("b7").to_string(), "b7");
-        assert_eq!(Square::parse("c6").to_string(), "c6");
-        assert_eq!(Square::parse("d5").to_string(), "d5");
-        assert_eq!(Square::parse("e4").to_string(), "e4");
-        assert_eq!(Square::parse("f3").to_string(), "f3");
-        assert_eq!(Square::parse("g2").to_string(), "g2");
-        assert_eq!(Square::parse("h1").to_string(), "h1");
+        use super::squares::*;
+
+        assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
+            map(|s| s.to_string()).collect::<Vec<String>>(),
+            ["h8","g7","f6","e5","d4","c3","b2","a1"]);
     }
 
     #[test]
@@ -356,7 +353,8 @@ mod test {
         println!("");
 
         for s in squares::All {
-            println!("pub const {} : Square = Square({});", s.to_string().to_uppercase(), s.bits());
+            println!("pub const {} : Square = Square({});",
+                     s.to_string().to_uppercase(), s.bits());
         }
         println!("");
     }
