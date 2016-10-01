@@ -133,22 +133,22 @@ pub mod masks {
 
     impl IntoIterator for All {
         type Item = Mask;
-        type IntoIter = SquareMaskIter;
+        type IntoIter = MaskIter;
 
         fn into_iter(self) -> Self::IntoIter {
-            SquareMaskIter::new()
+            MaskIter::new()
         }
     }
 
-    pub struct SquareMaskIter(u64);
+    pub struct MaskIter(u64);
 
-    impl SquareMaskIter {
+    impl MaskIter {
         pub fn new() -> Self {
-            SquareMaskIter(1)
+            MaskIter(1)
         }
     }
 
-    impl Iterator for SquareMaskIter {
+    impl Iterator for MaskIter {
         type Item = Mask;
         fn next(&mut self) -> Option<Self::Item> {
             if self.0 == 0 {

@@ -1,6 +1,6 @@
 use piece::{Piece, pieces, AllPieces};
 use mask::{masks, Mask};
-use mask::masks::{SquareMaskIter};
+use mask::masks::{MaskIter};
 use colored_square::*;
 
 #[derive(Debug, PartialEq)]
@@ -36,7 +36,7 @@ impl BitBoard {
     pub fn squares<'a>(&'a self) -> SquareIter<'a> {
         SquareIter {
             board: &self,
-            square_iter: SquareMaskIter::new(),
+            current: MaskIter::new(),
         }
     }
     pub fn dump(&self) -> String {
@@ -82,14 +82,14 @@ impl BitBoard {
 
 pub struct SquareIter<'a> {
     board: &'a BitBoard,
-    square_iter: SquareMaskIter,
+    current: MaskIter,
 }
 
 impl<'a> Iterator for SquareIter<'a> {
     type Item = Piece;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.square_iter.next().map(|square| self.board.get_piece(square))
+        self.current.next().map(|square| self.board.get_piece(square))
     }
 }
 
