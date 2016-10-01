@@ -272,7 +272,6 @@ pub mod squares {
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::files::*;
 
     #[test]
     fn color_invert() {
@@ -282,6 +281,8 @@ mod test {
 
     #[test]
     fn file_char() {
+        use super::files::*;
+
         assert_eq!(All.into_iter().
             map(|f| f.char()).collect::<Vec<char>>(),
             ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
@@ -289,6 +290,8 @@ mod test {
 
     #[test]
     fn all_files() {
+        use super::files::*;
+
         assert_eq!(
             All.into_iter().collect::<Vec<File>>(),
             [A, B, C, D, E, F, G, H]);
@@ -308,14 +311,11 @@ mod test {
 
     #[test]
     fn file_parse() {
-        assert_eq!(File::parse('a').0, 0);
-        assert_eq!(File::parse('b').0, 1);
-        assert_eq!(File::parse('c').0, 2);
-        assert_eq!(File::parse('d').0, 3);
-        assert_eq!(File::parse('e').0, 4);
-        assert_eq!(File::parse('f').0, 5);
-        assert_eq!(File::parse('g').0, 6);
-        assert_eq!(File::parse('h').0, 7);
+        use super::files::*;
+
+        assert_eq!(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].into_iter().
+            map(|f| File::parse(*f)).collect::<Vec<File>>(),
+            [A, B, C, D, E, F, G, H]);
     }
 
     #[test]
@@ -332,14 +332,11 @@ mod test {
 
     #[test]
     fn square_parse() {
-        assert_eq!(Square::parse("a8").0, 0);
-        assert_eq!(Square::parse("b7").0, 9);
-        assert_eq!(Square::parse("c6").0, 18);
-        assert_eq!(Square::parse("d5").0, 27);
-        assert_eq!(Square::parse("e4").0, 36);
-        assert_eq!(Square::parse("f3").0, 45);
-        assert_eq!(Square::parse("g2").0, 54);
-        assert_eq!(Square::parse("h1").0, 63);
+        use super::squares::*;
+
+        assert_eq!(["a8","b7","c6","d5","e4","f3","g2","h1"].into_iter().
+            map(|f| Square::parse(*f)).collect::<Vec<Square>>(),
+            [A8, B7, C6, D5, E4, F3, G2, H1]);
     }
 
     #[test]
