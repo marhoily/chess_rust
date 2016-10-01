@@ -7,7 +7,7 @@
 //unused_import_braces, unused_qualifications)]
 
 #![feature(plugin)]
-//#![plugin(clippy)]
+#![plugin(clippy)]
 
 #[macro_use]
 extern crate bitflags;

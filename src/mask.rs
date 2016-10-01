@@ -1,6 +1,6 @@
 use geometry::Square;
 
-#[derive(PartialEq, Copy, Clone, Debug)]
+#[derive(PartialEq, Copy, Clone, Debug, Default)]
 pub struct Mask(u64);
 
 impl Mask {
@@ -140,6 +140,7 @@ pub mod masks {
         }
     }
 
+    #[derive(Default)]
     pub struct MaskIter(u64);
 
     impl MaskIter {
