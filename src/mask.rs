@@ -188,7 +188,7 @@ mod test {
             let f = File::new(file);
             for rank in 0..8 {
                 let sq = Square::from(f, Rank::new(rank));
-                mask = mask.with(sq.to_mask());
+                mask = mask.with(sq.mask());
             }
             println!("pub const {} : Mask = Mask(0x{:X});",
                      f.char().to_ascii_uppercase(),
@@ -208,7 +208,7 @@ mod test {
             let r = Rank::new(rank);
             for file in 0..8 {
                 let sq = Square::from(File::new(file), r);
-                mask = mask.with(sq.to_mask());
+                mask = mask.with(sq.mask());
             }
             println!("pub const _{} : Mask = Mask(0x{:X});",
                      r.char(),
@@ -224,7 +224,7 @@ mod test {
         for s in squares::All {
             println!("pub const {} : Mask = Mask(0x{:X});",
                      s.to_string().to_uppercase(),
-                     s.to_mask().bits());
+                     s.mask().bits());
         }
         println!("");
     }

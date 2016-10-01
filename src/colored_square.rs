@@ -183,8 +183,8 @@ impl Square {
     pub fn parse(input: &str) -> Self {
         parse_square(input.as_bytes()).unwrap().1
     }
-    pub fn to_mask(&self) -> Mask {
-        Mask::square(*self)
+    pub fn mask(self) -> Mask {
+        Mask::square(self)
     }
     pub fn bits(self) -> u8 {
         self.0

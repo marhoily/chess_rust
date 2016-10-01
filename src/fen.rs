@@ -155,8 +155,8 @@ mod test {
     #[test]
     fn print_fen() {
         let mut b = BitBoard::new();
-        let a7 = Square::new(0 + 8).to_mask();
-        let e4 = Square::new(4 + 32).to_mask();
+        let a7 = Square::new(0 + 8).mask();
+        let e4 = Square::new(4 + 32).mask();
         b.set_piece(a7, pieces::BLACK_PAWN);
         b.set_piece(e4, pieces::WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
