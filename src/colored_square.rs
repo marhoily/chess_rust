@@ -338,6 +338,14 @@ mod test {
             map(|f| f.char()).collect::<Vec<char>>(),
             ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
     }
+    #[test]
+    fn rank_char() {
+        use super::ranks::*;
+
+        assert_eq!(All.into_iter().
+            map(|f| f.char()).collect::<Vec<char>>(),
+            ['8', '7', '6', '5', '4', '3', '2', '1']);
+    }
 
     #[test]
     fn all_files() {
@@ -372,18 +380,6 @@ mod test {
     }
 
     #[test]
-    fn rank_char() {
-        assert_eq!(Rank::new(0).char(), '8');
-        assert_eq!(Rank::new(1).char(), '7');
-        assert_eq!(Rank::new(2).char(), '6');
-        assert_eq!(Rank::new(3).char(), '5');
-        assert_eq!(Rank::new(4).char(), '4');
-        assert_eq!(Rank::new(5).char(), '3');
-        assert_eq!(Rank::new(6).char(), '2');
-        assert_eq!(Rank::new(7).char(), '1');
-    }
-
-    #[test]
     fn file_parse() {
         use super::files::*;
 
@@ -394,14 +390,11 @@ mod test {
 
     #[test]
     fn rank_parse() {
-        assert_eq!(Rank::parse('8').0, 0);
-        assert_eq!(Rank::parse('7').0, 1);
-        assert_eq!(Rank::parse('6').0, 2);
-        assert_eq!(Rank::parse('5').0, 3);
-        assert_eq!(Rank::parse('4').0, 4);
-        assert_eq!(Rank::parse('3').0, 5);
-        assert_eq!(Rank::parse('2').0, 6);
-        assert_eq!(Rank::parse('1').0, 7);
+        use super::ranks::*;
+
+        assert_eq!(['8', '7', '6', '5', '4', '3', '2', '1'].into_iter().
+            map(|f| Rank::parse(*f)).collect::<Vec<Rank>>(),
+            [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
 
     #[test]
