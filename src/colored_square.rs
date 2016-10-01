@@ -8,8 +8,9 @@ use mask::Mask;
 pub struct File(u8);
 
 impl File {
-    pub fn new(num: u8) -> Self {
-        File(num)
+    pub fn new(bits: u8) -> Self {
+        debug_assert!(num < 8);
+        File(bits)
     }
     pub fn parse(input: char) -> Self {
         let mut str = String::with_capacity(1);
