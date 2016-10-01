@@ -130,18 +130,18 @@ mod test {
         use super::pieces::*;
 
         assert_eq!(format!("{}", VOID), "Void");
-        assert_eq!(format!("{}", WHITE_PAWN), "White-pawn");
-        assert_eq!(format!("{}", WHITE_KNIGHT), "White-knight");
-        assert_eq!(format!("{}", WHITE_BISHOP), "White-bishop");
-        assert_eq!(format!("{}", WHITE_ROOK), "White-rook");
-        assert_eq!(format!("{}", WHITE_QUEEN), "White-queen");
-        assert_eq!(format!("{}", WHITE_KING), "White-king");
-        assert_eq!(format!("{}", BLACK_PAWN), "Black-pawn");
-        assert_eq!(format!("{}", BLACK_KNIGHT), "Black-knight");
-        assert_eq!(format!("{}", BLACK_BISHOP), "Black-bishop");
-        assert_eq!(format!("{}", BLACK_ROOK), "Black-rook");
-        assert_eq!(format!("{}", BLACK_QUEEN), "Black-queen");
-        assert_eq!(format!("{}", BLACK_KING), "Black-king");
+        assert_eq!(format!("{}", WHITE_PAWN), "White-P");
+        assert_eq!(format!("{}", WHITE_KNIGHT), "White-N");
+        assert_eq!(format!("{}", WHITE_BISHOP), "White-B");
+        assert_eq!(format!("{}", WHITE_ROOK), "White-R");
+        assert_eq!(format!("{}", WHITE_QUEEN), "White-Q");
+        assert_eq!(format!("{}", WHITE_KING), "White-K");
+        assert_eq!(format!("{}", BLACK_PAWN), "Black-P");
+        assert_eq!(format!("{}", BLACK_KNIGHT), "Black-N");
+        assert_eq!(format!("{}", BLACK_BISHOP), "Black-B");
+        assert_eq!(format!("{}", BLACK_ROOK), "Black-R");
+        assert_eq!(format!("{}", BLACK_QUEEN), "Black-Q");
+        assert_eq!(format!("{}", BLACK_KING), "Black-K");
     }
 
     #[test]

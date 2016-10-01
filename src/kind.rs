@@ -79,16 +79,7 @@ named!(parse_kind(&[u8]) -> Kind,
 
 impl Display for Kind {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        match self.0 {
-            0 => write!(f, "pawn"),
-            1 => write!(f, "knight"),
-            2 => write!(f, "bishop"),
-            3 => write!(f, "rook"),
-            4 => write!(f, "queen"),
-            5 => write!(f, "king"),
-            16 => write!(f, "unknown"),
-            _ => panic!(),
-        }
+        write!(f, "{}", self.char())
     }
 }
 
@@ -120,13 +111,11 @@ mod test {
 
     #[test]
     fn display() {
-        use super::kinds::*;
 
-        assert_eq!([PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, UNKNOWN]
-                       .into_iter()
+        assert_eq!(super::kinds::All.into_iter()
                        .map(|pt| format!("{}", pt))
-                       .collect::<Vec<_>>(),
-                   ["pawn", "knight", "bishop", "rook", "queen", "king", "unknown"]);
+                       .collect::<String>(),
+                   "PNBRQK");
     }
     #[test]
     fn debug() {
