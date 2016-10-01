@@ -174,7 +174,7 @@ impl Square {
         parse_square(input.as_bytes()).unwrap().1
     }
     pub fn mask(self) -> Mask {
-        Mask::square(self)
+        Mask::from(self)
     }
     pub fn bits(self) -> u8 {
         self.0

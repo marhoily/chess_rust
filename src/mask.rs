@@ -7,7 +7,7 @@ impl Mask {
     pub fn new(exp: u64) -> Self {
         Mask(exp)
     }
-    pub fn square(square: Square) -> Self {
+    pub fn from(square: Square) -> Self {
         Mask(1 << square.bits())
     }
     pub fn bits(self) -> u64 {

@@ -47,7 +47,7 @@ pub enum ParsingError {
 pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
-    let mut square = Mask::square(squares::FIRST);
+    let mut square = Mask::from(squares::FIRST);
     let mut file = 0;
     let mut just_had_gap = false;
     let mut consumed = 0;
