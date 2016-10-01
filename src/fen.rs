@@ -1,6 +1,6 @@
 use geometry::*;
 use piece::*;
-use mask::{Mask};
+use mask::Mask;
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -147,7 +147,7 @@ fn consume(c: char) -> Token {
 #[cfg(test)]
 mod test {
     use geometry::squares;
-    use bit_board::{BitBoard};
+    use bit_board::BitBoard;
     use piece::pieces;
     use nom::{Err, ErrorKind, Needed};
     use super::parse_bit_borad;
