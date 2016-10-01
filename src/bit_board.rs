@@ -20,7 +20,7 @@ impl BitBoard {
                 return piece;
             }
         }
-        pieces::EMPTY
+        pieces::VOID
     }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
@@ -32,7 +32,7 @@ impl BitBoard {
                 return probe;
             }
         }
-        pieces::EMPTY
+        pieces::VOID
     }
     pub fn squares<'a>(&'a self) -> SquareIter<'a> {
         SquareIter {
@@ -68,7 +68,7 @@ impl BitBoard {
             let piece = self.get_piece(square.mask());
             let (file, rank) = square.file_rank();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
-            if piece != pieces::EMPTY {
+            if piece != pieces::VOID {
                 result[i] = piece.as_char();
             }
         }
@@ -118,7 +118,7 @@ mod test {
         let all = b.squares().collect::<Vec<_>>();
         assert_eq!(all.len(), 64);
         assert_eq!(all[0], pieces::BLACK_ROOK);
-        assert_eq!(all[63], pieces::EMPTY);
+        assert_eq!(all[63], pieces::VOID);
     }
 
     #[test]

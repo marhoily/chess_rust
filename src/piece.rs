@@ -22,14 +22,14 @@ impl Piece {
         }
     }
     pub fn kind(self) -> Kind {
-        if self == pieces::EMPTY {
+        if self == pieces::VOID {
             kinds::UNKNOWN
         } else {
             Kind::new(self.bits() % kinds::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
-        debug_assert!(*self != pieces::EMPTY, "attempt to pieces::EMPTY.as_char()");
+        debug_assert!(*self != pieces::VOID, "attempt to pieces::VOID.as_char()");
         SYMBOLS[self.0 as usize] as char
     }
     pub fn parse(input: &str) -> Self {
@@ -44,8 +44,8 @@ named!(parse_piece(&[u8]) -> Piece,
 
 impl Display for Piece {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        if *self == pieces::EMPTY {
-            write!(f, "Empty")
+        if *self == pieces::VOID {
+            write!(f, "Void")
         } else {
             write!(f, "{:?}-{}", self.color(), self.kind())
         }
@@ -69,7 +69,7 @@ pub mod pieces {
     pub const BLACK_ROOK: Piece = Piece(9);
     pub const BLACK_QUEEN: Piece = Piece(10);
     pub const BLACK_KING: Piece = Piece(11);
-    pub const EMPTY: Piece = Piece(16);
+    pub const VOID: Piece = Piece(16);
 
     pub struct All;
 
@@ -124,7 +124,7 @@ mod test {
 
     #[test]
     fn piece_kind() {
-        assert_eq!(EMPTY.kind(), kinds::UNKNOWN);
+        assert_eq!(VOID.kind(), kinds::UNKNOWN);
         assert_eq!(WHITE_PAWN.kind(), kinds::PAWN);
         assert_eq!(WHITE_KNIGHT.kind(), kinds::KNIGHT);
         assert_eq!(WHITE_BISHOP.kind(), kinds::BISHOP);
@@ -141,7 +141,7 @@ mod test {
 
     #[test]
     fn piece_fmt() {
-        assert_eq!(format!("{}", EMPTY), "Empty");
+        assert_eq!(format!("{}", VOID), "Void");
         assert_eq!(format!("{}", WHITE_PAWN), "White-pawn");
         assert_eq!(format!("{}", WHITE_KNIGHT), "White-knight");
         assert_eq!(format!("{}", WHITE_BISHOP), "White-bishop");

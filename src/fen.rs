@@ -17,7 +17,7 @@ impl BitBoard {
                 file = 0;
             }
             file += 1;
-            if square == pieces::EMPTY {
+            if square == pieces::VOID {
                 gap += 1;
             } else {
                 if gap > 0 {
