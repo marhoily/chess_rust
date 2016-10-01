@@ -77,6 +77,15 @@ impl Mask {
         n = ((n >> 4) & z) | ((n & z) << 4);
         n
     }
+    pub fn flip_vertically(self) -> Mask {
+        let x = Mask(0x00FF00FF00FF00FF);
+        let y = Mask(0x0000FFFF0000FFFF);
+        let mut n = self;
+        n = ((n >> 8) & x) | ((n & x) << 8);
+        n = ((n >> 16) & y) | ((n & y) << 16);
+        n = (n >> 32) | (n << 32);
+        n
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
