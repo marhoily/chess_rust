@@ -126,6 +126,16 @@ mod test {
                        .collect::<Vec<_>>(),
                    ["pawn", "knight", "bishop", "rook", "queen", "king", "unknown"]);
     }
+    #[test]
+    fn debug() {
+        use super::piece_types::*;
+
+        assert_eq!([PAWN, KING, UNKNOWN]
+                       .into_iter()
+                       .map(|pt| format!("{:?}", pt))
+                       .collect::<Vec<_>>(),
+                   ["PieceType(0)", "PieceType(5)", "PieceType(16)"]);
+    }
     // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
