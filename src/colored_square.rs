@@ -282,14 +282,9 @@ mod test {
 
     #[test]
     fn file_char() {
-        assert_eq!(A.char(), 'a');
-        assert_eq!(B.char(), 'b');
-        assert_eq!(C.char(), 'c');
-        assert_eq!(D.char(), 'd');
-        assert_eq!(E.char(), 'e');
-        assert_eq!(F.char(), 'f');
-        assert_eq!(G.char(), 'g');
-        assert_eq!(H.char(), 'h');
+        assert_eq!(All.into_iter().
+            map(|f| f.char()).collect::<Vec<char>>(),
+            ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
     }
 
     #[test]
