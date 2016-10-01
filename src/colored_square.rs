@@ -170,7 +170,7 @@ impl Color {
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
-#[derive(PartialEq, PartialOrd, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub struct Square(u8);
 
 impl Square {
@@ -201,11 +201,6 @@ impl Square {
         }
     }
 
-}
-impl Debug for Square {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{}", self)
-    }
 }
 
 impl Display for Square {
@@ -416,9 +411,9 @@ mod test {
     fn square_debug() {
         use super::squares::*;
 
-        assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
+        assert_eq!([A8, H8, A1, H1].into_iter().
             map(|s| format!("{:?}", s)).collect::<Vec<String>>(),
-            ["h8","g7","f6","e5","d4","c3","b2","a1"]);
+            ["Square(0)", "Square(7)", "Square(56)", "Square(63)"]);
     }
 
     #[test]
