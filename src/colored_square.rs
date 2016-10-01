@@ -152,7 +152,7 @@ pub mod ranks {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Color {
     Black,
     White,
