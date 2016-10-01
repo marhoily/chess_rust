@@ -71,6 +71,7 @@ pub mod pieces {
     pub const BLACK_KING: Piece = Piece(11);
     pub const VOID: Piece = Piece(16);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
 
     impl IntoIterator for All {

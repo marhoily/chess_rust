@@ -21,6 +21,7 @@ pub mod kinds {
     pub const KING: Kind = Kind(5);
     pub const UNKNOWN: Kind = Kind(16);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
     impl IntoIterator for All {
         type Item = Kind;

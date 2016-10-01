@@ -129,6 +129,7 @@ pub mod masks {
     pub const G1: Mask = Mask(0x4000000000000000);
     pub const H1: Mask = Mask(0x8000000000000000);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
 
     impl IntoIterator for All {
@@ -140,7 +141,7 @@ pub mod masks {
         }
     }
 
-    #[derive(Default)]
+    #[derive(Default, Copy, Clone, Debug)]
     pub struct MaskIter(u64);
 
     impl MaskIter {

@@ -46,6 +46,7 @@ pub mod files {
     pub const G: File = File(6);
     pub const H: File = File(7);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
 
     impl IntoIterator for All {
@@ -114,6 +115,7 @@ pub mod ranks {
     pub const _7: Rank = Rank(1);
     pub const _8: Rank = Rank(0);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
 
     impl IntoIterator for All {
@@ -272,6 +274,7 @@ pub mod squares {
     pub const G1: Square = Square(62);
     pub const H1: Square = Square(63);
 
+    #[derive(Copy, Clone, Debug)]
     pub struct All;
     impl IntoIterator for All {
         type Item = Square;

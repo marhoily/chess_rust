@@ -4,7 +4,7 @@ use mask::{masks, Mask};
 use mask::masks::MaskIter;
 use geometry::*;
 
-#[derive(Debug, PartialEq, Default)]
+#[derive(Copy, Clone, Debug, PartialEq, Default)]
 pub struct BitBoard([Mask; pieces::COUNT]);
 
 impl BitBoard {
@@ -81,6 +81,7 @@ impl BitBoard {
     }
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct SquareIter<'a> {
     board: &'a BitBoard,
     current: MaskIter,
