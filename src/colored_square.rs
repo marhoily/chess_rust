@@ -200,23 +200,21 @@ impl Square {
             Color::Black
         }
     }
-    pub fn to_string(&self) -> String {
-        let mut result = String::with_capacity(2);
-        let (file, rank) = self.file_rank();
-        result.push(file.char());
-        result.push(rank.char());
-        result
-    }
+
 }
 impl Debug for Square {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{:?}", self.to_string())
+        let (file, rank) = self.file_rank();
+        try!(write!(f, "{}", file.char()));
+        write!(f, "{}", rank.char())
     }
 }
 
 impl Display for Square {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{}", self.to_string())
+        let (file, rank) = self.file_rank();
+        try!(write!(f, "{}", file.char()));
+        write!(f, "{}", rank.char())
     }
 }
 
@@ -409,11 +407,19 @@ mod test {
     }
 
     #[test]
-    fn square_to_string() {
+    fn square_display() {
         use super::squares::*;
 
         assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
-            map(|s| s.to_string()).collect::<Vec<String>>(),
+            map(|s| format!("{}", s)).collect::<Vec<String>>(),
+            ["h8","g7","f6","e5","d4","c3","b2","a1"]);
+    }
+    #[test]
+    fn square_debug() {
+        use super::squares::*;
+
+        assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
+            map(|s| format!("{:?}", s)).collect::<Vec<String>>(),
             ["h8","g7","f6","e5","d4","c3","b2","a1"]);
     }
 
