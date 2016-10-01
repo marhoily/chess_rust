@@ -204,9 +204,7 @@ impl Square {
 }
 impl Debug for Square {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        let (file, rank) = self.file_rank();
-        try!(write!(f, "{}", file.char()));
-        write!(f, "{}", rank.char())
+        write!(f, "{}", self)
     }
 }
 
