@@ -1,4 +1,5 @@
-use piece::{Piece, pieces, AllPieces};
+use piece::{Piece, pieces};
+use piece::pieces::AllPieces;
 use mask::{masks, Mask};
 use mask::masks::MaskIter;
 use colored_square::*;

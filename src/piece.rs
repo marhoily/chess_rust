@@ -7,27 +7,6 @@ use piece_type::{PieceType, piece_types};
 #[derive(PartialEq, PartialOrd, Copy, Clone)]
 pub struct Piece(u8);
 
-pub mod pieces {
-    use super::Piece;
-
-    pub const COUNT: usize = 12;
-    pub const TYPES: u8 = 6;
-
-    pub const WHITE_PAWN: Piece = Piece(0);
-    pub const WHITE_KNIGHT: Piece = Piece(1);
-    pub const WHITE_BISHOP: Piece = Piece(2);
-    pub const WHITE_ROOK: Piece = Piece(3);
-    pub const WHITE_QUEEN: Piece = Piece(4);
-    pub const WHITE_KING: Piece = Piece(5);
-    pub const BLACK_PAWN: Piece = Piece(6);
-    pub const BLACK_KNIGHT: Piece = Piece(7);
-    pub const BLACK_BISHOP: Piece = Piece(8);
-    pub const BLACK_ROOK: Piece = Piece(9);
-    pub const BLACK_QUEEN: Piece = Piece(10);
-    pub const BLACK_KING: Piece = Piece(11);
-    pub const EMPTY: Piece = Piece(16);
-}
-
 impl Piece {
     pub fn new(bits: u8) -> Self {
         Piece(bits)
@@ -74,30 +53,52 @@ impl Debug for Piece {
     }
 }
 
-pub struct AllPieces;
+pub mod pieces {
+    use super::Piece;
 
-impl IntoIterator for AllPieces {
-    type Item = Piece;
-    type IntoIter = PieceIter;
+    pub const COUNT: usize = 12;
+    pub const TYPES: u8 = 6;
 
-    fn into_iter(self) -> Self::IntoIter {
-        PieceIter(0)
-    }
-}
+    pub const WHITE_PAWN: Piece = Piece(0);
+    pub const WHITE_KNIGHT: Piece = Piece(1);
+    pub const WHITE_BISHOP: Piece = Piece(2);
+    pub const WHITE_ROOK: Piece = Piece(3);
+    pub const WHITE_QUEEN: Piece = Piece(4);
+    pub const WHITE_KING: Piece = Piece(5);
+    pub const BLACK_PAWN: Piece = Piece(6);
+    pub const BLACK_KNIGHT: Piece = Piece(7);
+    pub const BLACK_BISHOP: Piece = Piece(8);
+    pub const BLACK_ROOK: Piece = Piece(9);
+    pub const BLACK_QUEEN: Piece = Piece(10);
+    pub const BLACK_KING: Piece = Piece(11);
+    pub const EMPTY: Piece = Piece(16);
 
-pub struct PieceIter(u8);
+    pub struct AllPieces;
 
-impl Iterator for PieceIter {
-    type Item = Piece;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 < 12 {
-            let result = Piece(self.0);
-            self.0 += 1;
-            Some(result)
-        } else {
-            None
+    impl IntoIterator for AllPieces {
+        type Item = Piece;
+        type IntoIter = PieceIter;
+
+        fn into_iter(self) -> Self::IntoIter {
+            PieceIter(0)
         }
     }
+
+    pub struct PieceIter(u8);
+
+    impl Iterator for PieceIter {
+        type Item = Piece;
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 < 12 {
+                let result = Piece(self.0);
+                self.0 += 1;
+                Some(result)
+            } else {
+                None
+            }
+        }
+    }
+
 }
 
 static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
