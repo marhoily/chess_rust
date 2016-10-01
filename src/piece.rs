@@ -21,8 +21,8 @@ impl Piece {
             Color::White
         }
     }
-    pub fn get_type(&self) -> Kind {
-        if *self == pieces::EMPTY {
+    pub fn kind(self) -> Kind {
+        if self == pieces::EMPTY {
             kinds::UNKNOWN
         } else {
             Kind::new(self.bits() % kinds::COUNT)
@@ -47,7 +47,7 @@ impl Display for Piece {
         if *self == pieces::EMPTY {
             write!(f, "Empty")
         } else {
-            write!(f, "{:?}-{}", self.color(), self.get_type())
+            write!(f, "{:?}-{}", self.color(), self.kind())
         }
     }
 }
@@ -123,20 +123,20 @@ mod test {
     }
 
     #[test]
-    fn piece_get_type() {
-        assert_eq!(EMPTY.get_type(), kinds::UNKNOWN);
-        assert_eq!(WHITE_PAWN.get_type(), kinds::PAWN);
-        assert_eq!(WHITE_KNIGHT.get_type(), kinds::KNIGHT);
-        assert_eq!(WHITE_BISHOP.get_type(), kinds::BISHOP);
-        assert_eq!(WHITE_ROOK.get_type(), kinds::ROOK);
-        assert_eq!(WHITE_QUEEN.get_type(), kinds::QUEEN);
-        assert_eq!(WHITE_KING.get_type(), kinds::KING);
-        assert_eq!(BLACK_PAWN.get_type(), kinds::PAWN);
-        assert_eq!(BLACK_KNIGHT.get_type(), kinds::KNIGHT);
-        assert_eq!(BLACK_BISHOP.get_type(), kinds::BISHOP);
-        assert_eq!(BLACK_ROOK.get_type(), kinds::ROOK);
-        assert_eq!(BLACK_QUEEN.get_type(), kinds::QUEEN);
-        assert_eq!(BLACK_KING.get_type(), kinds::KING);
+    fn piece_kind() {
+        assert_eq!(EMPTY.kind(), kinds::UNKNOWN);
+        assert_eq!(WHITE_PAWN.kind(), kinds::PAWN);
+        assert_eq!(WHITE_KNIGHT.kind(), kinds::KNIGHT);
+        assert_eq!(WHITE_BISHOP.kind(), kinds::BISHOP);
+        assert_eq!(WHITE_ROOK.kind(), kinds::ROOK);
+        assert_eq!(WHITE_QUEEN.kind(), kinds::QUEEN);
+        assert_eq!(WHITE_KING.kind(), kinds::KING);
+        assert_eq!(BLACK_PAWN.kind(), kinds::PAWN);
+        assert_eq!(BLACK_KNIGHT.kind(), kinds::KNIGHT);
+        assert_eq!(BLACK_BISHOP.kind(), kinds::BISHOP);
+        assert_eq!(BLACK_ROOK.kind(), kinds::ROOK);
+        assert_eq!(BLACK_QUEEN.kind(), kinds::QUEEN);
+        assert_eq!(BLACK_KING.kind(), kinds::KING);
     }
 
     #[test]
