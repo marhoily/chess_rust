@@ -66,7 +66,7 @@ impl BitBoard {
         for index in 0..63 {
             let square = Square::new(index);
             let piece = self.get_piece(square.to_mask());
-            let (file, rank) = square.humanize();
+            let (file, rank) = square.file_rank();
             let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
             if piece != pieces::EMPTY {
                 result[i] = piece.as_char();

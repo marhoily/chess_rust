@@ -172,8 +172,8 @@ impl Color {
 pub struct Square(u8);
 
 impl Square {
-    pub fn new(square_number: u8) -> Self {
-        Square(square_number)
+    pub fn new(bits: u8) -> Self {
+        Square(bits)
     }
     pub fn from(f: File, r: Rank) -> Self {
         Square(f.0 + r.0 * 8)
@@ -187,11 +187,11 @@ impl Square {
     pub fn bits(self) -> u8 {
         self.0
     }
-    pub fn humanize(self) -> (File, Rank) {
+    pub fn file_rank(self) -> (File, Rank) {
         (File(self.0 % 8), Rank(self.0 / 8))
     }
     pub fn color(self) -> Color {
-        let (file, rank) = self.humanize();
+        let (file, rank) = self.file_rank();
         if (file.0 % 2) == (rank.0 % 2) {
             Color::White
         } else {
@@ -200,7 +200,7 @@ impl Square {
     }
     pub fn to_string(&self) -> String {
         let mut result = String::with_capacity(2);
-        let (file, rank) = self.humanize();
+        let (file, rank) = self.file_rank();
         result.push(file.char());
         result.push(rank.char());
         result
