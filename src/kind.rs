@@ -51,12 +51,14 @@ impl Kind {
         Kind(bits)
     }
     pub fn parse(input: char) -> Self {
+        debug_assert!((input as u32) < 128, "it is not even an ASCII character!");
         parse_kind(&[input as u8]).unwrap().1
     }
     pub fn bits(self) -> u8 {
         self.0
     }
     pub fn of(self, color: Color) -> Piece {
+        debug_assert!(self != kinds::UNKNOWN);
         if color == Color::White {
             Piece::new(self.0)
         } else {
@@ -64,6 +66,8 @@ impl Kind {
         }
     }
     pub fn char(self) -> char {
+        debug_assert!(self != kinds::UNKNOWN,
+                      "There's no symbol defined for kinds::UNKNOWN");
         SYMBOLS[self.0 as usize] as char
     }
 }

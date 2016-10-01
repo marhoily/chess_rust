@@ -4,39 +4,35 @@ use kind::*;
 use geometry::*;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub struct Move(u32);
+pub struct Move {
+    pub from: Square,
+    pub to: Square,
+    pub promote_to: Kind,
+}
 
 impl Move {
     pub fn usual(from: Square, to: Square) -> Self {
-        Move::with_promotion(from, to, kinds::UNKNOWN)
+        Move {
+            from: from,
+            to: to,
+            promote_to: kinds::UNKNOWN,
+        }
     }
-    pub fn with_promotion(from: Square, to: Square, promote_to: Kind) -> Self {
-        let mut bits: u32 = 0;
-        bits |= promote_to.bits() as u32;
-        bits <<= 8;
-        bits |= to.bits() as u32;
-        bits <<= 8;
-        bits |= from.bits() as u32;
-        Move(bits)
-    }
-    pub fn from(self) -> Square {
-        Square::new(self.0 as u8)
-    }
-    pub fn to(self) -> Square {
-        Square::new((self.0 >> 8) as u8)
-    }
-    pub fn promote_to(self) -> Kind {
-        Kind::new((self.0 >> 16) as u8)
+    pub fn with_promotion(from: Square, to: Square, promote_to: Kind)-> Self {
+        Move {
+            from: from,
+            to: to,
+            promote_to: promote_to,
+        }
     }
     pub fn string(self) -> String {
         let mut result = String::with_capacity(6);
-        result.push_str(self.from().to_string().as_str());
+        result.push_str(self.from.to_string().as_str());
         result.push('-');
-        result.push_str(self.to().to_string().as_str());
-        let promote_to = self.promote_to();
-        if promote_to != kinds::UNKNOWN {
+        result.push_str(self.to.to_string().as_str());
+        if self.promote_to != kinds::UNKNOWN {
             result.push('=');
-            result.push(promote_to.char());
+            result.push(self.promote_to.char());
         }
         result
     }
@@ -77,9 +73,9 @@ mod test {
         let e2 = Square::parse("e2");
         let e4 = Square::parse("e4");
         let m = Move::usual(e2, e4);
-        assert_eq!(m.from().to_string(), "e2");
-        assert_eq!(m.to().to_string(), "e4");
-        assert_eq!(m.promote_to(), kinds::UNKNOWN);
+        assert_eq!(m.from.to_string(), "e2");
+        assert_eq!(m.to.to_string(), "e4");
+        assert_eq!(m.promote_to, kinds::UNKNOWN);
     }
 
     #[test]
@@ -87,9 +83,9 @@ mod test {
         let e2 = Square::parse("e2");
         let e4 = Square::parse("e4");
         let m = Move::with_promotion(e2, e4, kinds::QUEEN);
-        assert_eq!(m.from().to_string(), "e2");
-        assert_eq!(m.to().to_string(), "e4");
-        assert_eq!(m.promote_to(), kinds::QUEEN);
+        assert_eq!(m.from.to_string(), "e2");
+        assert_eq!(m.to.to_string(), "e4");
+        assert_eq!(m.promote_to, kinds::QUEEN);
     }
 
     #[test]

@@ -164,6 +164,7 @@ pub struct Square(u8);
 
 impl Square {
     pub fn new(bits: u8) -> Self {
+        debug_assert!(bits < 64, "is not a valid square number");
         Square(bits)
     }
     pub fn from(f: File, r: Rank) -> Self {

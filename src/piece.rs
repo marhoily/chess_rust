@@ -103,46 +103,32 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 
 #[cfg(test)]
 mod test {
-    use super::pieces::*;
+    use super::*;
     use std::iter::*;
-    use geometry::*;
     use kind::kinds;
 
     #[test]
     fn piece_color() {
-        assert_eq!(WHITE_PAWN.color(), Color::White);
-        assert_eq!(WHITE_KNIGHT.color(), Color::White);
-        assert_eq!(WHITE_BISHOP.color(), Color::White);
-        assert_eq!(WHITE_ROOK.color(), Color::White);
-        assert_eq!(WHITE_QUEEN.color(), Color::White);
-        assert_eq!(WHITE_KING.color(), Color::White);
-        assert_eq!(BLACK_PAWN.color(), Color::Black);
-        assert_eq!(BLACK_KNIGHT.color(), Color::Black);
-        assert_eq!(BLACK_BISHOP.color(), Color::Black);
-        assert_eq!(BLACK_ROOK.color(), Color::Black);
-        assert_eq!(BLACK_QUEEN.color(), Color::Black);
-        assert_eq!(BLACK_KING.color(), Color::Black);
+        use geometry::Color::*;
+
+        assert_eq!(pieces::All.into_iter().map(Piece::color).collect::<Vec<_>>(),
+                   [White, White, White, White, White, White, Black, Black, Black, Black, Black,
+                    Black]);
     }
 
     #[test]
     fn piece_kind() {
-        assert_eq!(VOID.kind(), kinds::UNKNOWN);
-        assert_eq!(WHITE_PAWN.kind(), kinds::PAWN);
-        assert_eq!(WHITE_KNIGHT.kind(), kinds::KNIGHT);
-        assert_eq!(WHITE_BISHOP.kind(), kinds::BISHOP);
-        assert_eq!(WHITE_ROOK.kind(), kinds::ROOK);
-        assert_eq!(WHITE_QUEEN.kind(), kinds::QUEEN);
-        assert_eq!(WHITE_KING.kind(), kinds::KING);
-        assert_eq!(BLACK_PAWN.kind(), kinds::PAWN);
-        assert_eq!(BLACK_KNIGHT.kind(), kinds::KNIGHT);
-        assert_eq!(BLACK_BISHOP.kind(), kinds::BISHOP);
-        assert_eq!(BLACK_ROOK.kind(), kinds::ROOK);
-        assert_eq!(BLACK_QUEEN.kind(), kinds::QUEEN);
-        assert_eq!(BLACK_KING.kind(), kinds::KING);
+        assert_eq!(pieces::VOID.kind(), kinds::UNKNOWN);
+
+        let twice = kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>();
+        let colorless = pieces::All.into_iter().map(Piece::kind).collect::<Vec<_>>();
+        assert_eq!(colorless, twice);
     }
 
     #[test]
     fn piece_fmt() {
+        use super::pieces::*;
+
         assert_eq!(format!("{}", VOID), "Void");
         assert_eq!(format!("{}", WHITE_PAWN), "White-pawn");
         assert_eq!(format!("{}", WHITE_KNIGHT), "White-knight");
@@ -160,6 +146,8 @@ mod test {
 
     #[test]
     fn all_pieces() {
+        use super::pieces::*;
+
         let all = All.into_iter().collect::<Vec<_>>();
         assert_eq!(all.len(), 12);
         assert_eq!(all[0], WHITE_PAWN);
