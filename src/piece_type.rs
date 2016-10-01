@@ -1,5 +1,5 @@
 use geometry::*;
-use piece::{Piece, pieces};
+use piece::Piece;
 
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -11,6 +11,8 @@ pub struct PieceType(u8);
 pub mod piece_types {
     use super::PieceType;
 
+    pub const COUNT: u8 = 6;
+
     pub const PAWN: PieceType = PieceType(0);
     pub const KNIGHT: PieceType = PieceType(1);
     pub const BISHOP: PieceType = PieceType(2);
@@ -18,6 +20,29 @@ pub mod piece_types {
     pub const QUEEN: PieceType = PieceType(4);
     pub const KING: PieceType = PieceType(5);
     pub const UNKNOWN: PieceType = PieceType(16);
+
+    pub struct All;
+    impl IntoIterator for All {
+        type Item = PieceType;
+        type IntoIter = PieceType;
+
+        fn into_iter(self) -> Self::IntoIter {
+            PieceType(0)
+        }
+    }
+    impl Iterator for PieceType {
+        type Item = PieceType;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.0 < COUNT {
+                let result = *self;
+                self.0 += 1;
+                Some(result)
+            } else {
+                None
+            }
+        }
+    }
 
 }
 
@@ -29,7 +54,7 @@ impl PieceType {
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + pieces::TYPES)
+            Piece::new(self.bits() + piece_types::COUNT)
         }
     }
     pub fn char(self) -> char {
@@ -70,22 +95,22 @@ mod test {
     use super::*;
     use super::piece_types::*;
     use geometry::*;
-    use piece::pieces::*;
+    use piece::pieces;
 
     #[test]
     fn of_color() {
-        assert_eq!(PAWN.of(Color::White),      WHITE_PAWN            );
-        assert_eq!(KNIGHT.of(Color::White),    WHITE_KNIGHT                 );
-        assert_eq!(BISHOP.of(Color::White),    WHITE_BISHOP                 );
-        assert_eq!(ROOK.of(Color::White),      WHITE_ROOK             );
-        assert_eq!(QUEEN.of(Color::White),     WHITE_QUEEN                );
-        assert_eq!(KING.of(Color::White),      WHITE_KING             );
-        assert_eq!(PAWN.of(Color::Black),      BLACK_PAWN              );
-        assert_eq!(KNIGHT.of(Color::Black),    BLACK_KNIGHT                 );
-        assert_eq!(BISHOP.of(Color::Black),    BLACK_BISHOP                 );
-        assert_eq!(ROOK.of(Color::Black),      BLACK_ROOK              );
-        assert_eq!(QUEEN.of(Color::Black),     BLACK_QUEEN                );
-        assert_eq!(KING.of(Color::Black),      BLACK_KING             );
+        assert_eq!(PAWN.of(Color::White),    pieces::WHITE_PAWN            );
+        assert_eq!(KNIGHT.of(Color::White),  pieces::WHITE_KNIGHT                 );
+        assert_eq!(BISHOP.of(Color::White),  pieces::WHITE_BISHOP                 );
+        assert_eq!(ROOK.of(Color::White),    pieces::WHITE_ROOK             );
+        assert_eq!(QUEEN.of(Color::White),   pieces::WHITE_QUEEN                );
+        assert_eq!(KING.of(Color::White),    pieces::WHITE_KING             );
+        assert_eq!(PAWN.of(Color::Black),    pieces::BLACK_PAWN              );
+        assert_eq!(KNIGHT.of(Color::Black),  pieces::BLACK_KNIGHT                 );
+        assert_eq!(BISHOP.of(Color::Black),  pieces::BLACK_BISHOP                 );
+        assert_eq!(ROOK.of(Color::Black),    pieces::BLACK_ROOK              );
+        assert_eq!(QUEEN.of(Color::Black),   pieces::BLACK_QUEEN                );
+        assert_eq!(KING.of(Color::Black),    pieces::BLACK_KING             );
     }
 
     #[test]

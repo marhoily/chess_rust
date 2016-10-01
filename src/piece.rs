@@ -16,7 +16,7 @@ impl Piece {
     }
 
     pub fn get_color(&self) -> Color {
-        if self.0 >= pieces::TYPES {
+        if self.0 >= piece_types::COUNT {
             Color::Black
         } else {
             Color::White
@@ -26,7 +26,7 @@ impl Piece {
         if *self == pieces::EMPTY {
             piece_types::UNKNOWN
         } else {
-            PieceType::new(self.bits() % pieces::TYPES)
+            PieceType::new(self.bits() % piece_types::COUNT)
         }
     }
     pub fn as_char(&self) -> char {
@@ -57,7 +57,6 @@ pub mod pieces {
     use super::Piece;
 
     pub const COUNT: usize = 12;
-    pub const TYPES: u8 = 6;
 
     pub const WHITE_PAWN: Piece = Piece(0);
     pub const WHITE_KNIGHT: Piece = Piece(1);
@@ -86,8 +85,9 @@ pub mod pieces {
 
     impl Iterator for Piece {
         type Item = Piece;
+
         fn next(&mut self) -> Option<Self::Item> {
-            if self.0 < 12 {
+            if self.0 < COUNT as u8 {
                 let result = *self;
                 self.0 += 1;
                 Some(result)
@@ -106,7 +106,7 @@ mod test {
     use super::pieces::*;
     use std::iter::*;
     use geometry::*;
-    use piece_type::piece_types::*;
+    use piece_type::piece_types;
 
     #[test]
     fn piece_get_color() {
@@ -126,19 +126,19 @@ mod test {
 
     #[test]
     fn piece_get_type() {
-        assert_eq!(EMPTY.get_type(), UNKNOWN);
-        assert_eq!(WHITE_PAWN.get_type(), PAWN);
-        assert_eq!(WHITE_KNIGHT.get_type(), KNIGHT);
-        assert_eq!(WHITE_BISHOP.get_type(), BISHOP);
-        assert_eq!(WHITE_ROOK.get_type(), ROOK);
-        assert_eq!(WHITE_QUEEN.get_type(), QUEEN);
-        assert_eq!(WHITE_KING.get_type(), KING);
-        assert_eq!(BLACK_PAWN.get_type(), PAWN);
-        assert_eq!(BLACK_KNIGHT.get_type(), KNIGHT);
-        assert_eq!(BLACK_BISHOP.get_type(), BISHOP);
-        assert_eq!(BLACK_ROOK.get_type(), ROOK);
-        assert_eq!(BLACK_QUEEN.get_type(), QUEEN);
-        assert_eq!(BLACK_KING.get_type(), KING);
+        assert_eq!(EMPTY.get_type(), piece_types::UNKNOWN);
+        assert_eq!(WHITE_PAWN.get_type(), piece_types::PAWN);
+        assert_eq!(WHITE_KNIGHT.get_type(), piece_types::KNIGHT);
+        assert_eq!(WHITE_BISHOP.get_type(), piece_types::BISHOP);
+        assert_eq!(WHITE_ROOK.get_type(), piece_types::ROOK);
+        assert_eq!(WHITE_QUEEN.get_type(), piece_types::QUEEN);
+        assert_eq!(WHITE_KING.get_type(), piece_types::KING);
+        assert_eq!(BLACK_PAWN.get_type(), piece_types::PAWN);
+        assert_eq!(BLACK_KNIGHT.get_type(), piece_types::KNIGHT);
+        assert_eq!(BLACK_BISHOP.get_type(), piece_types::BISHOP);
+        assert_eq!(BLACK_ROOK.get_type(), piece_types::ROOK);
+        assert_eq!(BLACK_QUEEN.get_type(), piece_types::QUEEN);
+        assert_eq!(BLACK_KING.get_type(), piece_types::KING);
     }
 
     #[test]
