@@ -1,4 +1,5 @@
 use geometry::Square;
+use std::ops::{BitOr, BitOrAssign, Shl, ShlAssign, Shr, ShrAssign};
 
 #[derive(PartialEq, Copy, Clone, Debug, Default)]
 pub struct Mask(u64);
@@ -16,17 +17,44 @@ impl Mask {
     pub fn empty(self) -> bool {
         self.0 == 0
     }
-    pub fn next(self) -> Mask{
-        Mask(self.0 << 1)
-    }
-    pub fn forward(self, count: u8) ->  Mask{
-        Mask(self.0 << count)
-    }
     pub fn test(self, square: Mask) -> bool {
         self.0 & square.bits() != 0
     }
     pub fn with(self, another: Mask) -> Mask {
         Mask(self.0 | another.0)
+    }
+}
+impl BitOr<Mask> for Mask {
+    type Output = Mask;
+    fn bitor(self, rhs: Mask) -> Self::Output {
+        Mask(self.0 | rhs.0)
+    }
+}
+impl BitOrAssign<Mask> for Mask {
+    fn bitor_assign(&mut self, rhs: Mask) {
+        self.0 |= rhs.0
+    }
+}
+impl Shl<u8> for Mask {
+    type Output = Mask;
+    fn shl(self, rhs: u8) -> Self::Output {
+        Mask(self.0 << rhs)
+    }
+}
+impl ShlAssign<u8> for Mask {
+    fn shl_assign(&mut self, rhs: u8) {
+        self.0 <<= rhs
+    }
+}
+impl Shr<u8> for Mask {
+    type Output = Mask;
+    fn shr(self, rhs: u8) -> Self::Output {
+        Mask(self.0 << rhs)
+    }
+}
+impl ShrAssign<u8> for Mask {
+    fn shr_assign(&mut self, rhs: u8) {
+        self.0 <<= rhs
     }
 }
 
