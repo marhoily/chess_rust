@@ -120,9 +120,8 @@ mod test {
     fn piece_kind() {
         assert_eq!(pieces::VOID.kind(), kinds::UNKNOWN);
 
-        let twice = kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>();
-        let colorless = pieces::All.into_iter().map(Piece::kind).collect::<Vec<_>>();
-        assert_eq!(colorless, twice);
+        assert_eq!(kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>(),
+                   pieces::All.into_iter().map(Piece::kind).collect::<Vec<_>>());
     }
 
     #[test]
