@@ -120,13 +120,11 @@ mod test {
 
     #[test]
     fn display() {
-        assert_eq!(All.into_iter()
+        assert_eq!([PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, UNKNOWN]
+                       .into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<Vec<_>>(),
-                   ["pawn", "knight", "bishop", "rook", "queen", "king"]);
-
-        assert_eq!(format!("{}", UNKNOWN), "unknown");
-
+                   ["pawn", "knight", "bishop", "rook", "queen", "king", "unknown"]);
     }
     #[test]
     fn parse() {
