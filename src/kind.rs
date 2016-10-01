@@ -144,7 +144,7 @@ mod test {
         assert_eq!("PNBRQK"
                        .chars()
                        .into_iter()
-                       .map(|c| Kind::parse(c))
+                       .map(Kind::parse)
                        .collect::<Vec<_>>(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
