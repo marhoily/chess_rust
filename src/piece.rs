@@ -14,8 +14,7 @@ impl Piece {
     pub fn bits(self) -> u8 {
         self.0
     }
-
-    pub fn get_color(&self) -> Color {
+    pub fn color(self) -> Color {
         if self.0 >= piece_types::COUNT {
             Color::Black
         } else {
@@ -48,7 +47,7 @@ impl Display for Piece {
         if *self == pieces::EMPTY {
             write!(f, "Empty")
         } else {
-            write!(f, "{:?}-{}", self.get_color(), self.get_type())
+            write!(f, "{:?}-{}", self.color(), self.get_type())
         }
     }
 }
@@ -108,19 +107,19 @@ mod test {
     use piece_type::piece_types;
 
     #[test]
-    fn piece_get_color() {
-        assert_eq!(WHITE_PAWN.get_color(), Color::White);
-        assert_eq!(WHITE_KNIGHT.get_color(), Color::White);
-        assert_eq!(WHITE_BISHOP.get_color(), Color::White);
-        assert_eq!(WHITE_ROOK.get_color(), Color::White);
-        assert_eq!(WHITE_QUEEN.get_color(), Color::White);
-        assert_eq!(WHITE_KING.get_color(), Color::White);
-        assert_eq!(BLACK_PAWN.get_color(), Color::Black);
-        assert_eq!(BLACK_KNIGHT.get_color(), Color::Black);
-        assert_eq!(BLACK_BISHOP.get_color(), Color::Black);
-        assert_eq!(BLACK_ROOK.get_color(), Color::Black);
-        assert_eq!(BLACK_QUEEN.get_color(), Color::Black);
-        assert_eq!(BLACK_KING.get_color(), Color::Black);
+    fn piece_color() {
+        assert_eq!(WHITE_PAWN.color(), Color::White);
+        assert_eq!(WHITE_KNIGHT.color(), Color::White);
+        assert_eq!(WHITE_BISHOP.color(), Color::White);
+        assert_eq!(WHITE_ROOK.color(), Color::White);
+        assert_eq!(WHITE_QUEEN.color(), Color::White);
+        assert_eq!(WHITE_KING.color(), Color::White);
+        assert_eq!(BLACK_PAWN.color(), Color::Black);
+        assert_eq!(BLACK_KNIGHT.color(), Color::Black);
+        assert_eq!(BLACK_BISHOP.color(), Color::Black);
+        assert_eq!(BLACK_ROOK.color(), Color::Black);
+        assert_eq!(BLACK_QUEEN.color(), Color::Black);
+        assert_eq!(BLACK_KING.color(), Color::Black);
     }
 
     #[test]
