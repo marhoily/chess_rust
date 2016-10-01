@@ -16,11 +16,11 @@ impl Mask {
     pub fn empty(self) -> bool {
         self.0 == 0
     }
-    pub fn next(&mut self) {
-        self.0 <<= 1;
+    pub fn next(self) -> Mask{
+        Mask(self.0 << 1)
     }
-    pub fn forward(&mut self, count: u8) {
-        self.0 <<= count;
+    pub fn forward(self, count: u8) ->  Mask{
+        Mask(self.0 << count)
     }
     pub fn test(self, square: Mask) -> bool {
         self.0 & square.bits() != 0

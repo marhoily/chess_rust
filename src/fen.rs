@@ -65,7 +65,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                 }
 
                 result.set_piece(square, p);
-                square.next();
+                square = square.next();
                 just_had_gap = false;
                 file += 1;
             }
@@ -74,7 +74,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                     return Error(Err::Position(ErrorKind::Custom(ParsingError::DoubleGap),
                                                &input[consumed..]));
                 }
-                square.forward(size);
+                square = square.forward(size);
                 just_had_gap = true;
                 file += size;
 
