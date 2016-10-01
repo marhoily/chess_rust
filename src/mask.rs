@@ -86,6 +86,15 @@ impl Mask {
         n = (n >> 32) | (n << 32);
         n
     }
+    pub fn fill<F>(self, shift: F, stoppers: Mask) -> Mask
+        where F: Fn(Mask) -> Mask {
+        let empty = !stoppers;
+        let mut acc = self;
+        for _ in 0..7 {
+            acc |= empty & shift(acc)
+        }
+        acc
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
