@@ -341,6 +341,22 @@ mod test {
             map(|f| f.char()).collect::<Vec<char>>(),
             ['8', '7', '6', '5', '4', '3', '2', '1']);
     }
+    #[test]
+    fn rank_display() {
+        use super::ranks::*;
+
+        assert_eq!(All.into_iter().
+            map(|f| format!("{}", f)).collect::<Vec<String>>(),
+            ["8", "7", "6", "5", "4", "3", "2", "1"]);
+    }
+    #[test]
+    fn rank_debug() {
+        use super::ranks::*;
+
+        assert_eq!([_1, _8].into_iter().
+            map(|f| format!("{:?}", f)).collect::<Vec<String>>(),
+            ["Rank(7)", "Rank(0)"]);
+    }
 
     #[test]
     fn all_files() {
