@@ -1,5 +1,5 @@
 use geometry::Square;
-use std::ops::{BitOr, BitOrAssign, Shl, ShlAssign, Shr, ShrAssign};
+use std::ops::{BitOr, BitOrAssign, BitAnd, BitAndAssign, Shl, ShlAssign, Shr, ShrAssign, Not};
 
 #[derive(PartialEq, Copy, Clone, Debug, Default)]
 pub struct Mask(u64);
@@ -23,6 +23,30 @@ impl Mask {
     pub fn has_any(self, another: Mask) -> bool {
         self.0 & another.bits() != 0
     }
+    pub fn shift_north(self) -> Mask {
+        self << 8
+    }
+    pub fn shift_south(self) -> Mask {
+        self >> 8
+    }
+    pub fn shift_east(self) -> Mask {
+        (self << 1) & !masks::files::A
+    }
+    pub fn shift_north_east(self) -> Mask {
+        (self << 9) & !masks::files::A
+    }
+    pub fn shift_south_east(self) -> Mask {
+        (self >> 7) & !masks::files::A
+    }
+    pub fn shift_west(self) -> Mask {
+        (self >> 1) & !masks::files::H
+    }
+    pub fn shift_north_west(self) -> Mask {
+        (self >> 9) & !masks::files::H
+    }
+    pub fn shift_south_west(self) -> Mask {
+        (self << 7) & !masks::files::H
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -33,6 +57,17 @@ impl BitOr<Mask> for Mask {
 impl BitOrAssign<Mask> for Mask {
     fn bitor_assign(&mut self, rhs: Mask) {
         self.0 |= rhs.0
+    }
+}
+impl BitAnd<Mask> for Mask {
+    type Output = Mask;
+    fn bitand(self, rhs: Mask) -> Self::Output {
+        Mask(self.0 & rhs.0)
+    }
+}
+impl BitAndAssign<Mask> for Mask {
+    fn bitand_assign(&mut self, rhs: Mask) {
+        self.0 &= rhs.0
     }
 }
 impl Shl<u8> for Mask {
@@ -55,6 +90,12 @@ impl Shr<u8> for Mask {
 impl ShrAssign<u8> for Mask {
     fn shr_assign(&mut self, rhs: u8) {
         self.0 <<= rhs
+    }
+}
+impl Not for Mask {
+    type Output = Mask;
+    fn not(self) -> Self::Output {
+        Mask(!self.0)
     }
 }
 
