@@ -104,38 +104,58 @@ mod test {
     use kind::kinds;
 
     #[test]
-    fn piece_color() {
+    fn color() {
         use geometry::Color::*;
 
         assert_eq!(pieces::All.into_iter().map(Piece::color).collect::<Vec<_>>(),
                    [White, White, White, White, White, White, Black, Black, Black, Black, Black,
                     Black]);
     }
-
     #[test]
-    fn piece_kind() {
+    fn kind() {
         assert_eq!(pieces::VOID.kind(), kinds::UNKNOWN);
 
         assert_eq!(kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>(),
                    pieces::All.into_iter().map(Piece::kind).collect::<Vec<_>>());
     }
-
     #[test]
     fn display() {
         assert_eq!(super::pieces::All.into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQKpnbrqk");
-
     }
-
     #[test]
-    fn all_pieces() {
+    fn debug() {
         use super::pieces::*;
 
-        let all = All.into_iter().collect::<Vec<_>>();
-        assert_eq!(all.len(), 12);
-        assert_eq!(all[0], WHITE_PAWN);
-        assert_eq!(all[11], BLACK_KING);
+        assert_eq!([WHITE_PAWN, BLACK_PAWN, VOID]
+                       .into_iter()
+                       .map(|pt| format!("{:?}", pt))
+                       .collect::<Vec<_>>(),
+                   ["Piece(0)", "Piece(6)", "Piece(16)"]);
+    }
+    // noinspection SpellCheckingInspection
+    #[test]
+    fn parse() {
+        use super::pieces::*;
+
+        assert_eq!("PNBRQKpnbrqk"
+                       .chars()
+                       .into_iter()
+                       .map(Piece::parse)
+                       .collect::<Vec<_>>(),
+                   [WHITE_PAWN,
+                    WHITE_KNIGHT,
+                    WHITE_BISHOP,
+                    WHITE_ROOK,
+                    WHITE_QUEEN,
+                    WHITE_KING,
+                    BLACK_PAWN,
+                    BLACK_KNIGHT,
+                    BLACK_BISHOP,
+                    BLACK_ROOK,
+                    BLACK_QUEEN,
+                    BLACK_KING]);
     }
 }

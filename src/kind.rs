@@ -100,15 +100,6 @@ mod test {
 
         assert_eq!(together, pieces::All.into_iter().collect::<Vec<_>>());
     }
-
-    #[test]
-    fn all() {
-        use super::kinds::*;
-
-        assert_eq!(All.into_iter().collect::<Vec<_>>(),
-                   [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
-    }
-
     #[test]
     fn display() {
         assert_eq!(super::kinds::All.into_iter()
