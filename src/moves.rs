@@ -2,9 +2,9 @@
 
 use kind::*;
 use geometry::*;
-use std::fmt::{Display,Formatter,Result};
+use std::fmt::{Display, Formatter, Result};
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Eq, Hash, Debug, Copy, Clone, PartialEq)]
 pub struct Move {
     pub from: Square,
     pub to: Square,
@@ -13,9 +13,9 @@ pub struct Move {
 
 impl Move {
     pub fn usual(from: Square, to: Square) -> Self {
-        Self::with_promotion(from,  to, kinds::UNKNOWN)
+        Self::with_promotion(from, to, kinds::UNKNOWN)
     }
-    pub fn with_promotion(from: Square, to: Square, promote_to: Kind)-> Self {
+    pub fn with_promotion(from: Square, to: Square, promote_to: Kind) -> Self {
         Move {
             from: from,
             to: to,
@@ -67,40 +67,21 @@ mod test {
 
     #[test]
     fn usual_move() {
-        let e2 = Square::parse("e2");
-        let e4 = Square::parse("e4");
-        let m = Move::usual(e2, e4);
-        assert_eq!(m.from.to_string(), "e2");
-        assert_eq!(m.to.to_string(), "e4");
-        assert_eq!(m.promote_to, kinds::UNKNOWN);
+        let m = Move::usual(squares::E2, squares::E4);
+        assert_eq!(format!("{:?}", m),
+        "Move { from: Square(52), to: Square(36), promote_to: Kind(16) }");
     }
 
     #[test]
     fn promotion_move() {
-        let e2 = Square::parse("e2");
-        let e4 = Square::parse("e4");
-        let m = Move::with_promotion(e2, e4, kinds::QUEEN);
-        assert_eq!(m.from.to_string(), "e2");
-        assert_eq!(m.to.to_string(), "e4");
-        assert_eq!(m.promote_to, kinds::QUEEN);
+        let m = Move::with_promotion(
+            squares::E2, squares::E4, kinds::QUEEN);
+        assert_eq!(format!("{:?}", m),
+            "Move { from: Square(52), to: Square(36), promote_to: Kind(4) }");
     }
 
     #[test]
-    fn usual_move_to_string() {
-        let e2 = Square::parse("e2");
-        let e4 = Square::parse("e4");
-        assert_eq!(format!("{}", Move::usual(e2, e4)), "e2-e4");
-    }
-
-    #[test]
-    fn promotion_move_to_string() {
-        let e2 = Square::parse("e2");
-        let e4 = Square::parse("e4");
-        assert_eq!(format!("{}", Move::with_promotion(e2, e4, kinds::QUEEN)), "e2-e4=Q");
-    }
-
-    #[test]
-    fn parse_usual_move() {
+    fn parse_usual() {
         assert_eq!(format!("{}", Move::parse("e2e4")), "e2-e4");
         assert_eq!(format!("{}", Move::parse("a1a8")), "a1-a8");
         assert_eq!(format!("{}", Move::parse("c3-f2")), "c3-f2");
@@ -108,7 +89,7 @@ mod test {
     }
 
     #[test]
-    fn parse_promotion_move() {
+    fn parse_promotion() {
         assert_eq!(format!("{}", Move::parse("e2-e4=Q")), "e2-e4=Q");
     }
 }
