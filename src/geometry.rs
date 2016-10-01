@@ -438,7 +438,7 @@ mod test {
                     Square::from(f,r)
                 }).collect::<Vec<Square>>());
     }
-    //noinspection SpellCheckingInspection
+    // noinspection SpellCheckingInspection
     #[test]
     fn square_color() {
         use super::squares::*;

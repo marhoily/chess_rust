@@ -43,12 +43,17 @@ pub mod piece_types {
             }
         }
     }
-
 }
 
 impl PieceType {
     pub fn new(bits: u8) -> Self {
         PieceType(bits)
+    }
+    pub fn parse(input: &str) -> Self {
+        parse_piece_type(input.as_bytes()).unwrap().1
+    }
+    pub fn bits(self) -> u8 {
+        self.0
     }
     pub fn of(self, color: Color) -> Piece {
         if color == Color::White {
@@ -59,12 +64,6 @@ impl PieceType {
     }
     pub fn char(self) -> char {
         SYMBOLS[self.0 as usize] as char
-    }
-    pub fn bits(self) -> u8 {
-        self.0
-    }
-    pub fn parse(input: &str) -> Self {
-        parse_piece_type(input.as_bytes()).unwrap().1
     }
 }
 
@@ -99,31 +98,36 @@ mod test {
 
     #[test]
     fn of_color() {
-        assert_eq!(PAWN.of(Color::White),    pieces::WHITE_PAWN            );
-        assert_eq!(KNIGHT.of(Color::White),  pieces::WHITE_KNIGHT                 );
-        assert_eq!(BISHOP.of(Color::White),  pieces::WHITE_BISHOP                 );
-        assert_eq!(ROOK.of(Color::White),    pieces::WHITE_ROOK             );
-        assert_eq!(QUEEN.of(Color::White),   pieces::WHITE_QUEEN                );
-        assert_eq!(KING.of(Color::White),    pieces::WHITE_KING             );
-        assert_eq!(PAWN.of(Color::Black),    pieces::BLACK_PAWN              );
-        assert_eq!(KNIGHT.of(Color::Black),  pieces::BLACK_KNIGHT                 );
-        assert_eq!(BISHOP.of(Color::Black),  pieces::BLACK_BISHOP                 );
-        assert_eq!(ROOK.of(Color::Black),    pieces::BLACK_ROOK              );
-        assert_eq!(QUEEN.of(Color::Black),   pieces::BLACK_QUEEN                );
-        assert_eq!(KING.of(Color::Black),    pieces::BLACK_KING             );
+        assert_eq!(PAWN.of(Color::White), pieces::WHITE_PAWN);
+        assert_eq!(KNIGHT.of(Color::White), pieces::WHITE_KNIGHT);
+        assert_eq!(BISHOP.of(Color::White), pieces::WHITE_BISHOP);
+        assert_eq!(ROOK.of(Color::White), pieces::WHITE_ROOK);
+        assert_eq!(QUEEN.of(Color::White), pieces::WHITE_QUEEN);
+        assert_eq!(KING.of(Color::White), pieces::WHITE_KING);
+        assert_eq!(PAWN.of(Color::Black), pieces::BLACK_PAWN);
+        assert_eq!(KNIGHT.of(Color::Black), pieces::BLACK_KNIGHT);
+        assert_eq!(BISHOP.of(Color::Black), pieces::BLACK_BISHOP);
+        assert_eq!(ROOK.of(Color::Black), pieces::BLACK_ROOK);
+        assert_eq!(QUEEN.of(Color::Black), pieces::BLACK_QUEEN);
+        assert_eq!(KING.of(Color::Black), pieces::BLACK_KING);
     }
 
     #[test]
-    fn piece_type_fmt() {
-        assert_eq!(format!("{}", UNKNOWN), "unknown");
-        assert_eq!(format!("{}", PAWN), "pawn");
-        assert_eq!(format!("{}", KNIGHT), "knight");
-        assert_eq!(format!("{}", BISHOP), "bishop");
-        assert_eq!(format!("{}", ROOK), "rook");
-        assert_eq!(format!("{}", QUEEN), "queen");
-        assert_eq!(format!("{}", KING), "king");
+    fn all() {
+        assert_eq!(All.into_iter().collect::<Vec<PieceType>>(),
+                   [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
 
+    #[test]
+    fn display() {
+        assert_eq!(All.into_iter()
+                       .map(|pt| format!("{}", pt))
+                       .collect::<Vec<String>>(),
+                   ["pawn", "knight", "bishop", "rook", "queen", "king"]);
+
+        assert_eq!(format!("{}", UNKNOWN), "unknown");
+
+    }
     #[test]
     fn parse() {
         assert_eq!(PieceType::parse("P"), PAWN);
