@@ -77,20 +77,18 @@ pub mod pieces {
 
     impl IntoIterator for All {
         type Item = Piece;
-        type IntoIter = PieceIter;
+        type IntoIter = Piece;
 
         fn into_iter(self) -> Self::IntoIter {
-            PieceIter(0)
+            Piece(0)
         }
     }
 
-    pub struct PieceIter(u8);
-
-    impl Iterator for PieceIter {
+    impl Iterator for Piece {
         type Item = Piece;
         fn next(&mut self) -> Option<Self::Item> {
             if self.0 < 12 {
-                let result = Piece(self.0);
+                let result = *self;
                 self.0 += 1;
                 Some(result)
             } else {
@@ -98,7 +96,6 @@ pub mod pieces {
             }
         }
     }
-
 }
 
 static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
