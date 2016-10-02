@@ -24,28 +24,28 @@ impl Mask {
         self.0 & another.bits() != 0
     }
     pub fn shift_north(self) -> Mask {
-        self << 8
+        self >> 8
     }
     pub fn shift_south(self) -> Mask {
-        self >> 8
+        self << 8
     }
     pub fn shift_east(self) -> Mask {
         (self << 1) & !masks::files::A
     }
     pub fn shift_north_east(self) -> Mask {
-        (self << 9) & !masks::files::A
+        (self >> 7) & !masks::files::A
     }
     pub fn shift_south_east(self) -> Mask {
-        (self >> 7) & !masks::files::A
+        (self << 9) & !masks::files::A
     }
     pub fn shift_west(self) -> Mask {
         (self >> 1) & !masks::files::H
     }
     pub fn shift_north_west(self) -> Mask {
-        (self << 7) & !masks::files::H
+        (self >> 9) & !masks::files::H
     }
     pub fn shift_south_west(self) -> Mask {
-        (self >> 9) & !masks::files::H
+        (self << 7) & !masks::files::H
     }
     pub fn dump(self) -> String {
         let mut result = String::with_capacity(100);
@@ -169,14 +169,14 @@ pub mod masks {
     pub mod ranks {
         use super::super::Mask;
 
-        pub const _1: Mask = Mask(0xFF);
-        pub const _2: Mask = Mask(0xFF00);
-        pub const _3: Mask = Mask(0xFF0000);
-        pub const _4: Mask = Mask(0xFF000000);
-        pub const _5: Mask = Mask(0xFF00000000);
-        pub const _6: Mask = Mask(0xFF0000000000);
-        pub const _7: Mask = Mask(0xFF000000000000);
-        pub const _8: Mask = Mask(0xFF00000000000000);
+        pub const _8: Mask = Mask(0xFF);
+        pub const _7: Mask = Mask(0xFF00);
+        pub const _6: Mask = Mask(0xFF0000);
+        pub const _5: Mask = Mask(0xFF000000);
+        pub const _4: Mask = Mask(0xFF00000000);
+        pub const _3: Mask = Mask(0xFF0000000000);
+        pub const _2: Mask = Mask(0xFF000000000000);
+        pub const _1: Mask = Mask(0xFF00000000000000);
 
         pub static ALL: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
     }
@@ -297,9 +297,9 @@ mod test {
 
     #[test]
     fn dump() {
-        let mask = masks::files::E | masks::ranks::_5;
+        let mask = masks::files::E | masks::ranks::_5 | masks::A8;
         assert_eq!(mask.dump(),
-                   "|^^^^@^^^|...\
+                   "|@^^^@^^^|...\
                     |^^^^@^^^|...\
                     |^^^^@^^^|...\
                     |@@@@@@@@|...\
@@ -471,7 +471,7 @@ mod test {
                     |^@^^^^^^|...\
                     |@@@@@@@@|...\
                     |^@^^^^^^|...");
-        assert_eq!(masks::F1.fill(Mask::shift_south_west, stoppers).dump(),
+        assert_eq!(masks::F8.fill(Mask::shift_south_west, stoppers).dump(),
                    "|^^^^^@^^|...\
                     |^^^^@^^^|...\
                     |^^^@^^^^|...\
@@ -523,15 +523,11 @@ mod test {
         println!("");
     }
     #[test]
-    fn print_const_masks() {
-        use geometry::squares;
-        println!("");
-
-        for s in squares::All {
+    fn print_const_squares() {
+        for s in ::geometry::squares::All {
             println!("pub const {} : Mask = Mask(0x{:X});",
                      s.to_string().to_uppercase(),
                      s.mask().bits());
         }
-        println!("");
     }
 }
