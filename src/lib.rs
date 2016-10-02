@@ -35,3 +35,4 @@ pub mod moves;
 pub mod fen;
 pub mod position;
 pub mod analysis;
+pub mod castle;
