@@ -121,19 +121,15 @@ impl Mask {
         let bb = self.0;
         Mask(bb & bb.wrapping_neg())
     }
+
+    pub fn iter_bit_masks(self) -> FwdMaskIter {
+        FwdMaskIter(self)
+    }
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
 pub struct FwdMaskIter(Mask);
 
-impl IntoIterator for Mask {
-    type IntoIter = FwdMaskIter;
-    type Item = Mask;
-
-    fn into_iter(self) -> Self::IntoIter {
-        FwdMaskIter(self)
-    }
-}
 impl Iterator for FwdMaskIter{
     type Item = Mask;
 

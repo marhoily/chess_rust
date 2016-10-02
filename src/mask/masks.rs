@@ -145,9 +145,7 @@ mod test {
     }
 
     fn split(m: Mask) -> Vec<Mask> {
-        All.into_iter()
-            .filter(|x| m.has_any(*x))
-            .collect::<Vec<_>>()
+        m.iter_bit_masks().collect::<Vec<_>>()
     }
 
     #[test]
