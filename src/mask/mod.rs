@@ -280,6 +280,7 @@ mod test {
                     |^^^^@^^^|...\
                     |^^^^^^^^|...");
     }
+
     #[test]
     fn shift_south() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -293,6 +294,7 @@ mod test {
                     |^^^^@^^^|...\
                     |^^^^@^^^|...");
     }
+
     #[test]
     fn shift_east() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -306,6 +308,7 @@ mod test {
                     |^^^^^@^^|...\
                     |^^^^^@^^|...");
     }
+
     #[test]
     fn shift_south_east() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -319,6 +322,7 @@ mod test {
                     |^^^^^@^^|...\
                     |^^^^^@^^|...");
     }
+
     #[test]
     fn shift_north_east() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -332,6 +336,7 @@ mod test {
                     |^^^^^@^^|...\
                     |^^^^^^^^|...");
     }
+
     #[test]
     fn shift_west() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -345,6 +350,7 @@ mod test {
                     |^^^@^^^^|...\
                     |^^^@^^^^|...");
     }
+
     #[test]
     fn shift_south_west() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -358,6 +364,7 @@ mod test {
                     |^^^@^^^^|...\
                     |^^^@^^^^|...");
     }
+
     #[test]
     fn shift_north_west() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -370,7 +377,6 @@ mod test {
                     |^^^@^^^^|...\
                     |^^^@^^^^|...\
                     |^^^^^^^^|...");
-
     }
 
     #[test]
@@ -395,6 +401,7 @@ mod test {
                     |@@@@@@@@|...\
                     |^^^^^^@^|...");
     }
+
     #[test]
     fn flip_vertically() {
         let mask = masks::files::B | masks::ranks::_2;
@@ -441,14 +448,15 @@ mod test {
                     |^^^^^^^^|...");
     }
 
-    #[test]
-    fn count() {
-        for _ in 0..1000 {
-            let m = Mask(::rand::random());
-            assert_eq!(m.count() as usize, m.single_bits().count());
-            assert_eq!(m.count() as usize, m.single_bit_indices().count());
+    quickcheck! {
+        fn count_should_match_single_bits(m : Mask) -> bool {
+                m.count() as usize== m.single_bits().count()
+        }
+        fn count_should_match_single_bit_indices(m : Mask) -> bool {
+                m.count() as usize== m.single_bit_indices().count()
         }
     }
+
     #[test]
     fn has_mote_than_one_bit_set() {
         assert_eq!(masks::files::B.has_mote_than_one_bit_set(), true);
@@ -490,20 +498,14 @@ mod test {
     fn single_bits_back_and_forth() {
         for m in (0..1000).map(|_| Mask(random())) {
             assert_equal(m.single_bits().rev(),
-                 m.single_bits().collect_vec().into_iter().rev());
+                         m.single_bits().collect_vec().into_iter().rev());
         }
     }
     #[test]
     fn single_bit_indices_back_and_forth() {
         for m in (0..1000).map(|_| Mask(random())) {
             assert_equal(m.single_bit_indices().rev(),
-                 m.single_bit_indices().collect_vec().into_iter().rev());
-        }
-    }
-
-    impl Arbitrary for Mask {
-        fn arbitrary<G: Gen>(g: &mut G) -> Self {
-            Mask(g.next_u64())
+                         m.single_bit_indices().collect_vec().into_iter().rev());
         }
     }
 
@@ -534,8 +536,13 @@ mod test {
         });
     }
 
-    fn random_bits_shift(_: i32) ->(u64, u32) {
+    fn random_bits_shift(_: i32) -> (u64, u32) {
         (random::<u64>(), random::<u32>() % 64)
+    }
+    impl Arbitrary for Mask {
+        fn arbitrary<G: Gen>(g: &mut G) -> Self {
+            Mask(g.next_u64())
+        }
     }
     const LEFT: u64 = 1u64 << 63;
     const RIGHT: u64 = 1u64;
