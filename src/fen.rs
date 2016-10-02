@@ -45,7 +45,11 @@ pub enum ParsingError {
 }
 
 pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
-    use nom::{Err, ErrorKind, Needed};
+    use self::ParsingError::*;
+    use nom::Needed::Unknown;
+    use nom::Err::Position;
+    use nom::ErrorKind::Custom;
+
     let mut result = BitBoard::new();
     let mut square = Mask::from(squares::FIRST);
     let mut file = 0;
@@ -60,8 +64,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
         match token {
             Token::Piece(p) => {
                 if file > 7 {
-                    return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooLong),
-                                               &input[consumed..]));
+                    return Error(Position(Custom(RankIsTooLong), &input[consumed..]));
                 }
 
                 result.set_piece(square, p);
@@ -71,37 +74,31 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
             }
             Token::Gap(size) => {
                 if just_had_gap {
-                    return Error(Err::Position(ErrorKind::Custom(ParsingError::DoubleGap),
-                                               &input[consumed..]));
+                    return Error(Position(Custom(DoubleGap), &input[consumed..]));
                 }
                 square <<= size;
                 just_had_gap = true;
                 file += size;
 
                 if file > 8 {
-                    return Error(Err::Position(ErrorKind::Custom(ParsingError::GapIsTooBig),
-                                               &input[consumed..]));
+                    return Error(Position(Custom(GapIsTooBig), &input[consumed..]));
                 }
             }
             Token::Slash => {
                 if file < 8 {
-                    return Error(Err::Position(ErrorKind::Custom(ParsingError::RankIsTooShort),
-                                               &input[consumed..]));
+                    return Error(Position(Custom(RankIsTooShort), &input[consumed..]));
                 }
                 file = 0;
                 just_had_gap = false;
             }
-            Token::Other => {
-                return Error(Err::Position(ErrorKind::Custom(ParsingError::UnrecognizedToken),
-                                           &input[consumed..]))
-            }
+            Token::Other => return Error(Position(Custom(UnrecognizedToken), &input[consumed..])),
         }
         consumed += 1;
     }
     if square == masks::EMPTY {
         Done(&input[consumed..], result)
     } else {
-        Incomplete(Needed::Unknown)
+        Incomplete(Unknown)
     }
 }
 
