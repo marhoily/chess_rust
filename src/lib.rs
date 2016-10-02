@@ -15,6 +15,7 @@
 
 extern crate test;
 extern crate rand;
+extern crate itertools;
 
 #[macro_use]
 extern crate bitflags;

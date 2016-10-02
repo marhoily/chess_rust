@@ -249,6 +249,7 @@ pub mod masks;
 mod test {
     use super::*;
     use test::Bencher;
+    use itertools::*;
 
     #[test]
     fn dump() {
@@ -506,11 +507,15 @@ mod test {
     }
     #[test]
     fn index_iter_back_and_forth() {
+
         for _ in 0..1000 {
             let m = Mask(::rand::random());
-            let mut forward = m.single_bit_indices().collect::<Vec<_>>();
-            forward.reverse();
-            assert_eq!(forward, m.single_bit_indices().rev().collect::<Vec<_>>());
+
+            assert_equal(m.single_bit_indices()
+                             .collect_vec()
+                             .into_iter()
+                             .rev(),
+                         m.single_bit_indices().rev());
         }
     }
 

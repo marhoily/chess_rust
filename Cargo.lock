@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clippy 0.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
+ "itertools 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nom 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -33,6 +34,19 @@ dependencies = [
  "semver 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "toml 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-normalization 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "either"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "itertools"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "either 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -98,6 +112,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "aad18937a628ec6abcd26d1489012cc0e18c21798210f491af69ded9b881106d"
 "checksum clippy 0.0.90 (registry+https://github.com/rust-lang/crates.io-index)" = "d19bda68c3db98e3a780342f6101b44312fef20a5f13ce756d1202a35922b01b"
 "checksum clippy_lints 0.0.90 (registry+https://github.com/rust-lang/crates.io-index)" = "3d4ed67c69b9bb35169be2538691d290a3aa0cbfd4b9f0bfb7c221fc1d399a96"
+"checksum either 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5845bf77d497f79416df39462df26d4a8b71dd6440246848ee63709476dbb9a6"
+"checksum itertools 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "00de4ac29af46c948d6e180eb8c52798a23ec590d5cea8a7cf22cdd7f48c87ca"
 "checksum libc 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)" = "408014cace30ee0f767b1c4517980646a573ec61a57957aeeabcac8ac0a02e8d"
 "checksum matches 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "15305656809ce5a4805b1ff2946892810992197ce1270ff79baded852187942e"
 "checksum nom 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "a5b8c256fd9471521bcb84c3cdba98921497f1a331cbc15b8030fc63b82050ce"
