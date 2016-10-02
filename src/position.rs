@@ -4,14 +4,7 @@ use castle::Castle;
 use bit_board::BitBoard;
 use geometry::{File, Color};
 use fen;
-use fen::parse_bit_board;
-use geometry::{parse_color, parse_file};
 use castle;
-use castle::parse_castle;
-use nom::IResult;
-use nom::Err::Position as Positional;
-use nom::ErrorKind::Custom;
-use self::PositionError::*;
 
 #[derive(Eq, Debug, Copy, Clone, PartialEq)]
 pub struct Position {
@@ -34,49 +27,66 @@ pub enum PositionError {
     EnPassant(u32),
     Whitespace,
 }
+mod wrappers {
+    use super::*;
+    use castle::Castle;
+    use bit_board::BitBoard;
+    use geometry::{File, Color};
+    use fen::parse_bit_board;
+    use geometry::{parse_color, parse_file};
+    use castle::parse_castle;
+    use nom::IResult;
+    use nom::Err::Position as Positional;
+    use nom::ErrorKind::Custom;
+    use super::PositionError::*;
 
-fn wrapped_parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
-    parse_bit_board(input).map_err(|err| {
-        match err {
-            Positional(Custom(pe), x) => Positional(Custom(Board(pe)), x),
-            _ => panic!("wrapped_parse_bit_board"),
-        }
-    })
-}
-fn wrapped_parse_color(input: &[u8]) -> IResult<&[u8], Color, PositionError> {
-    parse_color(input).map_err(|err| {
-        match err {
-            Positional(Custom(pe), x) => Positional(Custom(Active(pe)), x),
-            _ => panic!("wrapped_parse_color"),
-        }
-    })
-}
-fn wrapped_parse_castle(input: &[u8]) -> IResult<&[u8], Castle, PositionError> {
-    parse_castle(input).map_err(|err| {
-        match err {
-            Positional(Custom(pe), x) => Positional(Custom(Available(pe)), x),
-            _ => panic!("wrapped_parse_castle"),
-        }
-    })
-}
-fn wrapped_parse_file(input: &[u8]) -> IResult<&[u8], File, PositionError> {
-    parse_file(input).map_err(|err| {
-        match err {
-            Positional(Custom(pe), x) => Positional(Custom(EnPassant(pe)), x),
-            _ => panic!("wrapped_parse_file"),
-        }
-    })
-}
-named!(ws(&[u8]) -> char, char!(' '));
+    pub fn wrapped_parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
+        parse_bit_board(input).map_err(|err| {
+            match err {
+                Positional(Custom(pe), x) => Positional(Custom(Board(pe)), x),
+                _ => panic!("wrapped_parse_bit_board"),
+            }
+        })
+    }
 
-fn wrapped_ws(input: &[u8]) -> IResult<&[u8], char, PositionError> {
-    ws(input).map_err(|err| {
-        match err {
-            Positional(_, x) => Positional(Custom(Whitespace), x),
-            _ => panic!("wrapped_ws"),
-        }
-    })
+    pub fn wrapped_parse_color(input: &[u8]) -> IResult<&[u8], Color, PositionError> {
+        parse_color(input).map_err(|err| {
+            match err {
+                Positional(Custom(pe), x) => Positional(Custom(Active(pe)), x),
+                _ => panic!("wrapped_parse_color"),
+            }
+        })
+    }
+
+    pub fn wrapped_parse_castle(input: &[u8]) -> IResult<&[u8], Castle, PositionError> {
+        parse_castle(input).map_err(|err| {
+            match err {
+                Positional(Custom(pe), x) => Positional(Custom(Available(pe)), x),
+                _ => panic!("wrapped_parse_castle"),
+            }
+        })
+    }
+
+    pub fn wrapped_parse_file(input: &[u8]) -> IResult<&[u8], File, PositionError> {
+        parse_file(input).map_err(|err| {
+            match err {
+                Positional(Custom(pe), x) => Positional(Custom(EnPassant(pe)), x),
+                _ => panic!("wrapped_parse_file"),
+            }
+        })
+    }
+
+    named!(ws(&[u8]) -> char, char!(' '));
+    pub fn wrapped_ws(input: &[u8]) -> IResult<&[u8], char, PositionError> {
+        ws(input).map_err(|err| {
+            match err {
+                Positional(_, x) => Positional(Custom(Whitespace), x),
+                _ => panic!("wrapped_ws"),
+            }
+        })
+    }
 }
+use self::wrappers::*;
 
 // "8/8/8/8/8/8/8/8 w KQkq - 0 1"
 named!(pub parse_position<&[u8], Position, PositionError>,
