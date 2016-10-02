@@ -134,6 +134,8 @@ mod test {
         check("QKq", "KQq");
         check("QkK", "KQk");
         check("QKqk", "KQkq");
+        check("QKqkK", "KQkq");
+        check("Q.K", "Q");
     }
     #[test]
     fn duplication() {
@@ -150,6 +152,8 @@ mod test {
             }
         };
         check("kk", 1);
+        check("QKkk", 3);
+        check("QKkQ", 3);
     }
     #[test]
     fn display() {
