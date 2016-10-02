@@ -39,50 +39,51 @@ mod wrappers {
     use castle::parse_castle;
     use nom::IResult;
     use nom::Err::Position as P;
-    use nom::ErrorKind::Custom;
+    use nom::ErrorKind::Custom as C;
     use super::PositionError::*;
+    type R<'a, T, X> = IResult<&'a[u8], T, X>;
 
-    pub fn wrapped_parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
+    pub fn wrapped_parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
         parse_bit_board(input).map_err(|err| {
             match err {
-                P(Custom(pe), x) => P(Custom(Board(pe)), x),
+                P(C(pe), x) => P(C(Board(pe)), x),
                 _ => panic!("wrapped_parse_bit_board"),
             }
         })
     }
 
-    pub fn wrapped_parse_color(input: &[u8]) -> IResult<&[u8], Color, PositionError> {
+    pub fn wrapped_parse_color(input: &[u8]) -> R<Color, PositionError> {
         parse_color(input).map_err(|err| {
             match err {
-                P(Custom(pe), x) => P(Custom(Active(pe)), x),
+                P(C(pe), x) => P(C(Active(pe)), x),
                 _ => panic!("wrapped_parse_color"),
             }
         })
     }
 
-    pub fn wrapped_parse_castle(input: &[u8]) -> IResult<&[u8], Castle, PositionError> {
+    pub fn wrapped_parse_castle(input: &[u8]) -> R<Castle, PositionError> {
         parse_castle(input).map_err(|err| {
             match err {
-                P(Custom(pe), x) => P(Custom(Available(pe)), x),
+                P(C(pe), x) => P(C(Available(pe)), x),
                 _ => panic!("wrapped_parse_castle"),
             }
         })
     }
 
-    pub fn wrapped_parse_file(input: &[u8]) -> IResult<&[u8], File, PositionError> {
+    pub fn wrapped_parse_file(input: &[u8]) -> R<File, PositionError> {
         parse_file(input).map_err(|err| {
             match err {
-                P(Custom(pe), x) => P(Custom(EnPassant(pe)), x),
+                P(C(pe), x) => P(C(EnPassant(pe)), x),
                 _ => panic!("wrapped_parse_file"),
             }
         })
     }
 
     named!(ws(&[u8]) -> char, char!(' '));
-    pub fn wrapped_ws(input: &[u8]) -> IResult<&[u8], char, PositionError> {
+    pub fn wrapped_ws(input: &[u8]) -> R<char, PositionError> {
         ws(input).map_err(|err| {
             match err {
-                P(_, x) => P(Custom(Whitespace), x),
+                P(_, x) => P(C(Whitespace), x),
                 _ => panic!("wrapped_ws"),
             }
         })
