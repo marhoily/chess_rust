@@ -55,12 +55,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut just_had_gap = false;
     let mut consumed = 0;
     for &e in input {
-        let token = if square != masks::EMPTY {
-            consume(e as char)
-        } else {
-            Token::Slash
-        };
-        match token {
+        match consume(e as char) {
             Token::Piece(p) => {
                 if file > 7 {
                     return Error(P(C(RankIsTooLong), &input[consumed..]));
@@ -68,6 +63,9 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
 
                 result.set_piece(square, p);
                 square <<= 1;
+                if square == masks::EMPTY {
+                    return Done(&input[consumed..], result)
+                }
                 just_had_gap = false;
                 file += 1;
             }
@@ -76,12 +74,15 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                     return Error(P(C(DoubleGap), &input[consumed..]));
                 }
                 square <<= size;
-                just_had_gap = true;
                 file += size;
 
                 if file > 8 {
                     return Error(P(C(GapIsTooBig), &input[consumed..]));
                 }
+                if square == masks::EMPTY {
+                    return Done(&input[consumed..], result)
+                }
+                just_had_gap = true;
             }
             Token::Slash => {
                 if file < 8 {
@@ -94,11 +95,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
         }
         consumed += 1;
     }
-    if square == masks::EMPTY {
-        Done(&input[consumed..], result)
-    } else {
-        Incomplete(Unknown)
-    }
+    Incomplete(Unknown)
 }
 
 enum Token {

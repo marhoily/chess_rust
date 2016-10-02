@@ -508,6 +508,10 @@ mod test {
                          m.single_bit_indices().collect_vec().into_iter().rev());
         }
     }
+    #[test]
+    fn shr() {
+        assert_eq!(masks::A8 >> 1, masks::EMPTY);
+    }
 
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
