@@ -98,6 +98,9 @@ impl Mask {
     pub fn count(self) -> u32 {
         self.0.count_ones()
     }
+    pub fn has_mote_than_one_bit_set(self) -> bool {
+        self.0 & (self.0.wrapping_sub(1)) != 0
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -155,6 +158,7 @@ pub mod masks;
 #[cfg(test)]
 mod test {
     use super::*;
+    use test::Bencher;
 
     #[test]
     fn dump() {
@@ -347,5 +351,19 @@ mod test {
     fn count() {
         let m = masks::files::B | masks::ranks::_2;
         assert_eq!(m.count(), 15);
+    }
+    #[test]
+    fn has_mote_than_one_bit_set() {
+        assert_eq!(masks::files::B.has_mote_than_one_bit_set(), true);
+        assert_eq!(masks::B2.has_mote_than_one_bit_set(), false);
+        assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
+    }
+    #[bench]
+    fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
+        b.iter(|| masks::files::B.has_mote_than_one_bit_set());
+    }
+    #[bench]
+    fn bench_count(b: &mut Bencher) {
+        b.iter(|| masks::files::B.count() > 1);
     }
 }

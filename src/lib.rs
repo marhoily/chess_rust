@@ -8,8 +8,12 @@
     unused_qualifications
  )]
 
+#![feature(test)]
+
 #![feature(plugin)]
 #![plugin(clippy)]
+
+extern crate test;
 
 #[macro_use]
 extern crate bitflags;
