@@ -47,7 +47,7 @@ impl Display for Castle {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Eq, Copy, Clone, Debug, PartialEq)]
 pub enum ParsingError {
     Duplication,
     UnrecognizedToken,

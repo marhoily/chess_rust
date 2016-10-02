@@ -35,7 +35,7 @@ impl BitBoard {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Eq, Copy, Clone, Debug, PartialEq)]
 pub enum ParsingError {
     DoubleGap,
     RankIsTooLong,

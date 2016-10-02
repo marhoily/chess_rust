@@ -25,7 +25,7 @@ impl File {
 
 static FILES: &'static [u8; 8] = b"abcdefgh";
 
-named!(parse_file(&[u8]) -> File,
+named!(pub parse_file(&[u8]) -> File,
     map!(is_a!(FILES), |c: &[u8]| File(c[0] - FILES[0])));
 
 impl Display for File {
@@ -94,7 +94,7 @@ impl Rank {
 
 static RANKS: &'static [u8; 8] = b"87654321";
 
-named!(parse_rank(&[u8]) -> Rank,
+named!(pub parse_rank(&[u8]) -> Rank,
     map!(is_a!(RANKS), |c:&[u8]| Rank(RANKS[0] - c[0])));
 
 impl Display for Rank {
@@ -156,6 +156,11 @@ impl Color {
         }
     }
 }
+
+named!(pub parse_color(&[u8]) -> Color,
+    alt!(
+        value!(Color::White, char!('w')) |
+        value!(Color::Black, char!('b'))));
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!

@@ -1,15 +1,13 @@
-#![allow(dead_code)]
-
 use kind::*;
 use geometry::*;
 use std::fmt::{Display, Formatter, Result};
 
-// todo: separate representation for castling moves
 #[derive(Eq, Hash, Debug, Copy, Clone, PartialEq)]
 pub struct Move {
     pub from: Square,
     pub to: Square,
     pub promote_to: Kind,
+    // special field for castling moves?
 }
 
 impl Move {
