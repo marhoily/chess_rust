@@ -34,11 +34,10 @@ mod wrappers {
     use castle::Castle;
     use bit_board::BitBoard;
     use geometry::{File, Color};
-    use nom::IResult;
     use nom::Err::Position as P;
     use nom::ErrorKind::Custom as C;
     use super::PositionError::*;
-    type R<'a, T, X> = IResult<&'a[u8], T, X>;
+    type R<'a, T, X> = ::nom::IResult<&'a[u8], T, X>;
 
     pub fn wrapped_parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
         ::fen::parse_bit_board(input).map_err(|err| {
@@ -103,6 +102,7 @@ named!(pub parse_position<&[u8], Position, PositionError>,
                 available: available,
                 en_passant: Some(en_passant)
         }));
+
 #[cfg(test)]
 mod test {
     use super::*;
