@@ -43,17 +43,7 @@ pub enum ParsingError {
     RankIsTooShort,
     UnrecognizedToken,
 }
-//todo: after parse validations:
-/*
-        wrongKingCount(Color)
-        missingKing(CastlingRights.Right)
-        missingRook(CastlingRights.Right)
-        wrongEnPassantTargetRank(Rank)
-        nonEmptyEnPassantTarget(Square, Piece)
-        missingEnPassantPawn(Square)
-        nonEmptyEnPassantSquare(Square, Piece)
 
-*/
 pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::{Err, ErrorKind, Needed};
     let mut result = BitBoard::new();
