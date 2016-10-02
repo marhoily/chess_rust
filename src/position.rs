@@ -32,7 +32,7 @@ pub enum PositionError {
     Active(u32),
     Available(castle::ParsingError),
     EnPassant(u32),
-    Whitespace
+    Whitespace,
 }
 
 fn wrapped_parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
@@ -100,7 +100,8 @@ mod test {
 
     #[test]
     fn correct_fen() {
-        assert_eq!(format!("{:?}", parse_position(b"8/8/8/8/8/8/8/8 w KQkq e 0 1")),
+        assert_eq!(format!("{:?}",
+                parse_position(b"8/8/8/8/8/8/8/8 w KQkq e 0 1")),
                 "Done([32, 48, 32, 49], \
                     Position { \
                         board: BitBoard(\
