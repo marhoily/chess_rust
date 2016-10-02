@@ -122,7 +122,7 @@ impl Mask {
         Mask(bb & bb.wrapping_neg())
     }
 
-    pub fn iter_bit_masks(self) -> FwdMaskIter {
+    pub fn iter_masks(self) -> FwdMaskIter {
         FwdMaskIter(self)
     }
 }
@@ -393,8 +393,10 @@ mod test {
 
     #[test]
     fn count() {
-        let m = masks::files::B | masks::ranks::_2;
-        assert_eq!(m.count(), 15);
+        for _ in 0..1000 {
+            let m = Mask(::rand::random());
+            assert_eq!(m.count() as usize, m.iter_masks().count());
+        }
     }
     #[test]
     fn has_mote_than_one_bit_set() {
