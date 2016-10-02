@@ -424,9 +424,10 @@ mod test {
     }
     #[test]
     fn index_of_most_significant_bit() {
+        const INIT: u64 = 1u64 << 63;
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
-            let x = x | (1u64 << 63);
+            let x = x | INIT;
             let shift = ::rand::random::<u32>() % 64;
             let x = x >> shift;
             let x = Mask(x);
