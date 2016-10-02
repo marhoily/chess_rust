@@ -100,7 +100,15 @@ mod test {
 
     #[test]
     fn correct_fen() {
-        assert_eq!("", format!("{:?}",
-            parse_position(b"8/8/8/8/8/8/8/8 w KQkq e 0 1")));
+        assert_eq!(format!("{:?}", parse_position(b"8/8/8/8/8/8/8/8 w KQkq e 0 1")),
+                "Done([32, 48, 32, 49], \
+                    Position { \
+                        board: BitBoard(\
+                            [Mask(0), Mask(0), Mask(0), Mask(0), Mask(0), Mask(0), Mask(0), \
+                             Mask(0), Mask(0), Mask(0), Mask(0), Mask(0)]), \
+                        active: White, \
+                        available: Q | K | W | B | WQ | WK | BQ | BK | ALL, \
+                        en_passant: Some(File(4)) \
+                })");
     }
 }

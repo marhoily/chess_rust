@@ -64,7 +64,7 @@ pub fn parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                 result.set_piece(square, p);
                 square <<= 1;
                 if square == masks::EMPTY {
-                    return Done(&input[i..], result)
+                    return Done(&input[i+1..], result)
                 }
                 just_had_gap = false;
                 file += 1;
@@ -80,7 +80,7 @@ pub fn parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                     return err(GapIsTooBig);
                 }
                 if square == masks::EMPTY {
-                    return Done(&input[i..], result)
+                    return Done(&input[i+1..], result)
                 }
                 just_had_gap = true;
             }
@@ -200,9 +200,9 @@ mod test {
     #[test]
     fn extra_symbols() {
         check_extra("8/p7/8/8/4Q3/8/8/81132", 18);
-        check_extra("8/p7/8/8/4Q3/8/8/8p", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/7p[", 19);
         check_extra("8/p7/8/8/4Q3/8/8/8[", 18);
-        check_extra("8/p7/8/8/4Q3/8/8/8 ", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/8 bhah", 18);
     }
 
     fn check(fen: &str) {
