@@ -103,7 +103,7 @@ impl Mask {
         self.0.trailing_zeros()
     }
     pub fn index_of_most_significant_bit(self) -> u32 {
-        self.0.leading_zeros()
+        self.0.leading_zeros() ^ 63
     }
 
     pub fn most_significant_bit(self) -> Mask {
@@ -131,7 +131,6 @@ impl Mask {
     pub fn iter_masks_rev(self) -> RevMaskIter {
         RevMaskIter(self)
     }
-
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
@@ -173,8 +172,12 @@ impl DoubleEndedIterator for IndexIter {
             None
         } else {
             let mask = self.0;
-            let result = mask.index_of_least_significant_bit();
+            let result = mask.index_of_most_significant_bit();
             self.0 = Mask(mask.0 ^ (1u64 << result));
+            debug_assert!(mask.count() > self.0.count(),
+                          "{:X}, {:X}",
+                          mask.0,
+                          (self.0).0);
             Some(result)
         }
     }
@@ -498,18 +501,26 @@ mod test {
             let x: u64 = ::rand::random();
             let shift = ::rand::random::<u32>() % 64;
             let x = Mask((x | ONE).wrapping_shr(shift));
-            assert_eq!(x.index_of_most_significant_bit(), shift);
+            assert_eq!(x.index_of_most_significant_bit(), 63 - shift);
         }
     }
 
     #[test]
-    fn rev_masks_iter() {
+    fn iter_masks_rev() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
             let mut forward = m.iter_masks().collect::<Vec<_>>();
             forward.reverse();
-            assert_eq!(forward,
-                m.iter_masks_rev().collect::<Vec<_>>());
+            assert_eq!(forward, m.iter_masks_rev().collect::<Vec<_>>());
+        }
+    }
+    #[test]
+    fn index_iter_back_and_forth() {
+        for _ in 0..1000 {
+            let m = Mask(::rand::random());
+            let mut forward = m.iter_indices().collect::<Vec<_>>();
+            forward.reverse();
+            assert_eq!(forward, m.iter_indices().rev().collect::<Vec<_>>());
         }
     }
 
