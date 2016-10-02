@@ -33,6 +33,8 @@ pub mod ranks {
     pub static ALL: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
 }
 
+pub const FIRST: Mask = Mask(0x1);
+
 pub const A8: Mask = Mask(0x1);
 pub const B8: Mask = Mask(0x2);
 pub const C8: Mask = Mask(0x4);

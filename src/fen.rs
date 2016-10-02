@@ -1,6 +1,5 @@
-use geometry::*;
 use piece::*;
-use mask::{Mask, masks};
+use mask::masks;
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -51,7 +50,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::ErrorKind::Custom as C;
 
     let mut result = BitBoard::new();
-    let mut square = Mask::from(squares::FIRST);
+    let mut square = masks::FIRST;
     let mut file = 0;
     let mut just_had_gap = false;
     let mut consumed = 0;
