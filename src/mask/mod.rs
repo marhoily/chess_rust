@@ -396,11 +396,7 @@ mod test {
             let x: u64 = ::rand::random();
             let x = x | 1;
             let shift = ::rand::random::<usize>() % 64;
-            let x = x << shift;
-            if x == 0 {
-                continue;
-            }
-            let x = Mask(x);
+            let x = Mask(x << shift);
             assert_eq!(x.index_of_least_significant_bit(), shift);
         }
     }
@@ -408,12 +404,9 @@ mod test {
     fn index_of_most_significant_bit() {
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
-            let x = x | (1<<63);
+            let x = x | (1 << 63);
             let shift = ::rand::random::<usize>() % 64;
             let x = x >> shift;
-            if x == 0 {
-                continue;
-            }
             let x = Mask(x);
             assert_eq!(x.index_of_most_significant_bit(), shift);
         }
