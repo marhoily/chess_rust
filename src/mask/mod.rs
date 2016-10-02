@@ -102,22 +102,13 @@ impl Mask {
     pub fn has_mote_than_one_bit_set(self) -> bool {
         self.0 & (self.0.wrapping_sub(1)) != 0
     }
-    pub fn index_of_least_significant_bit(self) -> usize {
-        debug_assert!(self.0 != 0);
-        let bb = self.0;
-        let bb = bb ^ bb.wrapping_sub(1);
-        MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
+    pub fn index_of_least_significant_bit(self) -> u64 {
+        use std::intrinsics;
+        unsafe {intrinsics::cttz(self.0)}
     }
-    pub fn index_of_most_significant_bit(self) -> usize {
-        debug_assert!(self.0 != 0);
-        let bb = self.0;
-        let bb = bb | (bb >> 1);
-        let bb = bb | (bb >> 2);
-        let bb = bb | (bb >> 4);
-        let bb = bb | (bb >> 8);
-        let bb = bb | (bb >> 16);
-        let bb = bb | (bb >> 32);
-        MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
+    pub fn index_of_most_significant_bit(self) -> u64 {
+        use std::intrinsics;
+        unsafe {intrinsics::ctlz(self.0)}
     }
 }
 impl BitOr<Mask> for Mask {
@@ -172,20 +163,6 @@ impl Not for Mask {
 }
 
 pub mod masks;
-
-#[allow(dead_code)]
-static LSB: &'static [usize] = &[0, 1, 48, 2, 57, 49, 28, 3, 61, 58, 50, 42, 38, 29, 17, 4, 62,
-                                 55, 59, 36, 53, 51, 43, 22, 45, 39, 33, 30, 24, 18, 12, 5, 63,
-                                 47, 56, 27, 60, 41, 37, 16, 54, 35, 52, 21, 44, 32, 23, 11, 46,
-                                 26, 40, 15, 34, 20, 31, 10, 25, 14, 19, 9, 13, 8, 7, 6];
-
-static MSB: &'static [usize] = &[0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 37, 28, 16, 3, 61, 54,
-                                 58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62, 46,
-                                 55, 26, 59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45, 25,
-                                 39, 14, 33, 19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63];
-
-/// The De Bruijn multiplier.
-const MAGIC: u64 = 0x03f79d71b4cb0a89;
 
 #[cfg(test)]
 mod test {
@@ -395,7 +372,7 @@ mod test {
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
             let x = x | 1;
-            let shift = ::rand::random::<usize>() % 64;
+            let shift = ::rand::random::<u64>() % 64;
             let x = Mask(x << shift);
             assert_eq!(x.index_of_least_significant_bit(), shift);
         }
@@ -404,8 +381,8 @@ mod test {
     fn index_of_most_significant_bit() {
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
-            let x = x | (1 << 63);
-            let shift = ::rand::random::<usize>() % 64;
+            let x = x | (1u64 << 63);
+            let shift = ::rand::random::<u64>() % 64;
             let x = x >> shift;
             let x = Mask(x);
             assert_eq!(x.index_of_most_significant_bit(), shift);
@@ -418,5 +395,13 @@ mod test {
     #[bench]
     fn bench_count(b: &mut Bencher) {
         b.iter(|| masks::files::B.count() > 1);
+    }
+    #[bench]
+    fn bench_index_of_least_significant_bit(b: &mut Bencher) {
+        b.iter(|| masks::files::B.index_of_least_significant_bit());
+    }
+    #[bench]
+    fn bench_index_of_most_significant_bit(b: &mut Bencher) {
+        b.iter(|| masks::files::B.index_of_most_significant_bit());
     }
 }

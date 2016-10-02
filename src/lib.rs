@@ -1,4 +1,5 @@
 // #![feature(question_mark)]
+#![feature(core_intrinsics)]
 #![deny(
     missing_debug_implementations,
     missing_copy_implementations,
