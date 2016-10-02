@@ -1,4 +1,7 @@
 #![allow(dead_code)]
+use geometry::{Color, Rank, Square};
+use piece::Piece;
+use position::Castle;
 
 enum MoveAnnotations {
     None,
