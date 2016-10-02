@@ -497,25 +497,28 @@ mod test {
     }
 
     #[test]
-    fn iter_masks_rev() {
+    fn single_bits_back_and_forth() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
-            let mut forward = m.single_bits().collect::<Vec<_>>();
-            forward.reverse();
-            assert_eq!(forward, m.single_bits().rev().collect::<Vec<_>>());
+
+            assert_equal(m.single_bits().rev(),
+                         m.single_bits()
+                             .collect_vec()
+                             .into_iter()
+                             .rev());
         }
     }
     #[test]
-    fn index_iter_back_and_forth() {
+    fn single_bit_indices_back_and_forth() {
 
         for _ in 0..1000 {
             let m = Mask(::rand::random());
 
-            assert_equal(m.single_bit_indices()
+            assert_equal(m.single_bit_indices().rev(),
+                         m.single_bit_indices()
                              .collect_vec()
                              .into_iter()
-                             .rev(),
-                         m.single_bit_indices().rev());
+                             .rev());
         }
     }
 
