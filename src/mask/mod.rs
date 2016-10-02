@@ -104,7 +104,19 @@ impl Mask {
     }
     pub fn index_of_least_significant_bit(self) -> usize {
         debug_assert!(self.0 != 0);
-        let bb = self.0 ^ self.0.wrapping_sub(1);
+        let bb = self.0;
+        let bb = bb ^ bb.wrapping_sub(1);
+        MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
+    }
+    pub fn index_of_most_significant_bit(self) -> usize {
+        debug_assert!(self.0 != 0);
+        let bb = self.0;
+        let bb = bb | (bb >> 1);
+        let bb = bb | (bb >> 2);
+        let bb = bb | (bb >> 4);
+        let bb = bb | (bb >> 8);
+        let bb = bb | (bb >> 16);
+        let bb = bb | (bb >> 32);
         MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
     }
 }
@@ -385,9 +397,25 @@ mod test {
             let x = x | 1;
             let shift = ::rand::random::<usize>() % 64;
             let x = x << shift;
-            if x == 0 { continue }
+            if x == 0 {
+                continue;
+            }
             let x = Mask(x);
             assert_eq!(x.index_of_least_significant_bit(), shift);
+        }
+    }
+    #[test]
+    fn index_of_most_significant_bit() {
+        for _ in 0..1000 {
+            let x: u64 = ::rand::random();
+            let x = x | (1<<63);
+            let shift = ::rand::random::<usize>() % 64;
+            let x = x >> shift;
+            if x == 0 {
+                continue;
+            }
+            let x = Mask(x);
+            assert_eq!(x.index_of_most_significant_bit(), shift);
         }
     }
     #[bench]
