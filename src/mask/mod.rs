@@ -458,41 +458,30 @@ mod test {
 
     #[test]
     fn least_significant_bit() {
-        const ONE: u64 = 1;
-        for _ in 0..1000 {
-            let sample: u64 = ::rand::random();
-            let shift = ::rand::random::<u32>() % 64;
-            let m = Mask((sample | ONE).wrapping_shl(shift));
-            assert_eq!(m.least_significant_bit().0, ONE << shift);
+        for (bits, shift) in (0..1000).map(random_bits_shift) {
+            let m = Mask((bits | RIGHT).wrapping_shl(shift));
+            assert_eq!(m.least_significant_bit().0, RIGHT << shift);
         }
     }
     #[test]
     fn index_of_least_significant_bit() {
-        const ONE: u64 = 1;
-        for _ in 0..1000 {
-            let sample: u64 = ::rand::random();
-            let shift = ::rand::random::<u32>() % 64;
-            let m = Mask((sample | ONE).wrapping_shl(shift));
+        for (bits, shift) in (0..1000).map(random_bits_shift) {
+            let m = Mask((bits | RIGHT).wrapping_shl(shift));
             assert_eq!(m.index_of_least_significant_bit(), shift);
         }
     }
 
     #[test]
     fn most_significant_bit() {
-        const ONE: u64 = 1u64 << 63;
-        for _ in 0..1000 {
-            let sample: u64 = ::rand::random();
-            let shift = ::rand::random::<u32>() % 64;
-            let m = Mask((sample | ONE).wrapping_shr(shift));
-            assert_eq!(m.most_significant_bit().0, ONE >> shift);
+        for (bits, shift) in (0..1000).map(random_bits_shift) {
+            let mask = Mask((bits | LEFT).wrapping_shr(shift));
+            assert_eq!(mask.most_significant_bit().0, LEFT >> shift);
         }
     }
     #[test]
     fn index_of_most_significant_bit() {
-        const ONE: u64 = 1u64 << 63;
-        let rnd = |_|(random::<u64>(), random::<u32>() % 64);
-        for (bits, shift) in (0..1000).map(rnd) {
-            let mask = Mask((bits | ONE).wrapping_shr(shift));
+        for (bits, shift) in (0..1000).map(random_bits_shift) {
+            let mask = Mask((bits | LEFT).wrapping_shr(shift));
             assert_eq!(mask.index_of_most_significant_bit(), 63 - shift);
         }
     }
@@ -511,6 +500,7 @@ mod test {
                  m.single_bit_indices().collect_vec().into_iter().rev());
         }
     }
+
     impl Arbitrary for Mask {
         fn arbitrary<G: Gen>(g: &mut G) -> Self {
             Mask(g.next_u64())
@@ -543,4 +533,10 @@ mod test {
             count
         });
     }
+
+    fn random_bits_shift(_: i32) ->(u64, u32) {
+        (random::<u64>(), random::<u32>() % 64)
+    }
+    const LEFT: u64 = 1u64 << 63;
+    const RIGHT: u64 = 1u64;
 }
