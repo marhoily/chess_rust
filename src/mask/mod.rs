@@ -194,6 +194,7 @@ mod test {
                     |^^^^@^^^|...\
                     |^^^^@^^^|...");
     }
+
     #[test]
     fn shift_north() {
         let mask = masks::files::E | masks::ranks::_5;
@@ -322,7 +323,6 @@ mod test {
                     |@@@@@@@@|...\
                     |^^^^^^@^|...");
     }
-
     #[test]
     fn flip_vertically() {
         let mask = masks::files::B | masks::ranks::_2;
@@ -345,6 +345,7 @@ mod test {
                     |^@^^^^^^|...\
                     |^@^^^^^^|...");
     }
+
     #[test]
     fn fill() {
         let stoppers = masks::files::B | masks::ranks::_2;
@@ -379,6 +380,7 @@ mod test {
         assert_eq!(masks::B2.has_mote_than_one_bit_set(), false);
         assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
     }
+
     #[test]
     fn least_significant_bit() {
         const ONE: u64 = 1;
