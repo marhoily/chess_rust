@@ -123,7 +123,6 @@ mod test {
             A1,B1,C1,D1,E1,F1,G1,H1 ));
     }
 
-
     #[test]
     fn print_const_squares() {
         for s in All {
