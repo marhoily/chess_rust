@@ -54,10 +54,11 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut file = 0;
     let mut just_had_gap = false;
     for (i, e) in input.iter().enumerate() {
+        let err = |e : ParsingError|Error(P(C(e), &input[i..]));
         match consume(*e as char) {
             Token::Piece(p) => {
                 if file > 7 {
-                    return Error(P(C(RankIsTooLong), &input[i..]));
+                    return err(RankIsTooLong);
                 }
 
                 result.set_piece(square, p);
@@ -70,13 +71,13 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
             }
             Token::Gap(size) => {
                 if just_had_gap {
-                    return Error(P(C(DoubleGap), &input[i..]));
+                    return err(DoubleGap);
                 }
                 square <<= size;
                 file += size;
 
                 if file > 8 {
-                    return Error(P(C(GapIsTooBig), &input[i..]));
+                    return err(GapIsTooBig);
                 }
                 if square == masks::EMPTY {
                     return Done(&input[i..], result)
@@ -85,12 +86,12 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
             }
             Token::Slash => {
                 if file < 8 {
-                    return Error(P(C(RankIsTooShort), &input[i..]));
+                    return err(RankIsTooShort);
                 }
                 file = 0;
                 just_had_gap = false;
             }
-            Token::Other => return Error(P(C(UnrecognizedToken), &input[i..])),
+            Token::Other => return err(UnrecognizedToken),
         }
     }
     Incomplete(Unknown)
