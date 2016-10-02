@@ -190,22 +190,15 @@ mod test {
     }
     #[test]
     fn print_const_ranks() {
-        use geometry::{File, Rank, Square};
+        use geometry::Square;
 
-        println!("");
-
-        for rank in 0..8 {
+        for rank in ::geometry::ranks::All {
             let mut mask = EMPTY;
-            let r = Rank::new(rank);
-            for file in 0..8 {
-                let sq = Square::from(File::new(file), r);
-                mask |= sq.mask();
+            for file in ::geometry::files::All {
+                mask |= Square::from(file, rank).mask();
             }
-            println!("pub const _{} : Mask = Mask(0x{:X});",
-                     r.char(),
-                     mask.bits());
+            println!("pub const _{} : Mask = Mask(0x{:X});", rank, mask.bits());
         }
-        println!("");
     }
     #[test]
     fn print_const_squares() {
