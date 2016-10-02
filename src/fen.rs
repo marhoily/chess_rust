@@ -53,47 +53,45 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut square = masks::FIRST;
     let mut file = 0;
     let mut just_had_gap = false;
-    let mut consumed = 0;
-    for &e in input {
-        match consume(e as char) {
+    for (i, e) in input.iter().enumerate() {
+        match consume(*e as char) {
             Token::Piece(p) => {
                 if file > 7 {
-                    return Error(P(C(RankIsTooLong), &input[consumed..]));
+                    return Error(P(C(RankIsTooLong), &input[i..]));
                 }
 
                 result.set_piece(square, p);
                 square <<= 1;
                 if square == masks::EMPTY {
-                    return Done(&input[consumed..], result)
+                    return Done(&input[i..], result)
                 }
                 just_had_gap = false;
                 file += 1;
             }
             Token::Gap(size) => {
                 if just_had_gap {
-                    return Error(P(C(DoubleGap), &input[consumed..]));
+                    return Error(P(C(DoubleGap), &input[i..]));
                 }
                 square <<= size;
                 file += size;
 
                 if file > 8 {
-                    return Error(P(C(GapIsTooBig), &input[consumed..]));
+                    return Error(P(C(GapIsTooBig), &input[i..]));
                 }
                 if square == masks::EMPTY {
-                    return Done(&input[consumed..], result)
+                    return Done(&input[i..], result)
                 }
                 just_had_gap = true;
             }
             Token::Slash => {
                 if file < 8 {
-                    return Error(P(C(RankIsTooShort), &input[consumed..]));
+                    return Error(P(C(RankIsTooShort), &input[i..]));
                 }
                 file = 0;
                 just_had_gap = false;
             }
-            Token::Other => return Error(P(C(UnrecognizedToken), &input[consumed..])),
+            Token::Other => return Error(P(C(UnrecognizedToken), &input[i..])),
         }
-        consumed += 1;
     }
     Incomplete(Unknown)
 }
