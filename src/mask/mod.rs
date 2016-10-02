@@ -250,6 +250,8 @@ mod test {
     use super::*;
     use test::Bencher;
     use itertools::*;
+    use quickcheck::*;
+    use rand::random;
 
     #[test]
     fn dump() {
@@ -488,37 +490,30 @@ mod test {
     #[test]
     fn index_of_most_significant_bit() {
         const ONE: u64 = 1u64 << 63;
-        for _ in 0..1000 {
-            let x: u64 = ::rand::random();
-            let shift = ::rand::random::<u32>() % 64;
-            let x = Mask((x | ONE).wrapping_shr(shift));
-            assert_eq!(x.index_of_most_significant_bit(), 63 - shift);
+        let rnd = |_|(random::<u64>(), random::<u32>() % 64);
+        for (bits, shift) in (0..1000).map(rnd) {
+            let mask = Mask((bits | ONE).wrapping_shr(shift));
+            assert_eq!(mask.index_of_most_significant_bit(), 63 - shift);
         }
     }
 
     #[test]
     fn single_bits_back_and_forth() {
-        for _ in 0..1000 {
-            let m = Mask(::rand::random());
-
+        for m in (0..1000).map(|_| Mask(random())) {
             assert_equal(m.single_bits().rev(),
-                         m.single_bits()
-                             .collect_vec()
-                             .into_iter()
-                             .rev());
+                 m.single_bits().collect_vec().into_iter().rev());
         }
     }
     #[test]
     fn single_bit_indices_back_and_forth() {
-
-        for _ in 0..1000 {
-            let m = Mask(::rand::random());
-
+        for m in (0..1000).map(|_| Mask(random())) {
             assert_equal(m.single_bit_indices().rev(),
-                         m.single_bit_indices()
-                             .collect_vec()
-                             .into_iter()
-                             .rev());
+                 m.single_bit_indices().collect_vec().into_iter().rev());
+        }
+    }
+    impl Arbitrary for Mask {
+        fn arbitrary<G: Gen>(g: &mut G) -> Self {
+            Mask(g.next_u64())
         }
     }
 

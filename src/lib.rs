@@ -17,6 +17,10 @@ extern crate test;
 extern crate rand;
 extern crate itertools;
 
+#[cfg(test)]
+#[macro_use]
+extern crate quickcheck;
+
 #[macro_use]
 extern crate bitflags;
 #[macro_use]
