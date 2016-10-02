@@ -507,6 +507,17 @@ mod test {
         }
     }
 
+    #[test]
+    fn rev_index_iter() {
+        for _ in 0..1000 {
+            let m = Mask(::rand::random());
+            let mut forward = m.iter_masks().collect::<Vec<_>>();
+            forward.reverse();
+            assert_eq!(forward,
+                m.iter_masks_rev().collect::<Vec<_>>());
+        }
+    }
+
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
         let max: u64 = ::test::black_box(1000);
