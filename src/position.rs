@@ -21,7 +21,8 @@ impl Position {
 }
 impl ::std::fmt::Display for Position {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "??")
+        let r = self.en_passant.map_or('-', |x| x.char());
+        write!(f, "{} {} {} {}", self.board, self.active, self.available, r)
     }
 }
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
@@ -41,7 +42,7 @@ mod wrappers {
     use nom::Err::Position as P;
     use nom::ErrorKind::Custom as C;
     use super::PositionError::*;
-    type R<'a, T, X> = ::nom::IResult<&'a[u8], T, X>;
+    type R<'a, T, X> = ::nom::IResult<&'a [u8], T, X>;
 
     pub fn wrapped_parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
         ::fen::parse_bit_board(input).map_err(|err| {

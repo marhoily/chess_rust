@@ -156,7 +156,15 @@ impl Color {
         }
     }
 }
-
+impl Display for Color {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        if *self == Color::White {
+            write!(f, "w")
+        }else{
+            write!(f, "b")
+        }
+    }
+}
 named!(pub parse_color(&[u8]) -> Color,
     alt!(
         value!(Color::White, char!('w')) |
