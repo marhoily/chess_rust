@@ -376,6 +376,11 @@ mod test {
         assert_eq!(masks::B2.has_mote_than_one_bit_set(), false);
         assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
     }
+    #[test]
+    fn least_significant_bit() {
+        let x:i32 = ::rand::random();
+        println!("{}", x)
+    }
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
         b.iter(|| masks::files::B.has_mote_than_one_bit_set());
