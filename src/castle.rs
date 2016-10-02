@@ -113,6 +113,20 @@ mod test {
         check("KQkq");
     }
     #[test]
+    fn un_canonical() {
+        let check = |input: &str, output: &str| {
+            let parsed = Castle::parse(input);
+            assert_eq!(format!("{}", parsed), output)
+        };
+        check("kQ", "Qk");
+        check("qK", "Kq");
+        check("kQq", "Qkq");
+        check("qKk", "Kkq");
+        check("QKq", "KQq");
+        check("QkK", "KQk");
+        check("QKqk", "KQkq");
+    }
+    #[test]
     fn display() {
         assert_eq!(format!("{}", ALL), "KQkq");
         assert_eq!(format!("{}", NONE), "-");
