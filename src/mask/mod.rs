@@ -104,7 +104,8 @@ impl Mask {
     }
     pub fn least_significant_bit(self) -> usize {
         debug_assert!(self.0 != 0);
-        LSB[(self.0.wrapping_mul(MAGIC) >> 58) as usize]
+        let bb = self.0 & self.0.wrapping_neg();
+        LSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
     }
 }
 impl BitOr<Mask> for Mask {
@@ -379,12 +380,15 @@ mod test {
     }
     #[test]
     fn least_significant_bit() {
-        let x: u64 = ::rand::random();
-        let x = x | 1;
-        let shift = ::rand::random::<usize>() % 64;
-        let x = x << shift;
-        let x = Mask(x);
-        assert_eq!(x.least_significant_bit(), shift);
+        for _ in 0..1000 {
+            let x: u64 = ::rand::random();
+            let x = x | 1;
+            let shift = ::rand::random::<usize>() % 64;
+            let x = x << shift;
+            if x == 0 { continue }
+            let x = Mask(x);
+            assert_eq!(x.least_significant_bit(), shift);
+        }
     }
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
