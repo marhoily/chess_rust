@@ -39,7 +39,7 @@ fn wrapped_parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, PositionErr
     parse_bit_borad(input).map_err(|err| {
         match err {
             Positional(Custom(pe), x) => Positional(Custom(Board(pe)), x),
-            _ => panic!(),
+            _ => panic!("wrapped_parse_bit_borad"),
         }
     })
 }
@@ -47,7 +47,7 @@ fn wrapped_parse_color(input: &[u8]) -> IResult<&[u8], Color, PositionError> {
     parse_color(input).map_err(|err| {
         match err {
             Positional(Custom(pe), x) => Positional(Custom(Active(pe)), x),
-            _ => panic!(),
+            _ => panic!("wrapped_parse_color"),
         }
     })
 }
@@ -55,24 +55,25 @@ fn wrapped_parse_castle(input: &[u8]) -> IResult<&[u8], Castle, PositionError> {
     parse_castle(input).map_err(|err| {
         match err {
             Positional(Custom(pe), x) => Positional(Custom(Available(pe)), x),
-            _ => panic!(),
+            _ => panic!("wrapped_parse_castle"),
         }
     })
 }
 fn wrapped_parse_file(input: &[u8]) -> IResult<&[u8], File, PositionError> {
     parse_file(input).map_err(|err| {
         match err {
-            Positional(_, x) => Positional(Custom(Whitespace), x),
-            _ => panic!(),
+            Positional(Custom(pe), x) => Positional(Custom(EnPassant(pe)), x),
+            _ => panic!("wrapped_parse_file"),
         }
     })
 }
 named!(ws(&[u8]) -> char, char!(' '));
+
 fn wrapped_ws(input: &[u8]) -> IResult<&[u8], char, PositionError> {
     ws(input).map_err(|err| {
         match err {
-            Positional(Custom(pe), x) => Positional(Custom(EnPassant(pe)), x),
-            _ => panic!(),
+            Positional(_, x) => Positional(Custom(Whitespace), x),
+            _ => panic!("wrapped_ws"),
         }
     })
 }
