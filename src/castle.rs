@@ -5,8 +5,7 @@ use std::fmt::{Display, Result, Formatter};
 use nom::IResult;
 use nom::IResult::*;
 
-// todo: make castle be masks for squares that need checking?
-// todo: let's keep parser near the struct
+// note: make castle be masks for squares that need checking?
 bitflags! {
     pub flags Castle: u8 {
         const NONE = 0,
@@ -15,9 +14,9 @@ bitflags! {
         const W = WQ.bits | WK.bits,
         const B = BQ.bits | BK.bits,
         const WQ = 1 << 0,
-        const WK = 1 << 2,
-        const BQ = 1 << 3,
-        const BK = 1 << 4,
+        const WK = 1 << 1,
+        const BQ = 1 << 2,
+        const BK = 1 << 3,
         const ALL = Q.bits | K.bits,
     }
 }
@@ -107,7 +106,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn parse() {
+    fn parse_works() {
         let check = |sample: &str| {
             let parsed = Castle::parse(sample);
             assert_eq!(format!("{}", parsed), sample)
@@ -122,7 +121,7 @@ mod test {
         check("KQkq");
     }
     #[test]
-    fn un_canonical() {
+    fn parse_un_canonical() {
         let check = |input: &str, output: &str| {
             let parsed = Castle::parse(input);
             assert_eq!(format!("{}", parsed), output)
@@ -136,9 +135,10 @@ mod test {
         check("QKqk", "KQkq");
         check("QKqkK", "KQkq");
         check("Q.K", "Q");
+        check("-.", "-");
     }
     #[test]
-    fn duplication() {
+    fn parse_duplication() {
         let check = |input: &'static str, expected: usize| {
             use nom::Err::Position;
             use nom::ErrorKind::Custom;
@@ -155,6 +155,24 @@ mod test {
         check("QKkk", 3);
         check("QKkQ", 3);
     }
+    #[test]
+    fn parse_unrecognized() {
+        let check = |input: &'static str, expected: usize| {
+            use nom::Err::Position;
+            use nom::ErrorKind::Custom;
+            use castle::ParsingError::*;
+
+            let b = input.as_bytes();
+            let err = parse_castle(b).unwrap_err();
+            match err {
+                Position(Custom(UnrecognizedToken), reminder) => assert_eq!(reminder, &b[expected..]),
+                _ => panic!(err),
+            }
+        };
+        check("?", 0);
+        check("?Q", 0);
+    }
+
     #[test]
     fn display() {
         assert_eq!(format!("{}", ALL), "KQkq");
