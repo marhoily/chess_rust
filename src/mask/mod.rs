@@ -104,24 +104,41 @@ impl Mask {
     }
     pub fn index_of_least_significant_bit(self) -> u64 {
         use std::intrinsics;
-        unsafe {intrinsics::cttz(self.0)}
+        unsafe { intrinsics::cttz(self.0) }
     }
     pub fn index_of_most_significant_bit(self) -> u64 {
         use std::intrinsics;
-        unsafe {intrinsics::ctlz(self.0)}
+        unsafe { intrinsics::ctlz(self.0) }
     }
-    pub fn stable_index_of_least_significant_bit(self) -> usize {
-//        debug_assert!(self.0 != 0);
+    pub fn stable_index_of_least_significant_bit(self) -> u64 {
+        //        debug_assert!(self.0 != 0);
         let bb = self.0;
         let bb = bb ^ bb.wrapping_sub(1);
         MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
     }
+    pub fn stable_index_of_most_significant_bit(self) -> u64 {
+        //        debug_assert!(self.0 != 0);
+        let mut bb = self.0;
+        bb |= bb >> 1;
+        bb |= bb >> 2;
+        bb |= bb >> 4;
+        bb |= bb >> 8;
+        bb |= bb >> 16;
+        bb |= bb >> 32;
+        MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
+    }
 }
 
-static MSB: &'static [usize] = &[0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 37, 28, 16, 3, 61, 54,
-    58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62, 46,
-    55, 26, 59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45, 25,
-    39, 14, 33, 19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63];
+static MSB: &'static [u64] = &[
+    0, 47,  1, 56, 48, 27,  2, 60,
+    57, 49, 41, 37, 28, 16,  3, 61,
+    54, 58, 35, 52, 50, 42, 21, 44,
+    38, 32, 29, 23, 17, 11,  4, 62,
+    46, 55, 26, 59, 40, 36, 15, 53,
+    34, 51, 20, 43, 31, 22, 10, 45,
+    25, 39, 14, 33, 19, 30,  9, 24,
+    13, 18,  8, 12,  7,  6,  5, 63
+];
 
 /// The De Bruijn multiplier.
 const MAGIC: u64 = 0x03f79d71b4cb0a89;
@@ -397,7 +414,7 @@ mod test {
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
             let x = x | 1;
-            let shift = ::rand::random::<usize>() % 64;
+            let shift = ::rand::random::<u64>() % 64;
             let x = Mask(x << shift);
             assert_eq!(x.stable_index_of_least_significant_bit(), shift);
         }
@@ -413,14 +430,25 @@ mod test {
             assert_eq!(x.index_of_most_significant_bit(), shift);
         }
     }
+    #[test]
+    fn stable_index_of_most_significant_bit() {
+        for _ in 0..1000 {
+            let x: u64 = ::rand::random();
+            let x = x | (1u64 << 63);
+            let shift = ::rand::random::<u64>() % 64;
+            let x = x >> shift;
+            let x = Mask(x);
+            assert_eq!(x.stable_index_of_most_significant_bit(), shift);
+        }
+    }
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
-        let max : u64 = ::test::black_box(1000);
+        let max: u64 = ::test::black_box(1000);
         b.iter(|| {
             let mut count = 0;
             for n in 0..max {
                 if Mask(n).has_mote_than_one_bit_set() {
-                    count +=1
+                    count += 1
                 }
             }
             count
@@ -428,12 +456,12 @@ mod test {
     }
     #[bench]
     fn bench_count(b: &mut Bencher) {
-        let max : u64 = ::test::black_box(1000);
+        let max: u64 = ::test::black_box(1000);
         b.iter(|| {
             let mut count = 0;
             for n in 0..max {
                 if Mask(n).count() > 1 {
-                    count +=1
+                    count += 1
                 }
             }
             count
@@ -441,33 +469,33 @@ mod test {
     }
     #[bench]
     fn bench_index_of_least_significant_bit(b: &mut Bencher) {
-        let max : u64 = ::test::black_box(1000);
+        let max: u64 = ::test::black_box(1000);
         b.iter(|| {
             let mut count = 0;
             for n in 0..max {
-                count +=Mask(n).index_of_least_significant_bit()
+                count += Mask(n).index_of_least_significant_bit()
             }
             count
         });
     }
     #[bench]
     fn bench_stable_index_of_least_significant_bit(b: &mut Bencher) {
-        let max : u64 = ::test::black_box(1000);
+        let max: u64 = ::test::black_box(1000);
         b.iter(|| {
             let mut count = 0;
             for n in 0..max {
-                count +=Mask(n).stable_index_of_least_significant_bit()
+                count += Mask(n).stable_index_of_least_significant_bit()
             }
             count
         });
     }
     #[bench]
     fn bench_index_of_most_significant_bit(b: &mut Bencher) {
-        let max : u64 = ::test::black_box(1000);
+        let max: u64 = ::test::black_box(1000);
         b.iter(|| {
             let mut count = 0;
             for n in 0..max {
-                count +=Mask(n).index_of_most_significant_bit()
+                count += Mask(n).index_of_most_significant_bit()
             }
             count
         });
