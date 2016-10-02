@@ -87,7 +87,8 @@ impl Mask {
         n
     }
     pub fn fill<F>(self, shift: F, stoppers: Mask) -> Mask
-        where F: Fn(Mask) -> Mask {
+        where F: Fn(Mask) -> Mask
+    {
         let empty = !stoppers;
         let mut acc = self;
         for _ in 0..7 {
@@ -378,8 +379,12 @@ mod test {
     }
     #[test]
     fn least_significant_bit() {
-        let x:i32 = ::rand::random();
-        println!("{}", x)
+        let x: u64 = ::rand::random();
+        let x = x | 1;
+        let shift = ::rand::random::<usize>() % 64;
+        let x = x << shift;
+        let x = Mask(x);
+        assert_eq!(x.least_significant_bit(), shift);
     }
     #[bench]
     fn bench_has_mote_than_one_bit_set(b: &mut Bencher) {
