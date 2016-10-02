@@ -111,13 +111,13 @@ impl Mask {
 
     pub fn most_significant_bit(self) -> Mask {
         let mut bb = self.0;
-        bb |= bb >> 32;
-        bb |= bb >> 16;
-        bb |= bb >> 8;
-        bb |= bb >> 4;
-        bb |= bb >> 2;
-        bb |= bb >> 1;
-        bb >>= 1;
+        bb |= bb.wrapping_shr(32);
+        bb |= bb.wrapping_shr(16);
+        bb |= bb.wrapping_shr(8);
+        bb |= bb.wrapping_shr(4);
+        bb |= bb.wrapping_shr(2);
+        bb |= bb.wrapping_shr(1);
+        bb = bb.wrapping_shr(1);
         Mask(bb.wrapping_add(1))
     }
     pub fn stable_index_of_most_significant_bit(self) -> u64 {
@@ -133,16 +133,10 @@ impl Mask {
     }
 }
 
-static MSB: &'static [u64] = &[
-    0, 47,  1, 56, 48, 27,  2, 60,
-    57, 49, 41, 37, 28, 16,  3, 61,
-    54, 58, 35, 52, 50, 42, 21, 44,
-    38, 32, 29, 23, 17, 11,  4, 62,
-    46, 55, 26, 59, 40, 36, 15, 53,
-    34, 51, 20, 43, 31, 22, 10, 45,
-    25, 39, 14, 33, 19, 30,  9, 24,
-    13, 18,  8, 12,  7,  6,  5, 63
-];
+static MSB: &'static [u64] = &[0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 37, 28, 16, 3, 61, 54, 58,
+                               35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62, 46, 55, 26,
+                               59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45, 25, 39, 14, 33,
+                               19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63];
 
 /// The De Bruijn multiplier.
 const MAGIC: u64 = 0x03f79d71b4cb0a89;
@@ -414,17 +408,20 @@ mod test {
         }
     }
 
-//    #[test]
-//    fn most_significant_bit() {
-//        for _ in 0..1000 {
-//            let x: u64 = ::rand::random();
-//            let x = x | (1u64 << 63);
-//            let shift = ::rand::random::<u64>() % 64;
-//            let x = x >> shift;
-//            let x = Mask(x);
-//            assert_eq!(x.most_significant_bit().0, 1 << shift);
-//        }
-//    }
+    #[test]
+    fn most_significant_bit() {
+        const INIT: u64 = 1u64 << 63;
+        for _ in 0..1000 {
+            let x: u64 = ::rand::random();
+            let x = x | INIT;
+            let shift = ::rand::random::<u32>() % 64;
+            let x = x.wrapping_shr(shift);
+            let m = Mask(x);
+            assert_eq!(
+                m.most_significant_bit().0,
+                INIT >> shift);
+        }
+    }
     #[test]
     fn index_of_most_significant_bit() {
         for _ in 0..1000 {
