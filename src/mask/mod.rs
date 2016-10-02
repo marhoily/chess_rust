@@ -122,20 +122,17 @@ impl Mask {
         Mask(bb & bb.wrapping_neg())
     }
 
-    pub fn iter_masks(self) -> FwdMaskIter {
-        FwdMaskIter(self)
+    pub fn single_bits(self) -> MaskIter {
+        MaskIter(self)
     }
-    pub fn iter_indices(self) -> IndexIter {
+    pub fn single_bit_indices(self) -> IndexIter {
         IndexIter(self)
-    }
-    pub fn iter_masks_rev(self) -> RevMaskIter {
-        RevMaskIter(self)
     }
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct FwdMaskIter(Mask);
-impl Iterator for FwdMaskIter {
+pub struct MaskIter(Mask);
+impl Iterator for MaskIter {
     type Item = Mask;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -145,6 +142,18 @@ impl Iterator for FwdMaskIter {
             let mask = self.0;
             let result = mask.least_significant_bit();
             self.0 = Mask(mask.0 & mask.0.wrapping_sub(1));
+            Some(result)
+        }
+    }
+}
+impl DoubleEndedIterator for MaskIter {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.0 == masks::EMPTY {
+            None
+        } else {
+            let mask = self.0;
+            let result = mask.most_significant_bit();
+            self.0 = Mask(mask.0 ^ result.0);
             Some(result)
         }
     }
@@ -182,25 +191,6 @@ impl DoubleEndedIterator for IndexIter {
         }
     }
 }
-
-#[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct RevMaskIter(Mask);
-impl Iterator for RevMaskIter {
-    type Item = Mask;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 == masks::EMPTY {
-            None
-        } else {
-            let mask = self.0;
-            let result = mask.most_significant_bit();
-            self.0 = Mask(mask.0 ^ result.0);
-            Some(result)
-        }
-    }
-}
-
-
 
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -452,8 +442,8 @@ mod test {
     fn count() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
-            assert_eq!(m.count() as usize, m.iter_masks().count());
-            assert_eq!(m.count() as usize, m.iter_indices().count());
+            assert_eq!(m.count() as usize, m.single_bits().count());
+            assert_eq!(m.count() as usize, m.single_bit_indices().count());
         }
     }
     #[test]
@@ -509,18 +499,18 @@ mod test {
     fn iter_masks_rev() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
-            let mut forward = m.iter_masks().collect::<Vec<_>>();
+            let mut forward = m.single_bits().collect::<Vec<_>>();
             forward.reverse();
-            assert_eq!(forward, m.iter_masks_rev().collect::<Vec<_>>());
+            assert_eq!(forward, m.single_bits().rev().collect::<Vec<_>>());
         }
     }
     #[test]
     fn index_iter_back_and_forth() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
-            let mut forward = m.iter_indices().collect::<Vec<_>>();
+            let mut forward = m.single_bit_indices().collect::<Vec<_>>();
             forward.reverse();
-            assert_eq!(forward, m.iter_indices().rev().collect::<Vec<_>>());
+            assert_eq!(forward, m.single_bit_indices().rev().collect::<Vec<_>>());
         }
     }
 
