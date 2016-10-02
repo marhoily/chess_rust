@@ -14,9 +14,6 @@ impl Mask {
     pub fn bits(self) -> u64 {
         self.0
     }
-    pub fn is_empty(&self) -> bool {
-        self.0 == 0
-    }
     pub fn has_all(self, another: Mask) -> bool {
         self.0 & another.bits() == another.bits()
     }

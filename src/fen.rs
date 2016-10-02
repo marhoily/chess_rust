@@ -1,6 +1,6 @@
 use geometry::*;
 use piece::*;
-use mask::Mask;
+use mask::{Mask, masks};
 use bit_board::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -52,7 +52,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut just_had_gap = false;
     let mut consumed = 0;
     for &e in input {
-        let token = if !square.is_empty() {
+        let token = if square != masks::EMPTY {
             consume(e as char)
         } else {
             Token::Slash
@@ -98,7 +98,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
         }
         consumed += 1;
     }
-    if square.is_empty() {
+    if square == masks::EMPTY {
         Done(&input[consumed..], result)
     } else {
         Incomplete(Needed::Unknown)
