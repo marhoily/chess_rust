@@ -207,7 +207,7 @@ mod test {
 
     #[test]
     fn extra_symbols() {
-        check_extra("8/p7/8/8/4Q3/8/8/81", 18);
+        check_extra("8/p7/8/8/4Q3/8/8/81132", 18);
         check_extra("8/p7/8/8/4Q3/8/8/8p", 18);
         check_extra("8/p7/8/8/4Q3/8/8/8[", 18);
         check_extra("8/p7/8/8/4Q3/8/8/8 ", 18);
