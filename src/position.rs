@@ -19,7 +19,11 @@ impl Position {
         parse_position(input.as_bytes()).unwrap().1
     }
 }
-
+impl ::std::fmt::Display for Position {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "??")
+    }
+}
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
 pub enum PositionError {
     Board(fen::ParsingError),

@@ -78,7 +78,11 @@ impl BitBoard {
         ::fen::parse_bit_board(input.as_bytes()).unwrap().1
     }
 }
-
+impl ::std::fmt::Display for BitBoard {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{}", self.print_fen())
+    }
+}
 #[derive(Copy, Clone, Debug)]
 pub struct SquareIter<'a> {
     board: &'a BitBoard,

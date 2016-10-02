@@ -135,7 +135,6 @@ fn consume(c: char) -> Token {
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use geometry::squares;
