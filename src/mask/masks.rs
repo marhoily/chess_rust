@@ -175,23 +175,18 @@ mod test {
 
     #[test]
     fn print_const_files() {
-        use geometry::{File, Rank, Square};
+        use geometry::Square;
         use std::ascii::AsciiExt;
 
-        println!("");
-
-        for file in 0..8 {
+        for file in ::geometry::files::All {
             let mut mask = EMPTY;
-            let f = File::new(file);
-            for rank in 0..8 {
-                let sq = Square::from(f, Rank::new(rank));
-                mask |= sq.mask();
+            for rank in ::geometry::ranks::All {
+                mask |= Square::from(file, rank).mask();
             }
             println!("pub const {} : Mask = Mask(0x{:X});",
-                     f.char().to_ascii_uppercase(),
+                     file.char().to_ascii_uppercase(),
                      mask.bits());
         }
-        println!("");
     }
     #[test]
     fn print_const_ranks() {
