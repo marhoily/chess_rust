@@ -77,7 +77,7 @@ impl BitBoard {
     pub fn parse(input: &str) -> Self {
         use fen;
 
-        fen::parse_bit_borad(input.as_bytes()).unwrap().1
+        fen::parse_bit_board(input.as_bytes()).unwrap().1
     }
 }
 

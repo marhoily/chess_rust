@@ -4,7 +4,7 @@ use castle::Castle;
 use bit_board::BitBoard;
 use geometry::{File, Color};
 use fen;
-use fen::parse_bit_borad;
+use fen::parse_bit_board;
 use geometry::{parse_color, parse_file};
 use castle;
 use castle::parse_castle;
@@ -35,11 +35,11 @@ pub enum PositionError {
     Whitespace
 }
 
-fn wrapped_parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
-    parse_bit_borad(input).map_err(|err| {
+fn wrapped_parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, PositionError> {
+    parse_bit_board(input).map_err(|err| {
         match err {
             Positional(Custom(pe), x) => Positional(Custom(Board(pe)), x),
-            _ => panic!("wrapped_parse_bit_borad"),
+            _ => panic!("wrapped_parse_bit_board"),
         }
     })
 }
@@ -81,7 +81,7 @@ fn wrapped_ws(input: &[u8]) -> IResult<&[u8], char, PositionError> {
 // "8/8/8/8/8/8/8/8 w KQkq - 0 1"
 named!(pub parse_position<&[u8], Position, PositionError>,
     chain!(
-        board: wrapped_parse_bit_borad ~
+        board: wrapped_parse_bit_board ~
         wrapped_ws ~
         active: wrapped_parse_color ~
         wrapped_ws ~
