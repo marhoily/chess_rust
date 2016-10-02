@@ -4,8 +4,10 @@
 use bit_board::BitBoard;
 use geometry::{File, Color};
 
+// todo: make castle be masks for squares that need checking?
+// todo: let's keep parser near the struct
 bitflags! {
-    pub flags Castling: u8 {
+    pub flags Castle: u8 {
         const NONE = 0,
         const Q = WQ.bits | BQ.bits,
         const K = WK.bits | BK.bits,
@@ -22,6 +24,6 @@ bitflags! {
 struct Position {
     board: BitBoard,
     active: Color,
-    available: Castling,
+    available: Castle,
     en_passant: Option<File>,
 }

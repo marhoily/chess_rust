@@ -14,6 +14,7 @@ pub mod files {
     pub const G: Mask = Mask(0x4040404040404040);
     pub const H: Mask = Mask(0x8080808080808080);
 
+    // todo: replace with an iterator and an indexer
     pub static ALL: &'static [Mask] = &[A, B, C, D, E, F, G, H];
 }
 pub mod ranks {
@@ -28,6 +29,7 @@ pub mod ranks {
     pub const _2: Mask = Mask(0xFF000000000000);
     pub const _1: Mask = Mask(0xFF00000000000000);
 
+    // todo: replace with an iterator and an indexer
     pub static ALL: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
 }
 
