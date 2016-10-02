@@ -50,7 +50,7 @@ impl Display for Castle {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum ParsingError {
-    Repeat,
+    Duplication,
     UnrecognizedToken,
 }
 
@@ -74,15 +74,24 @@ pub fn parse_castle(input: &[u8]) -> IResult<&[u8], Castle, ParsingError> {
     let mut result = NONE;
     let mut consumed = 0;
     for &e in input {
-        consumed += 1;
         match consume(e as char) {
-            None => return Error(Position(Custom(UnrecognizedToken), &input[consumed..])),
-            Some(NONE) => break,
+            None => {
+                if consumed > 0 {
+                    return Done(&input[consumed + 1..], result);
+                } else {
+                    return Error(Position(Custom(UnrecognizedToken), &input[consumed..]));
+                }
+            }
+            Some(NONE) => return Done(&input[consumed + 1..], result),
             Some(c) => {
                 if result.intersects(c) {
-                    return Error(Position(Custom(Repeat), &input[consumed..]));
+                    return Error(Position(Custom(Duplication), &input[consumed..]));
                 }
                 result |= c;
+                consumed += 1;
+                if consumed == 4 {
+                    return Done(&input[consumed..], result);
+                }
             }
         }
     }
@@ -125,6 +134,22 @@ mod test {
         check("QKq", "KQq");
         check("QkK", "KQk");
         check("QKqk", "KQkq");
+    }
+    #[test]
+    fn duplication() {
+        let check = |input: &'static str, expected: usize| {
+            use nom::Err::Position;
+            use nom::ErrorKind::Custom;
+            use castle::ParsingError::*;
+
+            let b = input.as_bytes();
+            let err = parse_castle(b).unwrap_err();
+            match err {
+                Position(Custom(Duplication), reminder) => assert_eq!(reminder, &b[expected..]),
+                _ => panic!(err),
+            }
+        };
+        check("kk", 1);
     }
     #[test]
     fn display() {
