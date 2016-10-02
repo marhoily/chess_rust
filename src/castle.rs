@@ -58,4 +58,10 @@ mod test {
         assert_eq!(format!("{}", BQ), "q");
         assert_eq!(format!("{}", BK), "k");
     }
+
+    #[test]
+    fn debug() {
+        assert_eq!(format!("{:?}", NONE), "");
+        assert_eq!(format!("{:?}", Q), "Q | WQ | BQ");
+    }
 }
