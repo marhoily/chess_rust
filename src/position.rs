@@ -34,9 +34,6 @@ mod wrappers {
     use castle::Castle;
     use bit_board::BitBoard;
     use geometry::{File, Color};
-    use fen::parse_bit_board;
-    use geometry::{parse_color, parse_file};
-    use castle::parse_castle;
     use nom::IResult;
     use nom::Err::Position as P;
     use nom::ErrorKind::Custom as C;
@@ -44,7 +41,7 @@ mod wrappers {
     type R<'a, T, X> = IResult<&'a[u8], T, X>;
 
     pub fn wrapped_parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
-        parse_bit_board(input).map_err(|err| {
+        ::fen::parse_bit_board(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Board(pe)), x),
                 _ => panic!("wrapped_parse_bit_board"),
@@ -53,7 +50,7 @@ mod wrappers {
     }
 
     pub fn wrapped_parse_color(input: &[u8]) -> R<Color, PositionError> {
-        parse_color(input).map_err(|err| {
+        ::geometry::parse_color(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Active(pe)), x),
                 _ => panic!("wrapped_parse_color"),
@@ -62,7 +59,7 @@ mod wrappers {
     }
 
     pub fn wrapped_parse_castle(input: &[u8]) -> R<Castle, PositionError> {
-        parse_castle(input).map_err(|err| {
+        ::castle::parse_castle(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Available(pe)), x),
                 _ => panic!("wrapped_parse_castle"),
@@ -71,7 +68,7 @@ mod wrappers {
     }
 
     pub fn wrapped_parse_file(input: &[u8]) -> R<File, PositionError> {
-        parse_file(input).map_err(|err| {
+        ::geometry::parse_file(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(EnPassant(pe)), x),
                 _ => panic!("wrapped_parse_file"),
