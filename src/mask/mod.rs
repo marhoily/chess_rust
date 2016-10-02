@@ -95,6 +95,9 @@ impl Mask {
         }
         acc
     }
+    pub fn count(self) -> u32 {
+        self.0.count_ones()
+    }
 }
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -338,5 +341,11 @@ mod test {
                     |^^^^^^^^|...\
                     |^^^^^^^^|...\
                     |^^^^^^^^|...");
+    }
+
+    #[test]
+    fn count() {
+        let m = masks::files::B | masks::ranks::_2;
+        assert_eq!(m.count(), 15);
     }
 }
