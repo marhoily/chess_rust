@@ -102,7 +102,7 @@ impl Mask {
     pub fn has_mote_than_one_bit_set(self) -> bool {
         self.0 & (self.0.wrapping_sub(1)) != 0
     }
-    pub fn least_significant_bit(self) -> usize {
+    pub fn index_of_least_significant_bit(self) -> usize {
         debug_assert!(self.0 != 0);
         let bb = self.0 ^ self.0.wrapping_sub(1);
         MSB[(bb.wrapping_mul(MAGIC) >> 58) as usize]
@@ -379,7 +379,7 @@ mod test {
         assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
     }
     #[test]
-    fn least_significant_bit() {
+    fn index_of_least_significant_bit() {
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
             let x = x | 1;
@@ -387,7 +387,7 @@ mod test {
             let x = x << shift;
             if x == 0 { continue }
             let x = Mask(x);
-            assert_eq!(x.least_significant_bit(), shift);
+            assert_eq!(x.index_of_least_significant_bit(), shift);
         }
     }
     #[bench]
