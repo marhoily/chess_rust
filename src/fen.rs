@@ -52,7 +52,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     let mut just_had_gap = false;
     let mut consumed = 0;
     for &e in input {
-        let token = if !square.empty() {
+        let token = if !square.is_empty() {
             consume(e as char)
         } else {
             Token::Slash
@@ -98,7 +98,7 @@ pub fn parse_bit_borad(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
         }
         consumed += 1;
     }
-    if square.empty() {
+    if square.is_empty() {
         Done(&input[consumed..], result)
     } else {
         Incomplete(Needed::Unknown)
