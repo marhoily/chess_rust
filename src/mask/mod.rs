@@ -117,6 +117,10 @@ impl Mask {
         bb = bb.wrapping_shr(1);
         Mask(bb.wrapping_add(1))
     }
+    pub fn least_significant_bit(self) -> Mask {
+        let bb = self.0;
+        Mask(bb & bb.wrapping_neg())
+    }
 }
 
 impl BitOr<Mask> for Mask {
@@ -376,39 +380,43 @@ mod test {
         assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
     }
     #[test]
-    fn index_of_least_significant_bit() {
+    fn least_significant_bit() {
+        const ONE: u64 = 1;
         for _ in 0..1000 {
-            let x: u64 = ::rand::random();
-            let x = x | 1;
+            let sample: u64 = ::rand::random();
             let shift = ::rand::random::<u32>() % 64;
-            let x = Mask(x << shift);
-            assert_eq!(x.index_of_least_significant_bit(), shift);
+            let m = Mask((sample | ONE).wrapping_shl(shift));
+            assert_eq!(m.least_significant_bit().0, ONE << shift);
+        }
+    }
+    #[test]
+    fn index_of_least_significant_bit() {
+        const ONE: u64 = 1;
+        for _ in 0..1000 {
+            let sample: u64 = ::rand::random();
+            let shift = ::rand::random::<u32>() % 64;
+            let m = Mask((sample | ONE).wrapping_shl(shift));
+            assert_eq!(m.index_of_least_significant_bit(), shift);
         }
     }
 
     #[test]
     fn most_significant_bit() {
-        const INIT: u64 = 1u64 << 63;
+        const ONE: u64 = 1u64 << 63;
         for _ in 0..1000 {
-            let x: u64 = ::rand::random();
-            let x = x | INIT;
+            let sample: u64 = ::rand::random();
             let shift = ::rand::random::<u32>() % 64;
-            let x = x.wrapping_shr(shift);
-            let m = Mask(x);
-            assert_eq!(
-                m.most_significant_bit().0,
-                INIT >> shift);
+            let m = Mask((sample | ONE).wrapping_shr(shift));
+            assert_eq!(m.most_significant_bit().0, ONE >> shift);
         }
     }
     #[test]
     fn index_of_most_significant_bit() {
-        const INIT: u64 = 1u64 << 63;
+        const ONE: u64 = 1u64 << 63;
         for _ in 0..1000 {
             let x: u64 = ::rand::random();
-            let x = x | INIT;
             let shift = ::rand::random::<u32>() % 64;
-            let x = x >> shift;
-            let x = Mask(x);
+            let x = Mask((x | ONE).wrapping_shr(shift));
             assert_eq!(x.index_of_most_significant_bit(), shift);
         }
     }
