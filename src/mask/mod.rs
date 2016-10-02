@@ -125,15 +125,13 @@ impl Mask {
     pub fn iter_masks(self) -> FwdMaskIter {
         FwdMaskIter(self)
     }
-    pub fn iter_indices(self) -> FwdIndexIter {
-        FwdIndexIter(self)
+    pub fn iter_indices(self) -> IndexIter {
+        IndexIter(self)
     }
     pub fn iter_masks_rev(self) -> RevMaskIter {
         RevMaskIter(self)
     }
-    pub fn iter_indices_rev(self) -> RevIndexIter {
-        RevIndexIter(self)
-    }
+
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
@@ -154,8 +152,8 @@ impl Iterator for FwdMaskIter {
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct FwdIndexIter(Mask);
-impl Iterator for FwdIndexIter {
+pub struct IndexIter(Mask);
+impl Iterator for IndexIter {
     type Item = u32;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -165,6 +163,18 @@ impl Iterator for FwdIndexIter {
             let mask = self.0;
             let result = mask.index_of_least_significant_bit();
             self.0 = Mask(mask.0 & mask.0.wrapping_sub(1));
+            Some(result)
+        }
+    }
+}
+impl DoubleEndedIterator for IndexIter {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.0 == masks::EMPTY {
+            None
+        } else {
+            let mask = self.0;
+            let result = mask.index_of_least_significant_bit();
+            self.0 = Mask(mask.0 ^ (1u64 << result));
             Some(result)
         }
     }
@@ -187,22 +197,7 @@ impl Iterator for RevMaskIter {
     }
 }
 
-#[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct RevIndexIter(Mask);
-impl Iterator for RevIndexIter {
-    type Item = u32;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0 == masks::EMPTY {
-            None
-        } else {
-            let mask = self.0;
-            let result = mask.index_of_least_significant_bit();
-            self.0 = Mask(mask.0 ^ (1u64 << result));
-            Some(result)
-        }
-    }
-}
 
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -508,7 +503,7 @@ mod test {
     }
 
     #[test]
-    fn rev_index_iter() {
+    fn rev_masks_iter() {
         for _ in 0..1000 {
             let m = Mask(::rand::random());
             let mut forward = m.iter_masks().collect::<Vec<_>>();
