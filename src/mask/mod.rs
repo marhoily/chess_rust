@@ -1,7 +1,7 @@
 use geometry::Square;
 use std::ops::{BitOr, BitOrAssign, BitAnd, BitAndAssign, Shl, ShlAssign, Shr, ShrAssign, Not};
 
-#[derive(PartialEq, Copy, Clone, Debug, Default)]
+#[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct Mask(u64);
 
 impl Mask {
@@ -120,6 +120,32 @@ impl Mask {
     pub fn least_significant_bit(self) -> Mask {
         let bb = self.0;
         Mask(bb & bb.wrapping_neg())
+    }
+}
+
+#[derive(Eq, Copy, Clone, Debug, PartialEq)]
+pub struct FwdMaskIter(Mask);
+
+impl IntoIterator for Mask {
+    type IntoIter = FwdMaskIter;
+    type Item = Mask;
+
+    fn into_iter(self) -> Self::IntoIter {
+        FwdMaskIter(self)
+    }
+}
+impl Iterator for FwdMaskIter{
+    type Item = Mask;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0 == masks::EMPTY {
+            None
+        } else {
+            let mask = self.0;
+            let result = mask.least_significant_bit();
+            self.0 = Mask(mask.0 & mask.0.wrapping_sub(1));
+            Some(result)
+        }
     }
 }
 
