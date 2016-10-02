@@ -396,12 +396,4 @@ mod test {
     fn bench_count(b: &mut Bencher) {
         b.iter(|| masks::files::B.count() > 1);
     }
-    #[bench]
-    fn bench_index_of_least_significant_bit(b: &mut Bencher) {
-        b.iter(|| masks::files::B.index_of_least_significant_bit());
-    }
-    #[bench]
-    fn bench_index_of_most_significant_bit(b: &mut Bencher) {
-        b.iter(|| masks::files::B.index_of_most_significant_bit());
-    }
 }
