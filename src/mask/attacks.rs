@@ -14,7 +14,7 @@ impl Mask {
 
 #[cfg(test)]
 mod tests {
-    use super::super::masks::E5;
+    use super::super::masks::*;
 
     #[test]
     fn knight_attacks() {
@@ -27,5 +27,41 @@ mod tests {
                     |^^^@^@^^|...\
                     |^^^^^^^^|...\
                     |^^^^^^^^|...");
+    }
+    #[test]
+    fn knight_attacks_corners() {
+        assert_eq!((A8|A1|H1|H8).knight_attacks().dump(),
+                   "|^^^^^^^^|...\
+                    |^^@^^@^^|...\
+                    |^@^^^^@^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^@^^^^@^|...\
+                    |^^@^^@^^|...\
+                    |^^^^^^^^|...");
+    }
+    #[test]
+    fn knight_attacks_flanks() {
+        assert_eq!((A3|A6|H3|H6).knight_attacks().dump(),
+                   "|^@^^^^@^|...\
+                    |^^@^^@^^|...\
+                    |^^^^^^^^|...\
+                    |^@@^^@@^|...\
+                    |^@@^^@@^|...\
+                    |^^^^^^^^|...\
+                    |^^@^^@^^|...\
+                    |^@^^^^@^|...");
+    }
+    #[test]
+    fn knight_attacks_inner() {
+        assert_eq!((B3|G6).knight_attacks().dump(),
+                   "|^^^^^@^@|...\
+                    |^^^^@^^^|...\
+                    |^^^^^^^^|...\
+                    |@^@^@^^^|...\
+                    |^^^@^@^@|...\
+                    |^^^^^^^^|...\
+                    |^^^@^^^^|...\
+                    |@^@^^^^^|...");
     }
 }
