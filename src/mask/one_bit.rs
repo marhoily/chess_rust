@@ -28,7 +28,6 @@ impl Mask {
         let bb = self.0;
         Mask(bb & bb.wrapping_neg())
     }
-
 }
 
 #[cfg(test)]

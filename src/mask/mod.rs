@@ -75,6 +75,7 @@ pub mod ops;
 pub mod iter;
 pub mod masks;
 pub mod one_bit;
+pub mod attacks;
 
 #[cfg(test)]
 mod test {
