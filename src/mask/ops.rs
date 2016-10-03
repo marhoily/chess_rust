@@ -1,5 +1,5 @@
 use super::*;
-use std::ops::{BitOr, BitOrAssign, BitAnd, BitAndAssign, Shl, ShlAssign, Shr, ShrAssign, Not};
+use std::ops::*;
 
 impl BitOr<Mask> for Mask {
     type Output = Mask;
@@ -20,6 +20,17 @@ impl BitAnd<Mask> for Mask {
 }
 impl BitAndAssign<Mask> for Mask {
     fn bitand_assign(&mut self, rhs: Mask) {
+        self.0 &= rhs.0
+    }
+}
+impl BitXor<Mask> for Mask {
+    type Output = Mask;
+    fn bitxor(self, rhs: Mask) -> Self::Output {
+        Mask(self.0 & rhs.0)
+    }
+}
+impl BitXorAssign<Mask> for Mask {
+    fn bitxor_assign(&mut self, rhs: Mask) {
         self.0 &= rhs.0
     }
 }
@@ -51,6 +62,7 @@ impl Not for Mask {
         Mask(!self.0)
     }
 }
+
 
 #[cfg(test)]
 mod tests {

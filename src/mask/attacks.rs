@@ -8,9 +8,6 @@ impl Mask {
     pub fn black_pawn_attacks(self) -> Mask {
         self.shift_south_east() | self.shift_south_west()
     }
-    // pub fn white_pawn_pushes
-    // pub fn black_pawn_pushes
-
     pub fn knight_attacks(self) -> Mask {
         let x = self;
         let a = ((x << 17) | (x >> 15)) & !A;
@@ -30,6 +27,9 @@ impl Mask {
         self.fill(Mask::shift_south, stoppers).shift_south() |
         self.fill(Mask::shift_east, stoppers).shift_east() |
         self.fill(Mask::shift_west, stoppers).shift_west()
+    }
+    pub fn queen_attacks(self, stoppers: Mask) -> Mask {
+        self.rook_attacks(stoppers) | self.bishop_attacks(stoppers)
     }
 }
 
@@ -141,4 +141,22 @@ mod tests {
                     |^^^^^@^^|...\
                     |^^^^^^^^|...");
     }
+    #[test]
+    fn queen_attacks() {
+        assert_eq!(F7.queen_attacks(B | _2).dump(),
+                   "|^^^^@@@^|...\
+                    |^@@@@^@@|...\
+                    |^^^^@@@^|...\
+                    |^^^@^@^@|...\
+                    |^^@^^@^^|...\
+                    |^@^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^^^^|...");
+    }
 }
+
+// pub fn white_pawn_pushes
+// pub fn black_pawn_pushes
+// pub fn xray_bishop_attacks(self, occupied: Mask, stoppers: Mask) -> Mask {
+//     let attacks = self.bishop_attacks(occupied);
+//     attacks ^ self.bishop_attacks((stoppers & attacks) ^ stoppers)
