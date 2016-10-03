@@ -3,7 +3,7 @@
 use castle::Castle;
 use bit_board::BitBoard;
 use geometry::{File, Color};
-use fen;
+use bit_board::fen;
 use castle;
 use self::wrappers::*;
 
@@ -45,7 +45,7 @@ mod wrappers {
     type R<'a, T, X> = ::nom::IResult<&'a [u8], T, X>;
 
     pub fn parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
-        ::fen::parse_bit_board(input).map_err(|err| {
+        ::bit_board::fen::parse_bit_board(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Board(pe)), x),
                 _ => panic!("parse_bit_board"),

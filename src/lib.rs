@@ -32,7 +32,6 @@ pub mod piece;
 pub mod mask;
 pub mod bit_board;
 pub mod moves;
-pub mod fen;
 pub mod position;
 pub mod analysis;
 pub mod castle;

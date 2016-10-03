@@ -75,9 +75,11 @@ impl BitBoard {
         String::from(result)
     }
     pub fn parse(input: &str) -> Self {
-        ::fen::parse_bit_board(input.as_bytes()).unwrap().1
+        fen::parse_bit_board(input.as_bytes()).unwrap().1
     }
 }
+pub mod fen;
+
 impl ::std::fmt::Display for BitBoard {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{}", self.print_fen())
