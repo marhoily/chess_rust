@@ -121,12 +121,7 @@ impl Mask {
         Mask(bb & bb.wrapping_neg())
     }
 
-    pub fn single_bits(self) -> iter::MaskIter {
-        iter::MaskIter(self)
-    }
-    pub fn single_bit_indices(self) -> iter::IndexIter {
-        iter::IndexIter(self)
-    }
+
 }
 pub mod ops;
 pub mod iter;

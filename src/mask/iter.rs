@@ -1,7 +1,16 @@
 use super::*;
 
+impl Mask {
+    pub fn single_bits(self) -> MaskIter {
+        MaskIter(self)
+    }
+    pub fn single_bit_indices(self) -> IndexIter {
+        IndexIter(self)
+    }
+}
+
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct MaskIter(pub Mask);
+pub struct MaskIter(Mask);
 impl Iterator for MaskIter {
     type Item = Mask;
 
@@ -30,7 +39,7 @@ impl DoubleEndedIterator for MaskIter {
 }
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
-pub struct IndexIter(pub Mask);
+pub struct IndexIter(Mask);
 impl Iterator for IndexIter {
     type Item = u32;
 
