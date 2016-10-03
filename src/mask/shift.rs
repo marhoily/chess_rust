@@ -29,12 +29,22 @@ impl Mask {
 
 #[cfg(test)]
 mod tests {
-    use super::super::*;
+    use super::super::masks::files::E;
+    use super::super::masks::ranks::_5;
+
+    //  E|5:
+    //           |@^^^@^^^|
+    //           |^^^^@^^^|
+    //           |^^^^@^^^|
+    //           |@@@@@@@@|
+    //           |^^^^@^^^|
+    //           |^^^^@^^^|
+    //           |^^^^@^^^|
+    //           |^^^^@^^^|
 
     #[test]
     fn shift_north() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_north().dump(),
+        assert_eq!((E | _5).shift_north().dump(),
                    "|^^^^@^^^|...\
                     |^^^^@^^^|...\
                     |@@@@@@@@|...\
@@ -47,8 +57,7 @@ mod tests {
 
     #[test]
     fn shift_south() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_south().dump(),
+        assert_eq!((E | _5).shift_south().dump(),
                    "|^^^^^^^^|...\
                     |^^^^@^^^|...\
                     |^^^^@^^^|...\
@@ -61,8 +70,7 @@ mod tests {
 
     #[test]
     fn shift_east() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_east().dump(),
+        assert_eq!((E | _5).shift_east().dump(),
                    "|^^^^^@^^|...\
                     |^^^^^@^^|...\
                     |^^^^^@^^|...\
@@ -75,8 +83,7 @@ mod tests {
 
     #[test]
     fn shift_south_east() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_south_east().dump(),
+        assert_eq!((E | _5).shift_south_east().dump(),
                    "|^^^^^^^^|...\
                     |^^^^^@^^|...\
                     |^^^^^@^^|...\
@@ -89,8 +96,7 @@ mod tests {
 
     #[test]
     fn shift_north_east() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_north_east().dump(),
+        assert_eq!((E | _5).shift_north_east().dump(),
                    "|^^^^^@^^|...\
                     |^^^^^@^^|...\
                     |^@@@@@@@|...\
@@ -103,8 +109,7 @@ mod tests {
 
     #[test]
     fn shift_west() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_west().dump(),
+        assert_eq!((E | _5).shift_west().dump(),
                    "|^^^@^^^^|...\
                     |^^^@^^^^|...\
                     |^^^@^^^^|...\
@@ -117,8 +122,7 @@ mod tests {
 
     #[test]
     fn shift_south_west() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_south_west().dump(),
+        assert_eq!((E | _5).shift_south_west().dump(),
                    "|^^^^^^^^|...\
                     |^^^@^^^^|...\
                     |^^^@^^^^|...\
@@ -131,8 +135,7 @@ mod tests {
 
     #[test]
     fn shift_north_west() {
-        let mask = masks::files::E | masks::ranks::_5;
-        assert_eq!(mask.shift_north_west().dump(),
+        assert_eq!((E | _5).shift_north_west().dump(),
                    "|^^^@^^^^|...\
                     |^^^@^^^^|...\
                     |@@@@@@@^|...\
