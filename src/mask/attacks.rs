@@ -25,6 +25,12 @@ impl Mask {
         self.fill(Mask::shift_south_east, stoppers).shift_south_east() |
         self.fill(Mask::shift_south_west, stoppers).shift_south_west()
     }
+    pub fn rook_attacks(self, stoppers: Mask) -> Mask {
+        self.fill(Mask::shift_north, stoppers).shift_north() |
+        self.fill(Mask::shift_south, stoppers).shift_south() |
+        self.fill(Mask::shift_east, stoppers).shift_east() |
+        self.fill(Mask::shift_west, stoppers).shift_west()
+    }
 }
 
 #[cfg(test)]
@@ -113,7 +119,7 @@ mod tests {
 
     #[test]
     fn bishop_attacks() {
-        assert_eq!(F7.bishop_attacks(B|_2).dump(),
+        assert_eq!(F7.bishop_attacks(B | _2).dump(),
                    "|^^^^@^@^|...\
                     |^^^^^^^^|...\
                     |^^^^@^@^|...\
@@ -121,6 +127,18 @@ mod tests {
                     |^^@^^^^^|...\
                     |^@^^^^^^|...\
                     |^^^^^^^^|...\
+                    |^^^^^^^^|...");
+    }
+    #[test]
+    fn rook_attacks() {
+        assert_eq!(F7.rook_attacks(B | _2).dump(),
+                   "|^^^^^@^^|...\
+                    |^@@@@^@@|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
+                    |^^^^^@^^|...\
                     |^^^^^^^^|...");
     }
 }
