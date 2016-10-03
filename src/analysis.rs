@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use geometry::Square;
+use square::Square;
 use color::Color;
 use rank::Rank;
 use piece::Piece;

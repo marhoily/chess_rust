@@ -29,7 +29,7 @@ extern crate nom;
 pub mod file;
 pub mod rank;
 pub mod color;
-pub mod geometry;
+pub mod square;
 pub mod kind;
 pub mod piece;
 pub mod mask;

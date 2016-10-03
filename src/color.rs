@@ -31,8 +31,6 @@ named!(pub parse_color(&[u8]) -> Color,
 
 #[cfg(test)]
 mod test {
-    use super::*;
-
 
     #[test]
     fn color_invert() {

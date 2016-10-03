@@ -1,5 +1,5 @@
 use kind::*;
-use geometry::*;
+use square::*;
 use std::fmt::{Display, Formatter, Result};
 
 #[derive(Eq, Hash, Debug, Copy, Clone, PartialEq)]
@@ -60,7 +60,7 @@ named!(pub parse_move(&[u8]) -> Move,
 
 #[cfg(test)]
 mod test {
-    use geometry::*;
+    use square::*;
     use super::*;
     use kind::*;
 

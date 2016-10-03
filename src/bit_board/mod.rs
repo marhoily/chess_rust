@@ -2,7 +2,7 @@ use piece::{Piece, pieces};
 use piece::pieces::All;
 use mask::{masks, Mask};
 use mask::masks::MaskIter;
-use geometry::*;
+use square::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; pieces::COUNT]);

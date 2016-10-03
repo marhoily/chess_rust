@@ -137,7 +137,7 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use geometry::squares;
+    use square::squares;
     use bit_board::BitBoard;
     use piece::pieces;
     use nom::{Err, ErrorKind, Needed};

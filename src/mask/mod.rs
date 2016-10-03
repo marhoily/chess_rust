@@ -1,4 +1,4 @@
-use geometry::Square;
+use square::Square;
 use std::ops::{BitOr, BitOrAssign, BitAnd, BitAndAssign, Shl, ShlAssign, Shr, ShrAssign, Not};
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]

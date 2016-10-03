@@ -86,7 +86,6 @@ static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 #[cfg(test)]
 mod test {
     use super::*;
-    use geometry::*;
 
     #[test]
     fn of_color() {
