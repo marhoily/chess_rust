@@ -44,48 +44,48 @@ mod wrappers {
     use super::PositionError::*;
     type R<'a, T, X> = ::nom::IResult<&'a [u8], T, X>;
 
-    pub fn wrapped_parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
+    pub fn parse_bit_board(input: &[u8]) -> R<BitBoard, PositionError> {
         ::fen::parse_bit_board(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Board(pe)), x),
-                _ => panic!("wrapped_parse_bit_board"),
+                _ => panic!("parse_bit_board"),
             }
         })
     }
 
-    pub fn wrapped_parse_color(input: &[u8]) -> R<Color, PositionError> {
+    pub fn parse_color(input: &[u8]) -> R<Color, PositionError> {
         ::geometry::parse_color(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Active(pe)), x),
-                _ => panic!("wrapped_parse_color"),
+                _ => panic!("parse_color"),
             }
         })
     }
 
-    pub fn wrapped_parse_castle(input: &[u8]) -> R<Castle, PositionError> {
+    pub fn parse_castle(input: &[u8]) -> R<Castle, PositionError> {
         ::castle::parse_castle(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Available(pe)), x),
-                _ => panic!("wrapped_parse_castle"),
+                _ => panic!("parse_castle"),
             }
         })
     }
 
-    pub fn wrapped_parse_file(input: &[u8]) -> R<File, PositionError> {
+    pub fn parse_file(input: &[u8]) -> R<File, PositionError> {
         ::geometry::parse_file(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(EnPassant(pe)), x),
-                _ => panic!("wrapped_parse_file"),
+                _ => panic!("parse_file"),
             }
         })
     }
 
-    named!(ws(&[u8]) -> char, char!(' '));
-    pub fn wrapped_ws(input: &[u8]) -> R<char, PositionError> {
-        ws(input).map_err(|err| {
+    named!(ws_inner(&[u8]) -> char, char!(' '));
+    pub fn ws(input: &[u8]) -> R<char, PositionError> {
+        ws_inner(input).map_err(|err| {
             match err {
                 P(_, x) => P(C(Whitespace), x),
-                _ => panic!("wrapped_ws"),
+                _ => panic!("ws"),
             }
         })
     }
@@ -94,13 +94,13 @@ mod wrappers {
 // "8/8/8/8/8/8/8/8 w KQkq - 0 1"
 named!(pub parse_position<&[u8], Position, PositionError>,
     chain!(
-        board: wrapped_parse_bit_board ~
-        wrapped_ws ~
-        active: wrapped_parse_color ~
-        wrapped_ws ~
-        available: wrapped_parse_castle ~
-        wrapped_ws ~
-        en_passant: wrapped_parse_file,
+        board: parse_bit_board ~
+        ws ~
+        active: parse_color ~
+        ws ~
+        available: parse_castle ~
+        ws ~
+        en_passant: parse_file,
         || Position {
                 board: board,
                 active: active,
