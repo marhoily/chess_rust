@@ -31,6 +31,11 @@ impl Mask {
     pub fn queen_attacks(self, stoppers: Mask) -> Mask {
         self.rook_attacks(stoppers) | self.bishop_attacks(stoppers)
     }
+    pub fn king_attacks(self) -> Mask {
+        let dots = self.shift_east() | self.shift_west();
+        let line = self | dots;
+        dots | line.shift_north() | line.shift_south()
+    }
 }
 
 #[cfg(test)]
@@ -152,6 +157,18 @@ mod tests {
                     |^@^^^@^^|...\
                     |^^^^^@^^|...\
                     |^^^^^^^^|...");
+    }
+    #[test]
+    fn king_attacks() {
+        assert_eq!((F7|C1).king_attacks().dump(),
+                   "|^^^^@@@^|...\
+                    |^^^^@^@^|...\
+                    |^^^^@@@^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^@@@^^^^|...\
+                    |^@^@^^^^|...");
     }
 }
 
