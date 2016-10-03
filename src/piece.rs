@@ -1,8 +1,6 @@
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result;
-use geometry::*;
+use std::fmt::{Result, Display, Formatter};
 use kind::{Kind, kinds};
+use color::Color;
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
 pub struct Piece(u8);
@@ -105,7 +103,7 @@ mod test {
 
     #[test]
     fn color() {
-        use geometry::Color::*;
+        use color::Color::*;
 
         assert_eq!(pieces::All.into_iter().map(Piece::color).collect::<Vec<_>>(),
                    [White, White, White, White, White, White, Black, Black, Black, Black, Black,

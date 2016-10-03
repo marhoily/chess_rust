@@ -26,6 +26,9 @@ extern crate bitflags;
 #[macro_use]
 extern crate nom;
 
+pub mod file;
+pub mod rank;
+pub mod color;
 pub mod geometry;
 pub mod kind;
 pub mod piece;

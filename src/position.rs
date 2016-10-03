@@ -2,7 +2,8 @@
 
 use castle::Castle;
 use bit_board::BitBoard;
-use geometry::{File, Color};
+use color::Color;
+use file::File;
 use bit_board::fen;
 use castle;
 use self::wrappers::*;
@@ -38,7 +39,8 @@ mod wrappers {
     use super::*;
     use castle::Castle;
     use bit_board::BitBoard;
-    use geometry::{File, Color};
+    use color::Color;
+    use file::File;
     use nom::Err::Position as P;
     use nom::ErrorKind::Custom as C;
     use super::PositionError::*;
@@ -54,7 +56,7 @@ mod wrappers {
     }
 
     pub fn parse_color(input: &[u8]) -> R<Color, PositionError> {
-        ::geometry::parse_color(input).map_err(|err| {
+        ::color::parse_color(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(Active(pe)), x),
                 _ => panic!("parse_color"),
@@ -72,7 +74,7 @@ mod wrappers {
     }
 
     pub fn parse_file(input: &[u8]) -> R<File, PositionError> {
-        ::geometry::parse_file(input).map_err(|err| {
+        ::file::parse_file(input).map_err(|err| {
             match err {
                 P(C(pe), x) => P(C(EnPassant(pe)), x),
                 _ => panic!("parse_file"),

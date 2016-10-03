@@ -1,9 +1,7 @@
-use geometry::*;
 use piece::Piece;
+use color::Color;
 
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result;
+use std::fmt::{Result, Display, Formatter};
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
 pub struct Kind(u8);
@@ -93,6 +91,7 @@ mod test {
     #[test]
     fn of_color() {
         use piece::pieces;
+        use color::Color;
 
         let white = kinds::All.into_iter().map(|pt| pt.of(Color::White));
         let black = kinds::All.into_iter().map(|pt| pt.of(Color::Black));

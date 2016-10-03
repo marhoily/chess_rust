@@ -96,7 +96,7 @@ mod test {
 
     #[test]
     fn all_files() {
-        use super::super::files::*;
+        use file::files::*;
 
         assert_eq!(
             All.into_iter().collect::<Vec<_>>(),
@@ -104,7 +104,7 @@ mod test {
     }
     #[test]
     fn all_ranks() {
-        use super::super::ranks::*;
+        use rank::ranks::*;
 
         assert_eq!(
             All.into_iter().collect::<Vec<_>>(),

@@ -1,5 +1,7 @@
 #![allow(dead_code)]
-use geometry::{Color, Rank, Square};
+use geometry::Square;
+use color::Color;
+use rank::Rank;
 use piece::Piece;
 use castle::Castle;
 
