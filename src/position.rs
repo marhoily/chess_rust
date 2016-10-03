@@ -94,12 +94,9 @@ mod wrappers {
 // "8/8/8/8/8/8/8/8 w KQkq - 0 1"
 named!(pub parse_position<&[u8], Position, PositionError>,
     chain!(
-        board: parse_bit_board ~
-        ws ~
-        active: parse_color ~
-        ws ~
-        available: parse_castle ~
-        ws ~
+        board: parse_bit_board ~ ws ~
+        active: parse_color ~ ws ~
+        available: parse_castle ~ ws ~
         en_passant: parse_file,
         || Position {
                 board: board,
