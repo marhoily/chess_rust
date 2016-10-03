@@ -22,8 +22,8 @@ impl Mask {
     pub fn dump(self) -> String {
         let mut result = String::with_capacity(100);
         result.push('|');
-        for rank in masks::ranks::ALL {
-            for file in masks::files::ALL {
+        for rank in masks::ranks::RANKS {
+            for file in masks::files::FILES {
                 if self.has_any(*file & *rank) {
                     result.push('@');
                 } else {

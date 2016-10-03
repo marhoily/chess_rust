@@ -15,7 +15,7 @@ pub mod files {
     pub const H: Mask = Mask(0x8080808080808080);
 
     // todo: replace with an iterator and an indexer
-    pub static ALL: &'static [Mask] = &[A, B, C, D, E, F, G, H];
+    pub static FILES: &'static [Mask] = &[A, B, C, D, E, F, G, H];
 }
 pub mod ranks {
     use super::super::Mask;
@@ -30,7 +30,7 @@ pub mod ranks {
     pub const _1: Mask = Mask(0xFF00000000000000);
 
     // todo: replace with an iterator and an indexer
-    pub static ALL: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
+    pub static RANKS: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
 }
 
 pub const FIRST: Mask = Mask(0x1);

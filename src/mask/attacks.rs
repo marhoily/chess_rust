@@ -8,6 +8,9 @@ impl Mask {
     pub fn black_pawn_attacks(self) -> Mask {
         self.shift_south_east() | self.shift_south_west()
     }
+    // pub fn white_pawn_pushes
+    // pub fn black_pawn_pushes
+
     pub fn knight_attacks(self) -> Mask {
         let x = self;
         let a = ((x << 17) | (x >> 15)) & !A;
@@ -16,10 +19,18 @@ impl Mask {
         let d = ((x << 6) | (x >> 10)) & !(G | H);
         a | b | c | d
     }
+    pub fn bishop_attacks(self, stoppers: Mask) -> Mask {
+        self.fill(Mask::shift_north_east, stoppers).shift_north_east() |
+        self.fill(Mask::shift_north_west, stoppers).shift_north_west() |
+        self.fill(Mask::shift_south_east, stoppers).shift_south_east() |
+        self.fill(Mask::shift_south_west, stoppers).shift_south_west()
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use super::super::masks::files::*;
+    use super::super::masks::ranks::*;
     use super::super::masks::*;
 
     #[test]
@@ -34,7 +45,7 @@ mod tests {
                     |@^@^^@^@|...\
                     |^^^^^^^^|...\
                     |^@^^^^@^|...\
-                    |^^^^^^^^|....");
+                    |^^^^^^^^|...");
     }
     #[test]
     fn black_pawn_attacks() {
@@ -98,5 +109,18 @@ mod tests {
                     |^^^^^^^^|...\
                     |^^^@^^^^|...\
                     |@^@^^^^^|...");
+    }
+
+    #[test]
+    fn bishop_attacks() {
+        assert_eq!(F7.bishop_attacks(B|_2).dump(),
+                   "|^^^^@^@^|...\
+                    |^^^^^^^^|...\
+                    |^^^^@^@^|...\
+                    |^^^@^^^@|...\
+                    |^^@^^^^^|...\
+                    |^@^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...");
     }
 }
