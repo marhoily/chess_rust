@@ -78,7 +78,7 @@ impl BitBoard {
     pub fn parse(input: &str) -> Self {
         fen::parse_bit_board(input.as_bytes()).unwrap().1
     }
-    pub fn population(&self) -> Mask {
+    pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
 }
@@ -99,7 +99,9 @@ impl<'a> Iterator for SquareIter<'a> {
     type Item = Piece;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.current.next().map(|square| self.board.get_piece(square))
+        self.current.next().map(|square| {
+            self.board.get_piece(square)
+        })
     }
 }
 
@@ -146,11 +148,11 @@ mod test {
     }
 
     #[test]
-    fn population() {
+    fn occupation() {
         let mut b = BitBoard::new();
         b.set_piece(A8, BLACK_ROOK);
         b.set_piece(H1, WHITE_PAWN);
-        assert_eq!(b.population().dump(),
+        assert_eq!(b.occupation().dump(),
             "|@^^^^^^^|...\
              |^^^^^^^^|...\
              |^^^^^^^^|...\
@@ -158,6 +160,6 @@ mod test {
              |^^^^^^^^|...\
              |^^^^^^^^|...\
              |^^^^^^^^|...\
-             |^^^^^^^@|");
+             |^^^^^^^@|...");
     }
 }
