@@ -1,7 +1,7 @@
 use piece::{Piece, pieces};
-use piece::pieces::All;
-use mask::{masks, Mask};
-use mask::masks::MaskIter;
+use piece::pieces::Pieces as All;
+use mask::Mask;
+use mask::masks::*;
 use square::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
@@ -9,7 +9,7 @@ pub struct BitBoard([Mask; pieces::COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([masks::EMPTY; pieces::COUNT])
+        BitBoard([EMPTY; pieces::COUNT])
     }
     fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
@@ -77,6 +77,9 @@ impl BitBoard {
     pub fn parse(input: &str) -> Self {
         fen::parse_bit_board(input.as_bytes()).unwrap().1
     }
+    pub fn population(&self) -> Mask {
+        self.0.iter().fold(EMPTY, |acc, &x| acc | x)
+    }
 }
 pub mod fen;
 
@@ -103,27 +106,27 @@ impl<'a> Iterator for SquareIter<'a> {
 mod test {
     use super::*;
     use std::iter::*;
-    use piece::*;
-    use mask::Mask;
+    use piece::pieces::*;
+    use mask::masks::*;
 
     #[test]
     fn check_square() {
         let mut b = BitBoard::new();
-        b.set_piece(Mask::new(0b0001), pieces::BLACK_ROOK);
-        b.set_piece(Mask::new(0b0100), pieces::BLACK_ROOK);
-        assert_eq!(b.check_square(Mask::new(0b0001)), pieces::BLACK_ROOK);
-        assert_eq!(b.check_square(Mask::new(0b0001)), pieces::BLACK_ROOK);
+        b.set_piece(E2, BLACK_ROOK);
+        b.set_piece(E3, BLACK_ROOK);
+        assert_eq!(b.check_square(E2), BLACK_ROOK);
+        assert_eq!(b.check_square(E3), BLACK_ROOK);
     }
 
     #[test]
     fn bit_board_squares() {
         let mut b = BitBoard::new();
-        b.set_piece(Mask::new(0b0001), pieces::BLACK_ROOK);
+        b.set_piece(A8, BLACK_ROOK);
 
         let all = b.squares().collect::<Vec<_>>();
         assert_eq!(all.len(), 64);
-        assert_eq!(all[0], pieces::BLACK_ROOK);
-        assert_eq!(all[63], pieces::VOID);
+        assert_eq!(all[0], BLACK_ROOK);
+        assert_eq!(all[63], VOID);
     }
 
     #[test]

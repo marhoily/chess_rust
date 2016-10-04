@@ -67,9 +67,9 @@ pub mod pieces {
     pub const VOID: Piece = Piece(16);
 
     #[derive(Copy, Clone, Debug)]
-    pub struct All;
+    pub struct Pieces;
 
-    impl IntoIterator for All {
+    impl IntoIterator for Pieces {
         type Item = Piece;
         type IntoIter = Piece;
 
@@ -98,6 +98,7 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::pieces::*;
     use std::iter::*;
     use kind::kinds;
 
@@ -105,20 +106,20 @@ mod test {
     fn color() {
         use color::Color::*;
 
-        assert_eq!(pieces::All.into_iter().map(Piece::color).collect::<Vec<_>>(),
+        assert_eq!(Pieces.into_iter().map(Piece::color).collect::<Vec<_>>(),
                    [White, White, White, White, White, White, Black, Black, Black, Black, Black,
                     Black]);
     }
     #[test]
     fn kind() {
-        assert_eq!(pieces::VOID.kind(), kinds::UNKNOWN);
+        assert_eq!(VOID.kind(), kinds::UNKNOWN);
 
         assert_eq!(kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>(),
-                   pieces::All.into_iter().map(Piece::kind).collect::<Vec<_>>());
+                   Pieces.into_iter().map(Piece::kind).collect::<Vec<_>>());
     }
     #[test]
     fn display() {
-        assert_eq!(super::pieces::All.into_iter()
+        assert_eq!(Pieces.into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQKpnbrqk");

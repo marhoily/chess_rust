@@ -89,14 +89,14 @@ mod test {
 
     #[test]
     fn of_color() {
-        use piece::pieces;
+        use piece::pieces::*;
         use color::Color;
 
         let white = kinds::All.into_iter().map(|pt| pt.of(Color::White));
         let black = kinds::All.into_iter().map(|pt| pt.of(Color::Black));
         let together = white.chain(black).collect::<Vec<_>>();
 
-        assert_eq!(together, pieces::All.into_iter().collect::<Vec<_>>());
+        assert_eq!(together, Pieces.into_iter().collect::<Vec<_>>());
     }
     #[test]
     fn display() {
