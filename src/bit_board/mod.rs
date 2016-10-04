@@ -1,71 +1,73 @@
 use std::fmt::{Result, Display, Formatter};
-use piece::{Piece, pieces};
-use piece::pieces::Pieces;
+use piece::Piece;
+use piece::pieces::*;
 use mask::Mask;
 use mask::masks::*;
-use square::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
-pub struct BitBoard([Mask; pieces::COUNT]);
+pub struct BitBoard([Mask; COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([EMPTY; pieces::COUNT])
+        BitBoard([EMPTY; COUNT])
     }
-    fn line(&self, piece: Piece) -> Mask {
+    fn index(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
     }
+    pub fn white_pawns(&self) -> Mask {
+        self.index(WHITE_PAWN)
+    }
+    pub fn white_knights(&self) -> Mask {
+        self.index(WHITE_KNIGHT)
+    }
+    pub fn white_bishops(&self) -> Mask {
+        self.index(WHITE_BISHOP)
+    }
+    pub fn white_rooks(&self) -> Mask {
+        self.index(WHITE_ROOK)
+    }
+    pub fn white_queens(&self) -> Mask {
+        self.index(WHITE_QUEEN)
+    }
+    pub fn white_kings(&self) -> Mask {
+        self.index(WHITE_KING)
+    }
+    pub fn black_pawns(&self) -> Mask {
+        self.index(BLACK_PAWN)
+    }
+    pub fn black_knights(&self) -> Mask {
+        self.index(BLACK_KNIGHT)
+    }
+    pub fn black_bishops(&self) -> Mask {
+        self.index(BLACK_BISHOP)
+    }
+    pub fn black_rooks(&self) -> Mask {
+        self.index(BLACK_ROOK)
+    }
+    pub fn black_queens(&self) -> Mask {
+        self.index(BLACK_QUEEN)
+    }
+    pub fn black_kings(&self) -> Mask {
+        self.index(BLACK_KING)
+    }
+
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
         self.0[idx] |= square;
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
         for probe in Pieces {
-            if self.line(probe).has_any(square) {
+            if self.index(probe).has_any(square) {
                 return probe;
             }
         }
-        pieces::VOID
+        VOID
     }
     pub fn squares(&self) -> SquareIter {
         SquareIter {
             board: self,
             current: MaskIter::new(),
         }
-    }
-    pub fn dump(&self) -> String {
-        use std::str::FromStr;
-        let mut result : Vec<char> = String::from_str(
-           " ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\r\n\
-            8║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            7║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            6║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            5║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            4║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            3║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            2║   │   │   │   │   │   │   │   ║\r\n \
-             ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n\
-            1║   │   │   │   │   │   │   │   ║\r\n \
-             ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝\r\n   \
-               A   B   C   D   E   F   G   H  \r\n")
-             .unwrap().chars().collect();
-
-        for index in 0..63 {
-            let square = Square::new(index);
-            let piece = self.get_piece(square.mask());
-            let (file, rank) = square.file_rank();
-            let i = (rank.bits() as usize * 2 + 1) * 36 + file.bits() as usize * 4 + 3;
-            if piece != pieces::VOID {
-                result[i] = piece.char();
-            }
-        }
-        String::from(result)
     }
     pub fn parse(input: &str) -> Self {
         fen::parse_bit_board(input.as_bytes()).unwrap().1
@@ -78,6 +80,16 @@ impl BitBoard {
     }
     pub fn black_occupation(&self) -> Mask {
         self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
+    }
+    pub fn white_attacks(&self) -> Mask {
+        let stoppers = self.black_occupation();
+        let a = self.white_pawns().white_pawn_attacks();
+        let b = self.white_knights().knight_attacks();
+        let c = self.white_bishops().bishop_attacks(stoppers);
+        let d = self.white_rooks().rook_attacks(stoppers);
+        let e = self.white_queens().queen_attacks(stoppers);
+        let f = self.white_kings().king_attacks();
+        a | b | c | d | e | f
     }
 }
 pub mod fen;
@@ -97,9 +109,7 @@ impl<'a> Iterator for SquareIter<'a> {
     type Item = Piece;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.current.next().map(|square| {
-            self.board.get_piece(square)
-        })
+        self.current.next().map(|square| self.board.get_piece(square))
     }
 }
 
@@ -131,55 +141,22 @@ mod test {
     }
 
     #[test]
-    fn dump() {
-        let sample = "1r2k2r/p2n1p1p/np4p1/2p1B1b1/7P/1P1P4/P1PN3P/RNQ2RK1";
-        assert_eq!(BitBoard::parse(sample).dump(),
-                   " ╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗\r\n8║   │ r │   │   │ k │   │   │ r ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n7║ p │   │   │ n │   │ p │   │ p ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n6║ n │ p │   │   │   │   │ p │   ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n5║   │   │ p │   │ B │   │ b │   ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n4║   │   │   │   │   │   │   │ P ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n3║   │ P │   │ P │   │   │   │   ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n2║ P │   │ P │ N │   │   │   │ P ║\r\n \
-                    ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n1║ R │ N │ Q │   │   │ R │ K │   ║\r\n \
-                    ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝\r\n   A   B   C   D   E   F   G   H  \r\n");
-    }
-
-    #[test]
     fn occupation() {
         assert_eq!(sample_with_one_of_each_kind().occupation().dump(),
-            "|@@@@@@^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |@@@@@@^^|...");
+                   "|@@@@@@^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
+                    .|^^^^^^^^|...|@@@@@@^^|...");
     }
     #[test]
     fn black_occupation() {
         assert_eq!(sample_with_one_of_each_kind().black_occupation().dump(),
-            "|@@@@@@^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...");
+                   "|@@@@@@^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
+                    .|^^^^^^^^|...|^^^^^^^^|...");
     }
     #[test]
     fn white_occupation() {
         assert_eq!(sample_with_one_of_each_kind().white_occupation().dump(),
-            "|^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |@@@@@@^^|...");
+                   "|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
+                    .|^^^^^^^^|...|@@@@@@^^|...");
     }
     fn sample_with_one_of_each_kind() -> BitBoard {
         let mut b = BitBoard::new();
