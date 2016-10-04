@@ -1,6 +1,6 @@
 use std::fmt::{Result, Display, Formatter};
 use piece::{Piece, pieces};
-use piece::pieces::Pieces as All;
+use piece::pieces::Pieces;
 use mask::Mask;
 use mask::masks::*;
 use square::*;
@@ -15,20 +15,12 @@ impl BitBoard {
     fn line(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
     }
-    pub fn check_square(&self, square: Mask) -> Piece {
-        for piece in All {
-            if self.line(piece).has_any(square) {
-                return piece;
-            }
-        }
-        pieces::VOID
-    }
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
         let idx = piece.bits() as usize;
         self.0[idx] |= square;
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
-        for probe in All {
+        for probe in Pieces {
             if self.line(probe).has_any(square) {
                 return probe;
             }
@@ -119,12 +111,12 @@ mod test {
     use mask::masks::*;
 
     #[test]
-    fn check_square() {
+    fn get_piece() {
         let mut b = BitBoard::new();
         b.set_piece(E2, BLACK_ROOK);
         b.set_piece(E3, BLACK_ROOK);
-        assert_eq!(b.check_square(E2), BLACK_ROOK);
-        assert_eq!(b.check_square(E3), BLACK_ROOK);
+        assert_eq!(b.get_piece(E2), BLACK_ROOK);
+        assert_eq!(b.get_piece(E3), BLACK_ROOK);
     }
 
     #[test]
@@ -177,7 +169,6 @@ mod test {
              |^^^^^^^^|...\
              |^^^^^^^^|...");
     }
-
     #[test]
     fn white_occupation() {
         assert_eq!(sample_with_one_of_each_kind().white_occupation().dump(),
