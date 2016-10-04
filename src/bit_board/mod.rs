@@ -81,6 +81,12 @@ impl BitBoard {
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
+    pub fn white_occupation(&self) -> Mask {
+        self.0[..6].iter().fold(EMPTY, |acc, &x| acc | x)
+    }
+    pub fn black_occupation(&self) -> Mask {
+        self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
+    }
 }
 pub mod fen;
 
@@ -149,17 +155,56 @@ mod test {
 
     #[test]
     fn occupation() {
+        assert_eq!(sample_with_one_of_each_kind().occupation().dump(),
+            "|@@@@@@^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |@@@@@@^^|...");
+    }
+    #[test]
+    fn black_occupation() {
+        assert_eq!(sample_with_one_of_each_kind().black_occupation().dump(),
+            "|@@@@@@^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...");
+    }
+
+    #[test]
+    fn white_occupation() {
+        assert_eq!(sample_with_one_of_each_kind().white_occupation().dump(),
+            "|^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |@@@@@@^^|...");
+    }
+    fn sample_with_one_of_each_kind() -> BitBoard {
         let mut b = BitBoard::new();
         b.set_piece(A8, BLACK_ROOK);
-        b.set_piece(H1, WHITE_PAWN);
-        assert_eq!(b.occupation().dump(),
-            "|@^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^^|...\
-             |^^^^^^^@|...");
+        b.set_piece(B8, BLACK_BISHOP);
+        b.set_piece(C8, BLACK_KING);
+        b.set_piece(D8, BLACK_QUEEN);
+        b.set_piece(E8, BLACK_PAWN);
+        b.set_piece(F8, BLACK_KNIGHT);
+
+        b.set_piece(A1, WHITE_ROOK);
+        b.set_piece(B1, WHITE_BISHOP);
+        b.set_piece(C1, WHITE_KING);
+        b.set_piece(D1, WHITE_QUEEN);
+        b.set_piece(E1, WHITE_PAWN);
+        b.set_piece(F1, WHITE_KNIGHT);
+        b
     }
 }

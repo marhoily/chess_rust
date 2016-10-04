@@ -46,6 +46,9 @@ impl Display for Piece {
         write!(f, "{}", self.char())
     }
 }
+use std::ops::Range;
+pub const PIECES_RANGE :Range<u8> = 0..12;
+pub const WHITE_RANGE :Range<Piece> = pieces::WHITE_PAWN..pieces::BLACK_PAWN;
 
 pub mod pieces {
     use super::Piece;
