@@ -143,4 +143,20 @@ mod test {
                     ╟───┼───┼───┼───┼───┼───┼───┼───╢\r\n1║ R │ N │ Q │   │   │ R │ K │   ║\r\n \
                     ╚═══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╝\r\n   A   B   C   D   E   F   G   H  \r\n");
     }
+
+    #[test]
+    fn population() {
+        let mut b = BitBoard::new();
+        b.set_piece(A8, BLACK_ROOK);
+        b.set_piece(H1, WHITE_PAWN);
+        assert_eq!(b.population().dump(),
+            "|@^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^^|...\
+             |^^^^^^^@|");
+    }
 }
