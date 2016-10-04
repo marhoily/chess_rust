@@ -1,3 +1,4 @@
+use std::fmt::{Result, Display, Formatter};
 use piece::{Piece, pieces};
 use piece::pieces::Pieces as All;
 use mask::Mask;
@@ -83,8 +84,8 @@ impl BitBoard {
 }
 pub mod fen;
 
-impl ::std::fmt::Display for BitBoard {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+impl Display for BitBoard {
+    fn fmt(&self, f: &mut Formatter) -> Result {
         write!(f, "{}", self.print_fen())
     }
 }
