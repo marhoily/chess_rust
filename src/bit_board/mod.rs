@@ -180,14 +180,18 @@ mod test {
     }
 
     #[test]
-    fn is_under_attack() {
+    fn white_attacks() {
         let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
         for _ in 0..10 {
             let bb = generate_random_board(&mut gen);
-            let b88 = BitBoard88::parse(format!("{}", bb).as_str());
-//            let bb_white_attacks = bb.white_attacks();
-//            let b88_white_attacks = b88.white_attacks();
-            assert_eq!(bb.white_attacks(), b88.white_attacks())
+            let fen = format!("{}", bb);
+            let b88 = BitBoard88::parse(fen.as_str());
+            if bb.white_attacks() != b88.white_attacks() {
+                panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}",
+                       bb.white_attacks(),
+                       b88.white_attacks(),
+                       fen)
+            }
         }
     }
 
@@ -202,9 +206,11 @@ mod test {
     #[test]
     fn test_generate_random_board_count() {
         let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
-        assert_eq!((0..10000).into_iter().map(|_| {
-            generate_random_board(&mut gen).occupation().count()
-        }).sum::<u32>(), 159635);
+        assert_eq!((0..10000)
+                       .into_iter()
+                       .map(|_| generate_random_board(&mut gen).occupation().count())
+                       .sum::<u32>(),
+                   159635);
     }
     #[test]
     fn test_generate_random_board_unique_masks() {
@@ -232,7 +238,7 @@ mod test {
                 16 => result.set_piece(one, BLACK_ROOK),
                 17 => result.set_piece(one, BLACK_QUEEN),
                 18 => result.set_piece(one, BLACK_KING),
-                _ => {},
+                _ => {}
             }
         }
         result
