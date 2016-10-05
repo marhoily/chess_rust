@@ -30,6 +30,7 @@ pub mod file;
 pub mod rank;
 pub mod color;
 pub mod square;
+mod square88;
 pub mod kind;
 pub mod piece;
 pub mod mask;
