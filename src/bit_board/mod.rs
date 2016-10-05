@@ -175,4 +175,39 @@ mod test {
         b.set_piece(F1, WHITE_KNIGHT);
         b
     }
+
+    #[test]
+    fn is_under_attack() {}
+    use rand::*;
+    use mask::Mask;
+    #[test]
+    fn test_generate_random_board() {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        assert_eq!(format!("{}", generate_random_board(&mut gen)),
+                   "Nrqp4/3P4/8/8/3P4/3p4/8/8");
+        assert_eq!(format!("{}", generate_random_board(&mut gen)),
+                   "6p1/pb2P3/2p4N/2p2p2/3P1Pqp/r2n4/K7/5n2");
+    }
+
+    fn generate_random_board(rng: &mut XorShiftRng) -> BitBoard {
+        let mut result = BitBoard::new();
+        for one in Mask::new(rng.next_u64()).single_bits() {
+            match rng.next_u32() % 38 {
+                0...3 => result.set_piece(one, WHITE_PAWN),
+                4 => result.set_piece(one, WHITE_KNIGHT),
+                5 => result.set_piece(one, WHITE_BISHOP),
+                6 => result.set_piece(one, WHITE_ROOK),
+                7 => result.set_piece(one, WHITE_QUEEN),
+                8 => result.set_piece(one, WHITE_KING),
+                9...13 => result.set_piece(one, BLACK_PAWN),
+                14 => result.set_piece(one, BLACK_KNIGHT),
+                15 => result.set_piece(one, BLACK_BISHOP),
+                16 => result.set_piece(one, BLACK_ROOK),
+                17 => result.set_piece(one, BLACK_QUEEN),
+                18 => result.set_piece(one, BLACK_KING),
+                _ => {},
+            }
+        }
+        result
+    }
 }
