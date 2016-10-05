@@ -4,6 +4,8 @@ use std::fmt::{Result, Display, Formatter};
 use file::{File, parse_file};
 use rank::{Rank, parse_rank};
 use color::Color;
+use square::Square;
+use mask::Mask;
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
@@ -11,6 +13,13 @@ use color::Color;
 pub struct Square88(u8);
 
 impl Square88 {
+    pub fn into_mask(self) -> Mask {
+        self.into_square().mask()
+    }
+    pub fn into_square(self) -> Square {
+        let (file, rank) = self.file_rank();
+        Square::from(file, rank)
+    }
     pub fn new(bits: u8) -> Self {
         debug_assert!(bits < 120, "is not a valid square number");
         debug_assert!(bits & 0x88 != 0, "is not a valid square number");

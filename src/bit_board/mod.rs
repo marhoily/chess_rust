@@ -121,6 +121,7 @@ mod test {
     use mask::masks::*;
     use rand::*;
     use mask::Mask;
+    use board88::BitBoard88;
 
     #[test]
     fn get_piece() {
@@ -179,7 +180,16 @@ mod test {
     }
 
     #[test]
-    fn is_under_attack() {}
+    fn is_under_attack() {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        for _ in 0..10 {
+            let bb = generate_random_board(&mut gen);
+            let b88 = BitBoard88::parse(format!("{}", bb).as_str());
+//            let bb_white_attacks = bb.white_attacks();
+//            let b88_white_attacks = b88.white_attacks();
+            assert_eq!(bb.white_attacks(), b88.white_attacks())
+        }
+    }
 
     #[test]
     fn test_generate_random_board() {

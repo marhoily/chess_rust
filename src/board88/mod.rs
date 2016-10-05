@@ -5,6 +5,7 @@ use square88::Square88;
 use square88::squares::*;
 use piece::Piece;
 use piece::pieces::*;
+use mask::Mask;
 
 pub struct BitBoard88([Piece; 0x78]);
 
@@ -80,6 +81,15 @@ impl BitBoard88 {
             }
         }
         INVALID
+    }
+    pub fn white_attacks(&self) -> Mask {
+        All.into_iter().fold(::mask::masks::EMPTY, |acc, s| {
+            if self.is_attacked_by_white(s) {
+                acc | s.into_mask()
+            } else {
+                acc
+            }
+        })
     }
 }
 
