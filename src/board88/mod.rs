@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 use std::fmt::{Result, Display, Formatter};
 use square88::Square88;
 use square88::squares::*;
@@ -27,7 +28,26 @@ impl BitBoard88 {
             current: FIRST,
         }
     }
+    /// slide from a `square` in direction of `increment` looking for a `piece`.
+    /// return the index if found, invalid square otherwise
+    #[allow(if_same_then_else)]
+    pub fn slide_for(&self, square: Square88, piece: Piece, increment: i8) -> Square88 {
+        let next = square + increment;
+        if !next.is_valid() { INVALID }
+            else if self.get_piece(next) == piece { next }
+                else if self.get_piece(next) != VOID { INVALID }
+                    else { self.slide_for(next, piece, increment) }
+    }
+    pub fn find(&self, piece: Piece) -> Square88 {
+        for s in ::square88::squares::All {
+            if self.get_piece(s) == piece {
+                return s
+            }
+        }
+        INVALID
+    }
 }
+
 pub mod fen;
 
 impl Display for BitBoard88 {
@@ -35,6 +55,7 @@ impl Display for BitBoard88 {
         write!(f, "{}", self.print_fen())
     }
 }
+
 pub struct SquareIter<'a> {
     board: &'a BitBoard88,
     current: Square88,
@@ -61,6 +82,7 @@ mod test {
         b.set_piece(E3, BLACK_ROOK);
         assert_eq!(format!("{}", b), "8/8/8/8/8/4r3/4r3/8");
     }
+
     #[test]
     fn get_piece() {
         let b = BitBoard88::parse("8/8/8/8/8/4r3/4r3/8");

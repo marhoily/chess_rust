@@ -62,6 +62,7 @@ named!(pub parse_square(&[u8]) -> Square88,
         || Square88::from(file, rank))
     );
 
+pub mod ops;
 pub mod squares;
 
 #[cfg(test)]

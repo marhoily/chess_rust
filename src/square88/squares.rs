@@ -1,6 +1,7 @@
 use super::Square88;
 
 pub const FIRST: Square88 = Square88(0);
+pub const INVALID: Square88 = Square88(0xFF);
 
 pub const A8: Square88 = Square88(0x0);
 pub const B8: Square88 = Square88(0x1);
@@ -130,6 +131,16 @@ mod test {
         for s in All {
             println!("pub const {} : Square88 = Square88({});",
                      s.to_string().to_uppercase(), s.bits());
+        }
+    }
+    #[test]
+    fn invalid() {
+        assert_eq!(INVALID.is_valid(), false);
+    }
+    #[test]
+    fn is_valid() {
+        for s in All {
+            assert_eq!(s.is_valid(), true);
         }
     }
 }
