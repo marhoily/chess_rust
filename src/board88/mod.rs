@@ -5,11 +5,11 @@ use square88::squares::*;
 use piece::Piece;
 use piece::pieces::*;
 
-pub struct BitBoard88([Piece; 0x77]);
+pub struct BitBoard88([Piece; 0x78]);
 
 impl BitBoard88 {
     pub fn new() -> Self {
-        BitBoard88([VOID; 0x77])
+        BitBoard88([VOID; 0x78])
     }
 
     pub fn set_piece(&mut self, at: Square88, piece: Piece) {
