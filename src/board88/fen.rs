@@ -1,5 +1,5 @@
 use piece::*;
-use mask::masks;
+use square88::squares::*;
 use super::*;
 use nom::IResult;
 use nom::IResult::*;
@@ -50,7 +50,7 @@ pub fn parse_board88(input: &[u8]) -> IResult<&[u8], BitBoard88, ParsingError> {
     use nom::ErrorKind::Custom as C;
 
     let mut result = BitBoard88::new();
-    let mut square = masks::FIRST;
+    let mut square = FIRST;
     let mut file = 0;
     let mut just_had_gap = false;
     for (i, e) in input.iter().enumerate() {
@@ -62,8 +62,8 @@ pub fn parse_board88(input: &[u8]) -> IResult<&[u8], BitBoard88, ParsingError> {
                 }
 
                 result.set_piece(square, p);
-                square <<= 1;
-                if square == masks::EMPTY {
+                square.forward(1);
+                if !square.is_valid() {
                     return Done(&input[i+1..], result)
                 }
                 just_had_gap = false;
@@ -73,13 +73,12 @@ pub fn parse_board88(input: &[u8]) -> IResult<&[u8], BitBoard88, ParsingError> {
                 if just_had_gap {
                     return err(DoubleGap);
                 }
-                square <<= size;
                 file += size;
-
                 if file > 8 {
                     return err(GapIsTooBig);
                 }
-                if square == masks::EMPTY {
+                square.forward(size);
+                if !square.is_valid() {
                     return Done(&input[i+1..], result)
                 }
                 just_had_gap = true;
@@ -137,19 +136,17 @@ fn consume(c: char) -> Token {
 
 #[cfg(test)]
 mod test {
-    use square::squares;
+    use square88::squares::*;
     use board88::BitBoard88;
-    use piece::pieces;
+    use piece::pieces::*;
     use nom::{Err, ErrorKind, Needed};
     use super::parse_board88;
 
     #[test]
     fn print_fen() {
         let mut b = BitBoard88::new();
-        let a7 = squares::A7.mask();
-        let e4 = squares::E4.mask();
-        b.set_piece(a7, pieces::BLACK_PAWN);
-        b.set_piece(e4, pieces::WHITE_QUEEN);
+        b.set_piece(A7, BLACK_PAWN);
+        b.set_piece(E4, WHITE_QUEEN);
         assert_eq!(b.print_fen(), "8/p7/8/8/4Q3/8/8/8");
     }
 

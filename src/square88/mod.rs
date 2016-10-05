@@ -36,6 +36,15 @@ impl Square88 {
             Color::Black
         }
     }
+    pub fn is_valid(&self) -> bool {
+        self.0 & 0x88 == 0 && self.0 < 0x77
+    }
+    pub fn forward(&mut self, offset: u8) {
+        self.0 += offset;
+        if !self.is_valid() {
+            self.0 = (self.0 + 8) & !0x88
+        }
+    }
 }
 
 impl Display for Square88 {
