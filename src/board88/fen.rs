@@ -62,7 +62,7 @@ pub fn parse_board88(input: &[u8]) -> IResult<&[u8], BitBoard88, ParsingError> {
                 }
 
                 result.set_piece(square, p);
-                square.forward(1);
+                square = square.forward(1);
                 if !square.is_valid() {
                     return Done(&input[i+1..], result)
                 }
@@ -77,7 +77,7 @@ pub fn parse_board88(input: &[u8]) -> IResult<&[u8], BitBoard88, ParsingError> {
                 if file > 8 {
                     return err(GapIsTooBig);
                 }
-                square.forward(size);
+                square = square.forward(size);
                 if !square.is_valid() {
                     return Done(&input[i+1..], result)
                 }

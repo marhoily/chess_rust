@@ -37,13 +37,14 @@ impl Square88 {
         }
     }
     pub fn is_valid(&self) -> bool {
-        self.0 & 0x88 == 0 && self.0 < 0x77
+        self.0 & 0x88 == 0 //&& self.0 < 0x77
     }
-    pub fn forward(&mut self, offset: u8) {
-        self.0 += offset;
-        if !self.is_valid() {
-            self.0 = (self.0 + 8) & !0x88
+    pub fn forward(self, offset: u8) -> Self {
+        let mut result = Square88(self.0 + offset);
+        while result.0 < 0x77 && !result.is_valid() {
+            result = Square88(result.0 + 1);
         }
+        result
     }
 }
 
@@ -66,6 +67,33 @@ pub mod squares;
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::squares::*;
+
+    #[test]
+    fn forward() {
+        let mut last = 0;
+        for offset in 1..119 {
+            let curr = FIRST.forward(offset).bits();
+            if curr < last {
+                panic!("+{} -> {};\r\n+{} -> {}",
+                    offset-1, FIRST.forward(offset-1).bits(),
+                    offset, FIRST.forward(offset).bits());
+            }
+            last = curr;
+        }
+        // assert_eq!((0..120).map(|offset| FIRST
+        //     .forward(offset))
+        //     .collect::<Vec<_>>(),
+        //     vec!( A8,B8,C8,D8,E8,F8,G8,H8,
+        //             A7,B7,C7,D7,E7,F7,G7,H7,
+        //             A6,B6,C6,D6,E6,F6,G6,H6,
+        //             A5,B5,C5,D5,E5,F5,G5,H5,
+        //             A4,B4,C4,D4,E4,F4,G4,H4,
+        //             A3,B3,C3,D3,E3,F3,G3,H3,
+        //             A2,B2,C2,D2,E2,F2,G2,H2,
+        //             A1,B1,C1,D1,E1,F1,G1,H1 ));
+        //        assert_eq !(FIRST.forward(120).is_valid(), false );
+    }
 
     #[test]
     fn square_display() {

@@ -55,10 +55,16 @@ mod test {
     use piece::pieces::*;
 
     #[test]
-    fn get_piece() {
+    fn set_piece() {
         let mut b = BitBoard88::new();
         b.set_piece(E2, BLACK_ROOK);
         b.set_piece(E3, BLACK_ROOK);
-        assert_eq!(format!("{}", b), "");
+        assert_eq!(format!("{}", b), "8/8/8/8/8/4r3/4r3/8");
+    }
+    #[test]
+    fn get_piece() {
+        let b = BitBoard88::parse("8/8/8/8/8/4r3/4r3/8");
+        assert_eq!(b.get_piece(E2), BLACK_ROOK);
+        assert_eq!(b.get_piece(E3), BLACK_ROOK);
     }
 }
