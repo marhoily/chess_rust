@@ -119,6 +119,8 @@ mod test {
     use std::iter::*;
     use piece::pieces::*;
     use mask::masks::*;
+    use rand::*;
+    use mask::Mask;
 
     #[test]
     fn get_piece() {
@@ -178,8 +180,7 @@ mod test {
 
     #[test]
     fn is_under_attack() {}
-    use rand::*;
-    use mask::Mask;
+
     #[test]
     fn test_generate_random_board() {
         let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
@@ -187,6 +188,22 @@ mod test {
                    "Nrqp4/3P4/8/8/3P4/3p4/8/8");
         assert_eq!(format!("{}", generate_random_board(&mut gen)),
                    "6p1/pb2P3/2p4N/2p2p2/3P1Pqp/r2n4/K7/5n2");
+    }
+    #[test]
+    fn test_generate_random_board_count() {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        assert_eq!((0..10000).into_iter().map(|_| {
+            generate_random_board(&mut gen).occupation().count()
+        }).sum::<u32>(), 159635);
+    }
+    #[test]
+    fn test_generate_random_board_unique_masks() {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        for _ in 0..10000 {
+            let board = generate_random_board(&mut gen);
+            let fen = format!("{}", board);
+            assert_eq!(BitBoard::parse(fen.as_str()), board);
+        }
     }
 
     fn generate_random_board(rng: &mut XorShiftRng) -> BitBoard {
