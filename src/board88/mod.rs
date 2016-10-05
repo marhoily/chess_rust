@@ -45,13 +45,15 @@ impl BitBoard88 {
     pub fn is_attacked_by_white(&self, square: Square88) -> bool {
         self.is_attacked_by_jump(square, WHITE_PAWN, &[15, 17]) |
         self.is_attacked_by_jump(square, WHITE_KNIGHT, &[-33, -31, -18, -14, 33, 31, 18, 14]) |
-        self.is_attacked_by_scan(square, WHITE_BISHOP, &[15, 17, -15, -17])
+        self.is_attacked_by_scan(square, WHITE_BISHOP, &[15, 17, -15, -17]) |
+        self.is_attacked_by_scan(square, WHITE_ROOK, &[16, 1, -16, -1])
 
     }
     pub fn is_attacked_by_black(&self, square: Square88) -> bool {
         self.is_attacked_by_jump(square, BLACK_PAWN, &[-15, -17]) |
         self.is_attacked_by_jump(square, BLACK_KNIGHT, &[-33, -31, -18, -14, 33, 31, 18, 14]) |
-        self.is_attacked_by_scan(square, BLACK_BISHOP, &[15, 17, -15, -17])
+        self.is_attacked_by_scan(square, BLACK_BISHOP, &[15, 17, -15, -17]) |
+        self.is_attacked_by_scan(square, BLACK_ROOK, &[16, 1, -16, -1])
     }
     /// slide from a `square` in direction of `increment` looking for a `piece`.
     /// return the index if found, invalid square otherwise
@@ -185,22 +187,22 @@ mod test {
     fn e2_is_attacked_by_black_knight_on_d4() {
         assert_is_attacked_by_black("8/8/8/8/3n4/8/8/8 w", E2);
     }
-    //    #[test]
-    //    fn d1_is_attacked_by_black_rook_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3r4/8/8/8 w", D1);
-    //    }
-    //    #[test]
-    //    fn d6_is_attacked_by_black_rook_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3r4/8/8/8 w", D6);
-    //    }
-    //    #[test]
-    //    fn f4_is_attacked_by_black_rook_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3r4/8/8/8 w", F4);
-    //    }
-    //    #[test]
-    //    fn a4_is_attacked_by_black_rook_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3r4/8/8/8 w", A4);
-    //    }
+    #[test]
+    fn d1_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3r4/8/8/8 w", D1);
+    }
+    #[test]
+    fn d6_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3r4/8/8/8 w", D6);
+    }
+    #[test]
+    fn f4_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3r4/8/8/8 w", F4);
+    }
+    #[test]
+    fn a4_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3r4/8/8/8 w", A4);
+    }
     //    #[test]
     //    fn c4_is_attacked_by_black_queen_on_d4() {
     //        assert_is_attacked_by_white("8/8/8/8/3q4/8/8/8 w", C4);
