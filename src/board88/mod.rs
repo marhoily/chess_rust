@@ -270,14 +270,14 @@ mod test {
     fn c5_is_attacked_by_black_king_on_d4() {
         assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", C5);
     }
-    //    #[test]
-    //    fn c8_is_attacked_by_white_pawn_on_b7() {
-    //        assert_is_attacked_by_white("8/1P6/8/8/8/8/8/8 w", C8);
-    //    }
-    //    #[test]
-    //    fn a8_is_attacked_by_white_pawn_on_b7() {
-    //        assert_is_attacked_by_white("8/1P6/8/8/8/8/8/8 w", A8);
-    //    }
+    #[test]
+    fn c8_is_attacked_by_white_pawn_on_b7() {
+        assert_is_attacked_by_white("8/1P6/8/8/8/8/8/8 w", C8);
+    }
+    #[test]
+    fn a8_is_attacked_by_white_pawn_on_b7() {
+        assert_is_attacked_by_white("8/1P6/8/8/8/8/8/8 w", A8);
+    }
 
     fn assert_is_attacked_by_white(fen: &str, square: Square88) {
         assert_eq!(BitBoard88::parse(fen).is_attacked_by_white(square), true);
