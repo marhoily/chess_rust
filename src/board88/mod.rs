@@ -45,6 +45,7 @@ impl BitBoard88 {
     pub fn is_attacked_by_white(&self, square: Square88) -> bool {
         self.is_attacked_by_jump(square, WHITE_PAWN, &[15, 17]) |
         self.is_attacked_by_jump(square, WHITE_KNIGHT, &[-33, -31, -18, -14, 33, 31, 18, 14]) |
+        self.is_attacked_by_jump(square, WHITE_KING, &[15, 17, -15, -17, 16, 1, -16, -1]) |
         self.is_attacked_by_scan(square, WHITE_BISHOP, &[15, 17, -15, -17]) |
         self.is_attacked_by_scan(square, WHITE_ROOK, &[16, 1, -16, -1]) |
         self.is_attacked_by_scan(square, WHITE_QUEEN, &[15, 17, -15, -17, 16, 1, -16, -1])
@@ -52,6 +53,7 @@ impl BitBoard88 {
     pub fn is_attacked_by_black(&self, square: Square88) -> bool {
         self.is_attacked_by_jump(square, BLACK_PAWN, &[-15, -17]) |
         self.is_attacked_by_jump(square, BLACK_KNIGHT, &[-33, -31, -18, -14, 33, 31, 18, 14]) |
+        self.is_attacked_by_jump(square, BLACK_KING, &[15, 17, -15, -17, 16, 1, -16, -1]) |
         self.is_attacked_by_scan(square, BLACK_BISHOP, &[15, 17, -15, -17]) |
         self.is_attacked_by_scan(square, BLACK_ROOK, &[16, 1, -16, -1]) |
         self.is_attacked_by_scan(square, BLACK_QUEEN, &[15, 17, -15, -17, 16, 1, -16, -1])
@@ -236,38 +238,38 @@ mod test {
     fn c5_is_attacked_by_black_queen_on_d4() {
         assert_is_attacked_by_black("8/8/8/8/3q4/8/8/8 w", C5);
     }
-    //    #[test]
-    //    fn c4_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", C4);
-    //    }
-    //    #[test]
-    //    fn c3_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", C3);
-    //    }
-    //    #[test]
-    //    fn d3_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", D3);
-    //    }
-    //    #[test]
-    //    fn e3_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", E3);
-    //    }
-    //    #[test]
-    //    fn e4_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", E4);
-    //    }
-    //    #[test]
-    //    fn e5_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", E5);
-    //    }
-    //    #[test]
-    //    fn d5_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", D5);
-    //    }
-    //    #[test]
-    //    fn c5_is_attacked_by_black_king_on_d4() {
-    //        assert_is_attacked_by_white("8/8/8/8/3k4/8/8/8 w", C5);
-    //    }
+    #[test]
+    fn c4_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", C4);
+    }
+    #[test]
+    fn c3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", C3);
+    }
+    #[test]
+    fn d3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", D3);
+    }
+    #[test]
+    fn e3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", E3);
+    }
+    #[test]
+    fn e4_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", E4);
+    }
+    #[test]
+    fn e5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", E5);
+    }
+    #[test]
+    fn d5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", D5);
+    }
+    #[test]
+    fn c5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked_by_black("8/8/8/8/3k4/8/8/8 w", C5);
+    }
     //    #[test]
     //    fn c8_is_attacked_by_white_pawn_on_b7() {
     //        assert_is_attacked_by_white("8/1P6/8/8/8/8/8/8 w", C8);
