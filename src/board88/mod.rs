@@ -58,9 +58,8 @@ impl BitBoard88 {
         self.is_attacked_by_scan(square, BLACK_ROOK, &[16, 1, -16, -1]) |
         self.is_attacked_by_scan(square, BLACK_QUEEN, &[15, 17, -15, -17, 16, 1, -16, -1])
     }
-    /// slide from a `square` in direction of `increment` looking for a `piece`.
+    /// slide from a `square` in direction of  `increment` looking for a `piece`.
     /// return the index if found, invalid square otherwise
-    #[allow(if_same_then_else)]
     pub fn slide_for(&self, square: Square88, piece: Piece, increment: i8) -> Square88 {
         let next = square + increment;
         if next.too_big() || !next.is_valid() {
