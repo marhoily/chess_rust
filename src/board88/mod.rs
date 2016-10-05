@@ -108,11 +108,203 @@ mod test {
     fn c6_is_attacked_by_black_pawn_on_b7() {
         assert_is_attacked("8/1p6/8/8/8/8/8/8", C6);
     }
-    fn assert_is_attacked(fen: &str, square: Square88) {
-        assert_eq!(BitBoard88::parse(fen).is_attacked_by(square), true);
-    }
-    fn assert_is_not_attacked(fen: &str, square: Square88) {
-        assert_eq!(BitBoard88::parse(fen).is_attacked_by(square), false);
+
+    #[test]
+    fn c6_is_attacked_by_black_pawn_on_b7() {
+        assert_is_attacked("8/1p6/8/8/8/8/8/8 w", C6/*Black*/);
     }
 
+    #[test]
+    fn a6_is_attacked_by_black_pawn_on_b7() {
+        assert_is_attacked("8/1p6/8/8/8/8/8/8 w", A6/*Black*/);
+    }
+
+    #[test]
+    fn when_check_if_a8_is_attacked_it_does_not_overflow() {
+        assert_is_attacked("8/8/8/8/8/8/8/8 w", A8/*Black*//*_not*/);
+    }
+
+    #[test]
+    fn h8_is_attacked_by_black_bishop_on_d4() {
+        assert_is_attacked("8/8/8/8/3b4/8/8/8 w", H8/*Black*/);
+    }
+
+    #[test]
+    fn h8_is_NOT_attacked_by_black_bishop_on_d4_because_its_masked_by_the_pawn_on_f6() {
+        assert_is_attacked("8/8/5P2/8/3b4/8/8/8 w", H8/*Black*//*_not*/);
+    }
+
+    #[test]
+    fn a7_is_attacked_by_black_bishop_on_d4() {
+        assert_is_attacked("8/8/8/8/3b4/8/8/8 w", A7/*Black*/);
+    }
+
+    #[test]
+    fn a1_is_attacked_by_black_bishop_on_d4() {
+        assert_is_attacked("8/8/8/8/3b4/8/8/8 w", A1/*Black*/);
+    }
+
+    #[test]
+    fn f2_is_attacked_by_black_bishop_on_d4() {
+        assert_is_attacked("8/8/8/8/3b4/8/8/8 w", F2/*Black*/);
+    }
+
+    #[test]
+    fn c2_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", C2/*Black*/);
+    }
+
+    #[test]
+    fn b3_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", B3/*Black*/);
+    }
+
+    #[test]
+    fn b5_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", B5/*Black*/);
+    }
+
+    #[test]
+    fn c6_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", C6/*Black*/);
+    }
+
+    #[test]
+    fn e6_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", E6/*Black*/);
+    }
+
+    #[test]
+    fn f5_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", F5/*Black*/);
+    }
+
+    #[test]
+    fn f3_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", f3/*Black*/);
+    }
+
+    #[test]
+    fn e2_is_attacked_by_black_knight_on_d4() {
+        assert_is_attacked("8/8/8/8/3n4/8/8/8 w", e2/*Black*/);
+    }
+
+    #[test]
+    fn d1_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked("8/8/8/8/3r4/8/8/8 w", d1/*Black*/);
+    }
+
+    #[test]
+    fn d6_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked("8/8/8/8/3r4/8/8/8 w", d6/*Black*/);
+    }
+
+    #[test]
+    fn f4_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked("8/8/8/8/3r4/8/8/8 w", f4/*Black*/);
+    }
+
+    #[test]
+    fn a4_is_attacked_by_black_rook_on_d4() {
+        assert_is_attacked("8/8/8/8/3r4/8/8/8 w", a4/*Black*/);
+    }
+
+    #[test]
+    fn c4_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", c4/*Black*/);
+    }
+
+    #[test]
+    fn c3_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", c3/*Black*/);
+    }
+
+    #[test]
+    fn d3_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", d3/*Black*/);
+    }
+
+    #[test]
+    fn e3_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", e3/*Black*/);
+    }
+
+    #[test]
+    fn e4_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", e4/*Black*/);
+    }
+
+    #[test]
+    fn e5_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", e5/*Black*/);
+    }
+
+    #[test]
+    fn d5_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", d5/*Black*/);
+    }
+
+    #[test]
+    fn c5_is_attacked_by_black_queen_on_d4() {
+        assert_is_attacked("8/8/8/8/3q4/8/8/8 w", c5/*Black*/);
+    }
+    // =============== King ===============
+    #[test]
+    fn c4_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", c4/*Black*/);
+    }
+
+    #[test]
+    fn c3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", c3/*Black*/);
+    }
+
+    #[test]
+    fn d3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", d3/*Black*/);
+    }
+
+    #[test]
+    fn e3_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", e3/*Black*/);
+    }
+
+    #[test]
+    fn e4_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", e4/*Black*/);
+    }
+
+    #[test]
+    fn e5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", e5/*Black*/);
+    }
+
+    #[test]
+    fn d5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", d5/*Black*/);
+    }
+
+    #[test]
+    fn c5_is_attacked_by_black_king_on_d4() {
+        assert_is_attacked("8/8/8/8/3k4/8/8/8 w", c5/*Black*/);
+    }
+    // =============== Color.White ==============
+    #[test]
+    fn c8_is_attacked_by_white_pawn_on_b7() {
+        assert_is_attacked("8/1P6/8/8/8/8/8/8 w", c8/*White*/);
+    }
+
+    #[test]
+    fn a8_is_attacked_by_white_pawn_on_b7() {
+        assert_is_attacked("8/1P6/8/8/8/8/8/8 w", a8/*White*/);
+    }
+}
+
+fn assert_is_attacked(fen: &str, square: Square88) {
+    assert_eq!(BitBoard88::parse(fen).is_attacked_by(square), true);
+}
+
+fn assert_is_not_attacked(fen: &str, square: Square88) {
+    assert_eq!(BitBoard88::parse(fen).is_attacked_by(square), false);
+}
 }
