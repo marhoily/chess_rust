@@ -40,7 +40,7 @@ impl Square88 {
         self.0 & 0x88 == 0 //&& self.0 < 0x77
     }
     pub fn too_big(&self) -> bool {
-        self.0 >= 0x77
+        self.0 > 0x77
     }
     pub fn forward(self, offset: u8) -> Self {
         let mut result = Square88(self.0 + offset);

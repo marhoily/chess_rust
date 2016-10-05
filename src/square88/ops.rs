@@ -67,7 +67,7 @@ impl Add<i8> for Square88 {
     type Output = Square88;
 
     fn add(self, rhs: i8) -> Self::Output {
-        Square88((self.0 as i8 + rhs) as u8)
+        Square88((self.0 as i16 + rhs as i16) as u8)
     }
 }
 
