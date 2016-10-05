@@ -35,6 +35,7 @@ pub mod kind;
 pub mod piece;
 pub mod mask;
 pub mod bit_board;
+mod board88;
 pub mod moves;
 pub mod castle;
 pub mod position;
