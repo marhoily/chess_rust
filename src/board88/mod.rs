@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::fmt::{Result, Display, Formatter};
 use piece::Piece;
 use piece::pieces::*;
@@ -70,7 +71,7 @@ impl BitBoard88 {
         }
     }
     pub fn parse(input: &str) -> Self {
-        fen::parse_bit_board88(input.as_bytes()).unwrap().1
+        fen::parse_board88(input.as_bytes()).unwrap().1
     }
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)

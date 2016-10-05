@@ -1,6 +1,6 @@
 use piece::*;
 use mask::masks;
-use bit_board::*;
+use super::*;
 use nom::IResult;
 use nom::IResult::*;
 use std::str;
