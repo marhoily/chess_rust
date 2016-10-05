@@ -55,7 +55,7 @@ impl BitBoard88 {
     #[allow(if_same_then_else)]
     pub fn slide_for(&self, square: Square88, piece: Piece, increment: i8) -> Square88 {
         let next = square + increment;
-        if !next.is_valid() {
+        if !next.too_big() || !next.is_valid() {
             return INVALID;
         }
         if self.get_piece(next) == piece {
