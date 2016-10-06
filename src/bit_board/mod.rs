@@ -101,7 +101,13 @@ impl BitBoard {
         let f = self.black_kings().king_attacks();
         a | b | c | d | e | f
     }
+    pub fn swap_colors(&mut self) {
+        for i in 0..6 {
+            self.0[..].swap(i, i+6)
+        }
+    }
 }
+
 pub mod fen;
 
 impl Display for BitBoard {
@@ -109,6 +115,7 @@ impl Display for BitBoard {
         write!(f, "{}", self.print_fen())
     }
 }
+
 #[derive(Copy, Clone, Debug)]
 pub struct SquareIter<'a> {
     board: &'a BitBoard,
@@ -159,18 +166,21 @@ mod test {
                    "|@@@@@@^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
                     .|^^^^^^^^|...|@@@@@@^^|...");
     }
+
     #[test]
     fn black_occupation() {
         assert_eq!(sample_with_one_of_each_kind().black_occupation().dump(),
                    "|@@@@@@^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
                     .|^^^^^^^^|...|^^^^^^^^|...");
     }
+
     #[test]
     fn white_occupation() {
         assert_eq!(sample_with_one_of_each_kind().white_occupation().dump(),
                    "|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
                     .|^^^^^^^^|...|@@@@@@^^|...");
     }
+
     fn sample_with_one_of_each_kind() -> BitBoard {
         let mut b = BitBoard::new();
         b.set_piece(A8, BLACK_ROOK);
@@ -213,6 +223,7 @@ mod test {
         assert_eq!(format!("{}", generate_random_board(&mut gen)),
                    "6p1/pb2P3/2p4N/2p2p2/3P1Pqp/r2n4/K7/5n2");
     }
+
     #[test]
     fn test_generate_random_board_count() {
         let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
@@ -222,6 +233,7 @@ mod test {
                        .sum::<u32>(),
                    159635);
     }
+
     #[test]
     fn test_generate_random_board_unique_masks() {
         let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
@@ -236,13 +248,13 @@ mod test {
         let mut result = BitBoard::new();
         for one in Mask::new(rng.next_u64()).single_bits() {
             match rng.next_u32() % 38 {
-                0...3 => result.set_piece(one, WHITE_PAWN),
+                0 ... 3 => result.set_piece(one, WHITE_PAWN),
                 4 => result.set_piece(one, WHITE_KNIGHT),
                 5 => result.set_piece(one, WHITE_BISHOP),
                 6 => result.set_piece(one, WHITE_ROOK),
                 7 => result.set_piece(one, WHITE_QUEEN),
                 8 => result.set_piece(one, WHITE_KING),
-                9...13 => result.set_piece(one, BLACK_PAWN),
+                9 ... 13 => result.set_piece(one, BLACK_PAWN),
                 14 => result.set_piece(one, BLACK_KNIGHT),
                 15 => result.set_piece(one, BLACK_BISHOP),
                 16 => result.set_piece(one, BLACK_ROOK),
