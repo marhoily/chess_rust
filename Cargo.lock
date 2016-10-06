@@ -3,7 +3,7 @@ name = "chess"
 version = "0.1.0"
 dependencies = [
  "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "clippy 0.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clippy 0.0.95 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "nom 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "quickcheck 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -25,15 +25,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "clippy"
-version = "0.0.94"
+version = "0.0.95"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "clippy_lints 0.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clippy_lints 0.0.95 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "clippy_lints"
-version = "0.0.94"
+version = "0.0.95"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "matches 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -205,8 +205,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [metadata]
 "checksum aho-corasick 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ca972c2ea5f742bfce5687b9aef75506a764f61d37f8f649047846a9686ddb66"
 "checksum bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "aad18937a628ec6abcd26d1489012cc0e18c21798210f491af69ded9b881106d"
-"checksum clippy 0.0.94 (registry+https://github.com/rust-lang/crates.io-index)" = "ed829797293d879eb288647d2294772d8c6b64cd0515d672613dc4470b92cbb2"
-"checksum clippy_lints 0.0.94 (registry+https://github.com/rust-lang/crates.io-index)" = "5635295c28475fa89702e0a66a99c6844c1795181d344a5b45b2d279c7676979"
+"checksum clippy 0.0.95 (registry+https://github.com/rust-lang/crates.io-index)" = "326a296da2adbb719fcc2301f3b44a148261f72a46dbda89930ead9c90d584b2"
+"checksum clippy_lints 0.0.95 (registry+https://github.com/rust-lang/crates.io-index)" = "921bb7c49a9a58f6bd097fbbb9f729426e0f05372fe5b81a0a053f6b2d98dc5b"
 "checksum either 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5845bf77d497f79416df39462df26d4a8b71dd6440246848ee63709476dbb9a6"
 "checksum env_logger 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "15abd780e45b3ea4f76b4e9a26ff4843258dd8a3eed2775a0e7368c2e7936c2f"
 "checksum itertools 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "00de4ac29af46c948d6e180eb8c52798a23ec590d5cea8a7cf22cdd7f48c87ca"
