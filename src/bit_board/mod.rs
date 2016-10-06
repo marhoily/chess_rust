@@ -91,6 +91,16 @@ impl BitBoard {
         let f = self.white_kings().king_attacks();
         a | b | c | d | e | f
     }
+    pub fn black_attacks(&self) -> Mask {
+        let stoppers = self.occupation();
+        let a = self.black_pawns().black_pawn_attacks();
+        let b = self.black_knights().knight_attacks();
+        let c = self.black_bishops().bishop_attacks(stoppers);
+        let d = self.black_rooks().rook_attacks(stoppers);
+        let e = self.black_queens().queen_attacks(stoppers);
+        let f = self.black_kings().king_attacks();
+        a | b | c | d | e | f
+    }
 }
 pub mod fen;
 
