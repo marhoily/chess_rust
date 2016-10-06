@@ -82,7 +82,7 @@ impl BitBoard {
         self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
     }
     pub fn white_attacks(&self) -> Mask {
-        let stoppers = self.black_occupation();
+        let stoppers = self.occupation();
         let a = self.white_pawns().white_pawn_attacks();
         let b = self.white_knights().knight_attacks();
         let c = self.white_bishops().bishop_attacks(stoppers);
@@ -181,13 +181,13 @@ mod test {
 
     #[test]
     fn white_attacks() {
-        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
-        for _ in 0..10 {
+        let mut gen = XorShiftRng::from_seed([80, 2, 3, 4]);
+        for _ in 0..10000 {
             let bb = generate_random_board(&mut gen);
             let fen = format!("{}", bb);
             let b88 = BitBoard88::parse(fen.as_str());
             if bb.white_attacks() != b88.white_attacks() {
-                panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}",
+                panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}\r\n",
                        bb.white_attacks(),
                        b88.white_attacks(),
                        fen)
