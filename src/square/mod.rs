@@ -10,15 +10,15 @@ use color::Color;
 pub struct Square(u8);
 
 impl Square {
-    pub fn new(bits: u8) -> Self {
-       // debug_assert!(bits < 64, "is not a valid square number");
+    pub fn from_bits(bits: u8) -> Self {
+        debug_assert!(bits < 64, "is not a valid square number");
         Square(bits)
     }
     pub fn file(self) -> File {
-        File::new(self.0 % 8)
+        File::from_bits(self.0 % 8)
     }
     pub fn rank(self) -> Rank {
-        Rank::new(self.0 / 8)
+        Rank::from_bits(self.0 / 8)
     }
     pub fn from(f: File, r: Rank) -> Self {
         Square(f.bits() + r.bits() * 8)

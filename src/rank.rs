@@ -4,7 +4,7 @@ use std::fmt::{Result, Display, Formatter};
 pub struct Rank(u8);
 
 impl Rank {
-    pub fn new(bits: u8) -> Self {
+    pub fn from_bits(bits: u8) -> Self {
         debug_assert!(bits < 8);
         Rank(bits)
     }

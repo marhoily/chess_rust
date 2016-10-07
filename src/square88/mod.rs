@@ -35,7 +35,7 @@ impl Square88 {
         self.0
     }
     pub fn file_rank(self) -> (File, Rank) {
-        (File::new(self.0 & 7), Rank::new(self.0 >> 4))
+        (File::from_bits(self.0 & 7), Rank::from_bits(self.0 >> 4))
     }
     pub fn color(self) -> Color {
         let (file, rank) = self.file_rank();

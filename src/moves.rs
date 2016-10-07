@@ -57,6 +57,13 @@ impl Move {
 
 impl Display for Move {
     fn fmt(&self, f: &mut Formatter) -> Result {
+        if self.castle != castle::NONE {
+            return write!(f, "{}", if self.castle ==castle::Q {
+                "O-O-O"
+            } else {
+                "O-O"
+            });
+        }
         try!(write!(f, "{}-{}", self.from, self.to));
         if self.promote != kinds::UNKNOWN {
             try!(write!(f, "={}", self.promote));
@@ -87,12 +94,12 @@ named!(parse_straight(&[u8]) -> Move,
 
 named!(parse_castle(&[u8]) -> Move,
     alt!(
-        value!(CASTLE_Q, tag!("o-o-o")) |
-        value!(CASTLE_Q, tag!("0-0-0")) |
-        value!(CASTLE_Q, tag!("O-O-O")) |
-        value!(CASTLE_K, tag!("o-o")) |
-        value!(CASTLE_K, tag!("0-0")) |
-        value!(CASTLE_K, tag!("O-O"))
+        complete!(value!(CASTLE_Q, tag!("o-o-o"))) |
+        complete!(value!(CASTLE_Q, tag!("0-0-0"))) |
+        complete!(value!(CASTLE_Q, tag!("O-O-O"))) |
+        complete!(value!(CASTLE_K, tag!("o-o"))) |
+        complete!(value!(CASTLE_K, tag!("0-0"))) |
+        complete!(value!(CASTLE_K, tag!("O-O")))
     ));
 
 named!(pub parse_move(&[u8]) -> Move,
@@ -125,6 +132,10 @@ mod test {
         assert_eq!(format!("{}", Move::parse("a1a8")), "a1-a8");
         assert_eq!(format!("{}", Move::parse("c3-f2")), "c3-f2");
         assert_eq!(format!("{}", Move::parse("a8:h1")), "a8-h1");
+    }
+    #[test]
+    fn parse_short_castle() {
+        assert_eq!(format!("{}", Move::parse("O-O")), "O-O");
     }
 
     #[test]
