@@ -201,8 +201,8 @@ mod test {
 
     #[test]
     fn white_attacks() {
-        let mut gen = XorShiftRng::from_seed([80, 2, 3, 4]);
-        for _ in 0..10000 {
+        let mut gen = weak_rng();
+        for _ in 0..2000 {
             let bb = generate_random_board(&mut gen);
             let b88 = BitBoard88::from(&bb);
             if bb.white_attacks() != b88.white_attacks() {
