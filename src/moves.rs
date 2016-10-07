@@ -89,9 +89,9 @@ named!(parse_castle(&[u8]) -> Move,
         complete!(value!(CASTLE_Q, tag!("o-o-o"))) |
         complete!(value!(CASTLE_Q, tag!("0-0-0"))) |
         complete!(value!(CASTLE_Q, tag!("O-O-O"))) |
-        complete!(value!(CASTLE_K, tag!("o-o"))) |
-        complete!(value!(CASTLE_K, tag!("0-0"))) |
-        complete!(value!(CASTLE_K, tag!("O-O")))
+        value!(CASTLE_K, tag!("o-o")) |
+        value!(CASTLE_K, tag!("0-0")) |
+        value!(CASTLE_K, tag!("O-O"))
     ));
 
 named!(pub parse_move(&[u8]) -> Move,

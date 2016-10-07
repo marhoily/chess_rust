@@ -4,6 +4,7 @@ use piece::pieces::*;
 use mask::Mask;
 use mask::masks::*;
 use moves::Move;
+use kind::kinds;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; COUNT]);
@@ -133,7 +134,7 @@ impl BitBoard {
         }
 
         //  Only pawns can promote and only on the back-rank.
-        if mv.promote != ::kind::kinds::UNKNOWN {
+        if mv.promote != kinds::UNKNOWN {
             if piece != WHITE_PAWN {
                 return false;
             }
