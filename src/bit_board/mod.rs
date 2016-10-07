@@ -103,7 +103,7 @@ impl BitBoard {
     }
     pub fn swap_colors(&mut self) {
         for i in 0..6 {
-            self.0[..].swap(i, i+6)
+            self.0[..].swap(i, i + 6)
         }
     }
 }
@@ -204,13 +204,12 @@ mod test {
         let mut gen = XorShiftRng::from_seed([80, 2, 3, 4]);
         for _ in 0..10000 {
             let bb = generate_random_board(&mut gen);
-            let fen = format!("{}", bb);
-            let b88 = BitBoard88::parse(fen.as_str());
+            let b88 = BitBoard88::from(&bb);
             if bb.white_attacks() != b88.white_attacks() {
                 panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}\r\n",
                        bb.white_attacks(),
                        b88.white_attacks(),
-                       fen)
+                       format!("{}", bb))
             }
         }
     }
@@ -248,13 +247,13 @@ mod test {
         let mut result = BitBoard::new();
         for one in Mask::new(rng.next_u64()).single_bits() {
             match rng.next_u32() % 38 {
-                0 ... 3 => result.set_piece(one, WHITE_PAWN),
+                0...3 => result.set_piece(one, WHITE_PAWN),
                 4 => result.set_piece(one, WHITE_KNIGHT),
                 5 => result.set_piece(one, WHITE_BISHOP),
                 6 => result.set_piece(one, WHITE_ROOK),
                 7 => result.set_piece(one, WHITE_QUEEN),
                 8 => result.set_piece(one, WHITE_KING),
-                9 ... 13 => result.set_piece(one, BLACK_PAWN),
+                9...13 => result.set_piece(one, BLACK_PAWN),
                 14 => result.set_piece(one, BLACK_KNIGHT),
                 15 => result.set_piece(one, BLACK_BISHOP),
                 16 => result.set_piece(one, BLACK_ROOK),
@@ -264,5 +263,25 @@ mod test {
             }
         }
         result
+    }
+
+    use test::Bencher;
+
+    #[bench]
+    fn convert_bit_board_to_88_througn_fen(b: &mut Bencher) {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        b.iter(|| {
+            let board = generate_random_board(&mut gen);
+            let fen = format!("{}", board);
+            BitBoard88::parse(fen.as_str())
+        });
+    }
+    #[bench]
+    fn convert_bit_board_to_88_directly(b: &mut Bencher) {
+        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
+        b.iter(|| {
+            let board = generate_random_board(&mut gen);
+            BitBoard88::from(&board)
+        });
     }
 }
