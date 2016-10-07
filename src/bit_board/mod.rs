@@ -101,10 +101,20 @@ impl BitBoard {
         let f = self.black_kings().king_attacks();
         a | b | c | d | e | f
     }
-    pub fn swap_colors(&mut self) {
-        for i in 0..6 {
-            self.0[..].swap(i, i + 6)
-        }
+    pub fn swap_colors(&self) -> Self {
+        let x = self.0;
+        BitBoard([x[6].flip_vertically(),
+                  x[7].flip_vertically(),
+                  x[8].flip_vertically(),
+                  x[9].flip_vertically(),
+                  x[10].flip_vertically(),
+                  x[11].flip_vertically(),
+                  x[0].flip_vertically(),
+                  x[1].flip_vertically(),
+                  x[2].flip_vertically(),
+                  x[3].flip_vertically(),
+                  x[4].flip_vertically(),
+                  x[5].flip_vertically()])
     }
 }
 
@@ -210,6 +220,22 @@ mod test {
                        bb.white_attacks(),
                        b88.white_attacks(),
                        format!("{}", bb))
+            }
+        }
+    }
+    #[test]
+    fn black_attacks_are_white_attacs_reverse() {
+        let mut gen = weak_rng();
+        for _ in 0..2000 {
+            let bb = generate_random_board(&mut gen);
+            let inverse = bb.swap_colors();
+            let cmp = inverse.black_attacks().flip_vertically();
+            if bb.white_attacks() != cmp {
+                panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nbb: {}\r\ninverse: {}\r\n",
+                       bb.white_attacks(),
+                       cmp,
+                       bb,
+                       inverse)
             }
         }
     }
