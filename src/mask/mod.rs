@@ -1,4 +1,6 @@
 use square::Square;
+use file::File;
+use rank::Rank;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct Mask(u64);
@@ -9,6 +11,9 @@ impl Mask {
     }
     pub fn from(square: Square) -> Self {
         Mask(1 << square.bits())
+    }
+    pub fn from_file_rank(file: File, rank: Rank) -> Self {
+        Self::from(Square::from(file, rank))
     }
     pub fn bits(self) -> u64 {
         self.0

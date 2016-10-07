@@ -6,12 +6,24 @@ use square88::squares::*;
 use piece::Piece;
 use piece::pieces::*;
 use mask::Mask;
+use bit_board::BitBoard;
 
 pub struct BitBoard88([Piece; 0x78]);
 
 impl BitBoard88 {
     pub fn new() -> Self {
         BitBoard88([VOID; 0x78])
+    }
+    pub fn from(source: &BitBoard) -> Self {
+        let mut result = BitBoard88::new();
+        for file in ::file::files::All {
+            for rank in ::rank::ranks::All {
+                let mask = Mask::from_file_rank(file, rank);
+                let square = Square88::from(file, rank);
+                result.set_piece(square, source.get_piece(mask));
+            }
+        }
+        result
     }
 
     pub fn set_piece(&mut self, at: Square88, piece: Piece) {
