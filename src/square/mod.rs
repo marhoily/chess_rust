@@ -11,8 +11,14 @@ pub struct Square(u8);
 
 impl Square {
     pub fn new(bits: u8) -> Self {
-        debug_assert!(bits < 64, "is not a valid square number");
+       // debug_assert!(bits < 64, "is not a valid square number");
         Square(bits)
+    }
+    pub fn file(self) -> File {
+        File::new(self.0 % 8)
+    }
+    pub fn rank(self) -> Rank {
+        Rank::new(self.0 / 8)
     }
     pub fn from(f: File, r: Rank) -> Self {
         Square(f.bits() + r.bits() * 8)
@@ -27,7 +33,7 @@ impl Square {
         self.0
     }
     pub fn file_rank(self) -> (File, Rank) {
-        (File::new(self.0 % 8), Rank::new(self.0 / 8))
+        (self.file(), self.rank())
     }
     pub fn color(self) -> Color {
         let (file, rank) = self.file_rank();

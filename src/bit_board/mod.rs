@@ -3,6 +3,7 @@ use piece::Piece;
 use piece::pieces::*;
 use mask::Mask;
 use mask::masks::*;
+use moves::Move;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; COUNT]);
@@ -101,6 +102,9 @@ impl BitBoard {
         let f = self.black_kings().king_attacks();
         a | b | c | d | e | f
     }
+    pub fn white_castling_move_masks(&self) -> Mask {
+        EMPTY
+    }
     pub fn swap_colors(&self) -> Self {
         let x = self.0;
         BitBoard([x[6].flip_vertically(),
@@ -115,6 +119,30 @@ impl BitBoard {
                   x[3].flip_vertically(),
                   x[4].flip_vertically(),
                   x[5].flip_vertically()])
+    }
+    pub fn is_pseudo_legal_for_white(&self, mv: Move) -> bool {
+        // Source square must not be vacant.
+        let from = mv.from.mask();
+        let piece = self.get_piece(from);
+        if piece == VOID {
+            return false;
+        }
+        // Check turn.
+        if !self.white_occupation().has_any(from) {
+            return false;
+        }
+
+        //  Only pawns can promote and only on the back-rank.
+        if mv.promote != ::kind::kinds::UNKNOWN {
+            if piece != WHITE_PAWN {
+                return false;
+            }
+            if mv.to.rank() != ::rank::ranks::_7 {
+                return false;
+            }
+        }
+//        let to = mv.to.mask();
+        true
     }
 }
 
@@ -224,7 +252,7 @@ mod test {
         }
     }
     #[test]
-    fn black_attacks_are_white_attacs_reverse() {
+    fn black_attacks_are_white_attacks_reverse() {
         let mut gen = weak_rng();
         for _ in 0..2000 {
             let bb = generate_random_board(&mut gen);

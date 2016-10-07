@@ -2,7 +2,7 @@ use square::Square;
 use file::File;
 use rank::Rank;
 
-#[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
+#[derive(Eq, Copy, Clone, Debug, Default, PartialEq, Hash)]
 pub struct Mask(u64);
 
 impl Mask {
