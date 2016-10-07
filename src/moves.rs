@@ -33,14 +33,6 @@ impl Move {
             castle: castle::NONE,
         }
     }
-    pub fn castle(castle: Castle) -> Self {
-        Move {
-            from: squares::UNDEFINED,
-            to: squares::UNDEFINED,
-            promote: kinds::UNKNOWN,
-            castle: castle,
-        }
-    }
     pub fn promote(from: Square, to: Square, promote: Kind) -> Self {
         Move {
             from: from,
