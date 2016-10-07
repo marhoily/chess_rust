@@ -136,6 +136,14 @@ mod test {
     #[test]
     fn parse_short_castle() {
         assert_eq!(format!("{}", Move::parse("O-O")), "O-O");
+        assert_eq!(format!("{}", Move::parse("0-0")), "O-O");
+        assert_eq!(format!("{}", Move::parse("o-o")), "O-O");
+    }
+    #[test]
+    fn parse_long_castle() {
+        assert_eq!(format!("{}", Move::parse("O-O-O")), "O-O-O");
+        assert_eq!(format!("{}", Move::parse("0-0-0")), "O-O-O");
+        assert_eq!(format!("{}", Move::parse("o-o-o")), "O-O-O");
     }
 
     #[test]
