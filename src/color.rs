@@ -1,4 +1,5 @@
 use std::fmt::{Result, Display, Formatter};
+use castle::*;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]
 pub enum Color {
@@ -12,6 +13,13 @@ impl Color {
             Color::White
         } else {
             Color::Black
+        }
+    }
+    pub fn castle(self) -> Castle {
+        if self == Color::Black {
+            B
+        } else {
+            W
         }
     }
 }

@@ -9,7 +9,7 @@ pub struct Kind(u8);
 pub mod kinds {
     use super::Kind;
 
-    pub const COUNT: u8 = 6;
+    pub const KINDS_COUNT: u8 = 6;
 
     pub const PAWN: Kind = Kind(0);
     pub const KNIGHT: Kind = Kind(1);
@@ -33,7 +33,7 @@ pub mod kinds {
         type Item = Kind;
 
         fn next(&mut self) -> Option<Self::Item> {
-            if self.0 < COUNT {
+            if self.0 < KINDS_COUNT {
                 let result = *self;
                 self.0 += 1;
                 Some(result)
@@ -60,7 +60,7 @@ impl Kind {
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + kinds::COUNT)
+            Piece::new(self.bits() + kinds::KINDS_COUNT)
         }
     }
     pub fn char(self) -> char {

@@ -4,6 +4,7 @@
 use std::fmt::{Display, Result, Formatter};
 use nom::IResult;
 use nom::IResult::*;
+use mask::{Mask, masks};
 
 // note: make castle be masks for squares that need checking?
 bitflags! {
@@ -20,6 +21,7 @@ bitflags! {
         const ALL = Q.bits | K.bits,
     }
 }
+
 impl Castle {
     pub fn parse(input: &str) -> Self {
         parse_castle(input.as_bytes()).unwrap().1
@@ -165,7 +167,9 @@ mod test {
             let b = input.as_bytes();
             let err = parse_castle(b).unwrap_err();
             match err {
-                Position(Custom(UnrecognizedToken), reminder) => assert_eq!(reminder, &b[expected..]),
+                Position(Custom(UnrecognizedToken), reminder) => {
+                    assert_eq!(reminder, &b[expected..])
+                }
                 _ => panic!(err),
             }
         };

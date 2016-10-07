@@ -1,10 +1,12 @@
 use std::fmt::{Result, Display, Formatter};
 use piece::Piece;
 use piece::pieces::*;
+use kind::kinds::*;
 use mask::Mask;
 use mask::masks::*;
-use moves::Move;
 use kind::kinds;
+use castle;
+use color::Color;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; COUNT]);
@@ -16,6 +18,26 @@ impl BitBoard {
     fn index(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
     }
+
+    pub fn pawns(&self, color: Color) -> Mask {
+        self.index(PAWN.of(color))
+    }
+    pub fn knights(&self, color: Color) -> Mask {
+        self.index(KNIGHT.of(color))
+    }
+    pub fn bishops(&self, color: Color) -> Mask {
+        self.index(BISHOP.of(color))
+    }
+    pub fn rooks(&self, color: Color) -> Mask {
+        self.index(ROOK.of(color))
+    }
+    pub fn queens(&self, color: Color) -> Mask {
+        self.index(QUEEN.of(color))
+    }
+    pub fn kings(&self, color: Color) -> Mask {
+        self.index(KING.of(color))
+    }
+
     pub fn white_pawns(&self) -> Mask {
         self.index(WHITE_PAWN)
     }
@@ -59,7 +81,7 @@ impl BitBoard {
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
         for probe in Pieces {
-            if self.index(probe).has_any(square) {
+            if self.index(probe).intersects(square) {
                 return probe;
             }
         }
@@ -73,6 +95,13 @@ impl BitBoard {
     }
     pub fn parse(input: &str) -> Self {
         fen::parse_bit_board(input.as_bytes()).unwrap().1
+    }
+    pub fn occupation_of(&self, color: Color) -> Mask {
+        if color == Color::White {
+            self.white_occupation()
+        } else {
+            self.black_occupation()
+        }
     }
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
@@ -103,6 +132,13 @@ impl BitBoard {
         let f = self.black_kings().king_attacks();
         a | b | c | d | e | f
     }
+    pub fn attacks(&self, color: Color) -> Mask {
+        if color == Color::White {
+            self.white_attacks()
+        } else {
+            self.black_attacks()
+        }
+    }
     pub fn white_castling_move_masks(&self) -> Mask {
         EMPTY
     }
@@ -120,30 +156,6 @@ impl BitBoard {
                   x[3].flip_vertically(),
                   x[4].flip_vertically(),
                   x[5].flip_vertically()])
-    }
-    pub fn is_pseudo_legal_for_white(&self, mv: Move) -> bool {
-        // Source square must not be vacant.
-        let from = mv.from.mask();
-        let piece = self.get_piece(from);
-        if piece == VOID {
-            return false;
-        }
-        // Check turn.
-        if !self.white_occupation().has_any(from) {
-            return false;
-        }
-
-        //  Only pawns can promote and only on the back-rank.
-        if mv.promote != kinds::UNKNOWN {
-            if piece != WHITE_PAWN {
-                return false;
-            }
-            if mv.to.rank() != ::rank::ranks::_7 {
-                return false;
-            }
-        }
-//        let to = mv.to.mask();
-        true
     }
 }
 

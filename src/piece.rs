@@ -16,7 +16,7 @@ impl Piece {
         self.0
     }
     pub fn color(self) -> Color {
-        if self.0 >= kinds::COUNT {
+        if self.0 >= kinds::KINDS_COUNT {
             Color::Black
         } else {
             Color::White
@@ -26,7 +26,7 @@ impl Piece {
         if self == pieces::VOID {
             kinds::UNKNOWN
         } else {
-            Kind::new(self.bits() % kinds::COUNT)
+            Kind::new(self.bits() % kinds::KINDS_COUNT)
         }
     }
     pub fn char(self) -> char {

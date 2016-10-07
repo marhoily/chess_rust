@@ -18,10 +18,10 @@ impl Mask {
     pub fn bits(self) -> u64 {
         self.0
     }
-    pub fn has_all(self, another: Mask) -> bool {
+    pub fn contains(self, another: Mask) -> bool {
         self.0 & another.bits() == another.bits()
     }
-    pub fn has_any(self, another: Mask) -> bool {
+    pub fn intersects(self, another: Mask) -> bool {
         self.0 & another.bits() != 0
     }
     pub fn dump(self) -> String {
@@ -29,7 +29,7 @@ impl Mask {
         result.push('|');
         for rank in masks::ranks::RANKS {
             for file in masks::files::FILES {
-                if self.has_any(*file & *rank) {
+                if self.intersects(*file & *rank) {
                     result.push('@');
                 } else {
                     result.push('^');
