@@ -37,8 +37,7 @@ impl Square {
         (self.file(), self.rank())
     }
     pub fn color(self) -> Color {
-        let (file, rank) = self.file_rank();
-        if (file.bits() % 2) == (rank.bits() % 2) {
+        if ((self.file().bits() ^ self.rank().bits()) & 1) == 0 {
             White
         } else {
             Black
