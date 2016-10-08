@@ -1,6 +1,5 @@
 use super::Square;
 pub const ALL_SQUARES: Square = Square(0);
-pub const FIRST: Square = Square(0);
 pub const UNDEFINED: Square = Square(0xFF);
 
 pub const A8: Square = Square(0);
@@ -97,7 +96,7 @@ mod test {
             A4,B4,C4,D4,E4,F4,G4,H4,
             A3,B3,C3,D3,E3,F3,G3,H3,
             A2,B2,C2,D2,E2,F2,G2,H2,
-            A1,B1,C1,D1,E1,F1,G1,H1 ));
+            A1, B1,C1,D1, E1, F1, G1,H1));
     }
 
     #[test]
