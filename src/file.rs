@@ -77,8 +77,8 @@ mod test {
     }
     #[test]
     fn file_debug() {
-        assert_eq!([A, H].into_iter().map(|f| format!("{:?}", f))
-            .collect_vec(), ["File(0)", "File(7)"]);
+        assert_eq!(format!("{:?}", A), "File(0)");
+        assert_eq!(format!("{:?}", H), "File(7)");
     }
 
     #[test]

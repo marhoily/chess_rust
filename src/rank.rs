@@ -23,7 +23,9 @@ impl Rank {
 static RANK_SYMBOLS: &'static [u8; 8] = b"87654321";
 
 named!(pub parse_rank(&[u8]) -> Rank,
-    map!(is_a!(RANK_SYMBOLS), |c:&[u8]| Rank(RANK_SYMBOLS[0] - c[0])));
+    map!(is_a!(RANK_SYMBOLS), |c:&[u8]|{
+        Rank(RANK_SYMBOLS[0] - c[0])
+    }));
 
 impl Display for Rank {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -69,26 +71,23 @@ mod test {
 
     #[test]
     fn rank_char() {
-        assert_eq!(ALL_RANKS.
-            map(|f| f.char()).collect::<Vec<_>>(),
-            ['8', '7', '6', '5', '4', '3', '2', '1']);
+        assert_eq!(ALL_RANKS.map(|f| f.char()).collect::<String>(),
+            "87654321");
     }
     #[test]
     fn rank_display() {
-        assert_eq!(ALL_RANKS.
-            map(|f| format!("{}", f)).collect::<Vec<_>>(),
-            ["8", "7", "6", "5", "4", "3", "2", "1"]);
+        assert_eq!(ALL_RANKS.map(|f| format!("{}", f)).join(""),
+            "87654321");
     }
     #[test]
     fn rank_debug() {
-        assert_eq!([_1, _8].into_iter().
-            map(|f| format!("{:?}", f)).collect::<Vec<_>>(),
-            ["Rank(7)", "Rank(0)"]);
+        assert_eq!(format!("{:?}", _1), "Rank(7)");
+        assert_eq!(format!("{:?}", _8), "Rank(0)");
     }
     #[test]
     fn rank_parse() {
         assert_eq!(['8', '7', '6', '5', '4', '3', '2', '1'].into_iter().
-            map(|f| Rank::parse(*f)).collect::<Vec<_>>(),
+            map(|f| Rank::parse(*f)).collect_vec(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
 }
