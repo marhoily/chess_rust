@@ -30,7 +30,10 @@ impl Board88 {
             for rank in ::rank::ALL_RANKS {
                 let mask = Mask::from_file_rank(file, rank);
                 let square = Square88::from(file, rank);
-                result.set_piece(mask, self.get_piece(square));
+                let p = self.get_piece(square);
+                if p != VOID {
+                    result.set_piece(mask, p);
+                }
             }
         }
         result
@@ -48,7 +51,7 @@ impl Board88 {
     pub fn squares(&self) -> SquareIter {
         SquareIter {
             board: self,
-            current: FIRST,
+            current: ALL_SQUARES,
         }
     }
     pub fn is_attacked_by_jump(&self, square: Square88, piece: Piece, increments: &[i8]) -> bool {
@@ -86,26 +89,26 @@ impl Board88 {
     pub fn slide_for(&self, square: Square88, piece: Piece, increment: i8) -> Square88 {
         let next = square + increment;
         if next.too_big() || !next.is_valid() {
-            return INVALID;
+            return UNDEFINED_SQUARE;
         }
         if self.get_piece(next) == piece {
             return next;
         }
         if self.get_piece(next) != VOID {
-            return INVALID;
+            return UNDEFINED_SQUARE;
         }
         self.slide_for(next, piece, increment)
     }
     pub fn find(&self, piece: Piece) -> Square88 {
-        for s in All {
+        for s in ALL_SQUARES {
             if self.get_piece(s) == piece {
                 return s;
             }
         }
-        INVALID
+        UNDEFINED_SQUARE
     }
     pub fn white_attacks(&self) -> Mask {
-        All.into_iter()
+        ALL_SQUARES.into_iter()
             .filter(|s| self.is_attacked_by_white(*s))
             .fold(::mask::masks::EMPTY, |acc, s| acc | s.into_mask())
     }

@@ -1,7 +1,8 @@
 use super::Square88;
+use itertools::*;
 
-pub const FIRST: Square88 = Square88(0);
-pub const INVALID: Square88 = Square88(0xFF);
+pub const ALL_SQUARES: Square88 = Square88(0);
+pub const UNDEFINED_SQUARE: Square88 = Square88(0xFF);
 
 pub const A8: Square88 = Square88(0x0);
 pub const B8: Square88 = Square88(0x1);
@@ -68,16 +69,6 @@ pub const F1: Square88 = Square88(0x75);
 pub const G1: Square88 = Square88(0x76);
 pub const H1: Square88 = Square88(0x77);
 
-#[derive(Copy, Clone, Debug)]
-pub struct All;
-impl IntoIterator for All {
-    type Item = Square88;
-    type IntoIter = Square88;
-
-    fn into_iter(self) -> Self::IntoIter {
-        Square88(0)
-    }
-}
 impl Iterator for Square88 {
     type Item = Square88;
 
@@ -85,7 +76,9 @@ impl Iterator for Square88 {
         if self.0 == 120 {
             None
         } else {
-            if self.0 & 0x88 != 0 {self.0 += 8}
+            if self.0 & 0x88 != 0 {
+                self.0 += 8
+            }
             let copy = *self;
             self.0 += 1;
             Some(copy)
@@ -93,38 +86,30 @@ impl Iterator for Square88 {
     }
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
+#[test]
+fn all_squares() {
+    assert_eq!(ALL_SQUARES.collect_vec(),
+               vec![A8, B8, C8, D8, E8, F8, G8, H8, A7, B7, C7, D7, E7, F7, G7, H7, A6, B6, C6,
+                    D6, E6, F6, G6, H6, A5, B5, C5, D5, E5, F5, G5, H5, A4, B4, C4, D4, E4, F4,
+                    G4, H4, A3, B3, C3, D3, E3, F3, G3, H3, A2, B2, C2, D2, E2, F2, G2, H2, A1,
+                    B1, C1, D1, E1, F1, G1, H1]);
+}
 
-    #[test]
-    fn all_squares() {
-        assert_eq!(All.into_iter().collect::<Vec<_>>(), vec!(
-            A8,B8,C8,D8,E8,F8,G8,H8,
-            A7,B7,C7,D7,E7,F7,G7,H7,
-            A6,B6,C6,D6,E6,F6,G6,H6,
-            A5,B5,C5,D5,E5,F5,G5,H5,
-            A4,B4,C4,D4,E4,F4,G4,H4,
-            A3,B3,C3,D3,E3,F3,G3,H3,
-            A2,B2,C2,D2,E2,F2,G2,H2,
-            A1,B1,C1,D1,E1,F1,G1,H1 ));
+#[test]
+fn print_const_squares() {
+    for s in ALL_SQUARES {
+        println!("pub const {} : Square88 = Square88({});",
+                 s.to_string().to_uppercase(),
+                 s.bits());
     }
-
-    #[test]
-    fn print_const_squares() {
-        for s in All {
-            println!("pub const {} : Square88 = Square88({});",
-                     s.to_string().to_uppercase(), s.bits());
-        }
-    }
-    #[test]
-    fn invalid() {
-        assert_eq!(INVALID.is_valid(), false);
-    }
-    #[test]
-    fn is_valid() {
-        for s in All {
-            assert_eq!(s.is_valid(), true);
-        }
+}
+#[test]
+fn invalid() {
+    assert_eq!(UNDEFINED_SQUARE.is_valid(), false);
+}
+#[test]
+fn is_valid() {
+    for s in ALL_SQUARES {
+        assert_eq!(s.is_valid(), true);
     }
 }

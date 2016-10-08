@@ -7,6 +7,7 @@ use color::Color;
 use color::Color::*;
 use square::Square;
 use mask::Mask;
+use itertools::*;
 pub use self::squares::*;
 
 pub mod ops;
@@ -85,15 +86,15 @@ named!(pub parse_square(&[u8]) -> Square88,
     fn forward() {
         let mut last = 0;
         for offset in 1..119 {
-            let curr = FIRST.forward(offset).bits();
+            let curr = ALL_SQUARES.forward(offset).bits();
             if curr < last {
                 panic!("+{} -> {};\r\n+{} -> {}",
-                    offset-1, FIRST.forward(offset-1).bits(),
-                    offset, FIRST.forward(offset).bits());
+                    offset-1, ALL_SQUARES.forward(offset-1).bits(),
+                    offset, ALL_SQUARES.forward(offset).bits());
             }
             last = curr;
         }
-        // assert_eq!((0..120).map(|offset| FIRST
+        // assert_eq!((0..120).map(|offset| ALL_SQUARES
         //     .forward(offset))
         //     .collect::<Vec<_>>(),
         //     vec!( A8,B8,C8,D8,E8,F8,G8,H8,
@@ -131,8 +132,8 @@ named!(pub parse_square(&[u8]) -> Square88,
 
     #[test]
     fn square_file_rank() {
-        assert_eq!(All.into_iter().collect::<Vec<_>>(),
-            All.into_iter().map(|square| {
+        assert_eq!(ALL_SQUARES.into_iter().collect_vec(),
+            ALL_SQUARES.into_iter().map(|square| {
                     let (f, r) = square.file_rank();
                     Square88::from(f,r)
                 }).collect::<Vec<_>>());
@@ -140,7 +141,7 @@ named!(pub parse_square(&[u8]) -> Square88,
     // noinspection SpellCheckingInspection
     #[test]
     fn square_color() {
-        assert_eq!(All.into_iter().map(|square| {
+        assert_eq!(ALL_SQUARES.into_iter().map(|square| {
                     if square.color() == White { 'w' } else { 'b' }
                 }).collect::<String>(),
                 "wbwbwbwb\
