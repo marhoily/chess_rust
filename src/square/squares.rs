@@ -94,26 +94,19 @@ impl Iterator for Square {
 #[cfg(test)]
 mod test {
     use super::*;
+    use itertools::*;
 
-    #[test]
-    fn all_files() {
-        use file::files::*;
-
-        assert_eq!(
-            All.into_iter().collect::<Vec<_>>(),
-            [A, B, C, D, E, F, G, H]);
-    }
     #[test]
     fn all_ranks() {
         use rank::ranks::*;
 
         assert_eq!(
-            All.into_iter().collect::<Vec<_>>(),
+            All.into_iter().collect_vec(),
             [_8, _7, _6, _5, _4, _3, _2, _1]);
     }
     #[test]
     fn all_squares() {
-        assert_eq!(All.into_iter().collect::<Vec<_>>(), vec!(
+        assert_eq!(All.into_iter().collect_vec(), vec!(
             A8,B8,C8,D8,E8,F8,G8,H8,
             A7,B7,C7,D7,E7,F7,G7,H7,
             A6,B6,C6,D6,E6,F6,G6,H6,

@@ -98,14 +98,6 @@ mod test {
     use super::*;
 
     #[test]
-    fn all_files() {
-        use file::files::*;
-
-        assert_eq!(
-            All.into_iter().collect::<Vec<_>>(),
-            [A, B, C, D, E, F, G, H]);
-    }
-    #[test]
     fn all_ranks() {
         use rank::ranks::*;
 
