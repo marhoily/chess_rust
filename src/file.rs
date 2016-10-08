@@ -72,39 +72,28 @@ pub mod files {
 #[cfg(test)]
 mod test {
     use super::*;
+    use super::files::*;
+    use itertools::*;
 
     #[test]
     fn file_char() {
-        use super::files::*;
-
-        assert_eq!(All.into_iter().
-            map(|f| f.char()).collect::<String>(),
-           "abcdefgh");
+        assert_eq!(All.into_iter().map(|f| f.char()).collect::<String>(), "abcdefgh");
     }
     #[test]
     fn file_display() {
-        use super::files::*;
-
-        assert_eq!(All.into_iter().
-            map(|f| format!("{}", f)).collect::<Vec<_>>(),
-            ["a", "b", "c", "d", "e", "f", "g", "h"]);
+        assert_eq!(All.into_iter().map(|f| format!("{}", f)).join(""), "abcdefgh");
     }
     #[test]
     fn file_debug() {
-        use super::files::*;
-
         assert_eq!([A, H].into_iter().
-            map(|f| format!("{:?}", f)).collect::<Vec<_>>(),
+            map(|f| format!("{:?}", f)).collect_vec(),
             ["File(0)", "File(7)"]);
     }
 
     #[test]
     fn file_parse() {
-        use super::files::*;
-
         assert_eq!(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].into_iter().
-            map(|f| File::parse(*f)).collect::<Vec<_>>(),
+            map(|f| File::parse(*f)).collect_vec(),
             [A, B, C, D, E, F, G, H]);
     }
-
 }
