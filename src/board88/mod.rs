@@ -105,13 +105,9 @@ impl Board88 {
         INVALID
     }
     pub fn white_attacks(&self) -> Mask {
-        All.into_iter().fold(::mask::masks::EMPTY, |acc, s| {
-            if self.is_attacked_by_white(s) {
-                acc | s.into_mask()
-            } else {
-                acc
-            }
-        })
+        All.into_iter()
+            .filter(|s| self.is_attacked_by_white(*s))
+            .fold(::mask::masks::EMPTY, |acc, s| acc | s.into_mask())
     }
 }
 
