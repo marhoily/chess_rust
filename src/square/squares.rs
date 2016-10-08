@@ -1,4 +1,5 @@
 use super::Square;
+pub const ALL_SQUARES: Square = Square(0);
 pub const FIRST: Square = Square(0);
 pub const UNDEFINED: Square = Square(0xFF);
 
@@ -67,16 +68,6 @@ pub const F1: Square = Square(61);
 pub const G1: Square = Square(62);
 pub const H1: Square = Square(63);
 
-#[derive(Copy, Clone, Debug)]
-pub struct All;
-impl IntoIterator for All {
-    type Item = Square;
-    type IntoIter = Square;
-
-    fn into_iter(self) -> Self::IntoIter {
-        Square(0)
-    }
-}
 impl Iterator for Square {
     type Item = Square;
 
@@ -98,7 +89,7 @@ mod test {
 
     #[test]
     fn all_squares() {
-        assert_eq!(All.into_iter().collect_vec(), vec!(
+        assert_eq!(ALL_SQUARES.collect_vec(), vec!(
             A8,B8,C8,D8,E8,F8,G8,H8,
             A7,B7,C7,D7,E7,F7,G7,H7,
             A6,B6,C6,D6,E6,F6,G6,H6,
@@ -111,7 +102,7 @@ mod test {
 
     #[test]
     fn print_const_squares() {
-        for s in All {
+        for s in ALL_SQUARES {
             println!("pub const {} : Square = Square({});",
                      s.to_string().to_uppercase(), s.bits());
         }

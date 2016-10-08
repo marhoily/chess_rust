@@ -89,15 +89,15 @@ mod test {
 
     #[test]
     fn square_file_rank() {
-        assert_eq!(All.into_iter().collect_vec(),
-            All.into_iter().map(|square| {
+        assert_eq!(ALL_SQUARES.collect_vec(),
+            ALL_SQUARES.map(|square| {
                     Square::from(square.file(), square.rank())
                 }).collect_vec());
     }
     // noinspection SpellCheckingInspection
     #[test]
     fn square_color() {
-        assert_eq!(All.into_iter().map(|square| {
+        assert_eq!(ALL_SQUARES.map(|square| {
                     if square.color() == White { 'w' } else { 'b' }
                 }).collect::<String>(),
                 "wbwbwbwb\
