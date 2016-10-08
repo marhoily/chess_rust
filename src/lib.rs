@@ -30,11 +30,13 @@ pub mod file;
 pub mod rank;
 pub mod color;
 pub mod square;
+#[cfg(test)]
 mod square88;
 pub mod kind;
 pub mod piece;
 pub mod mask;
 pub mod bit_board;
+#[cfg(test)]
 mod board88;
 pub mod moves;
 pub mod castle;
