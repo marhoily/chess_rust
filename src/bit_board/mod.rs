@@ -4,8 +4,6 @@ use piece::pieces::*;
 use kind::kinds::*;
 use mask::Mask;
 use mask::masks::*;
-use kind::kinds;
-use castle;
 use color::Color;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]

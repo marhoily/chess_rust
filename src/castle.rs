@@ -4,7 +4,6 @@
 use std::fmt::{Display, Result, Formatter};
 use nom::IResult;
 use nom::IResult::*;
-use mask::{Mask, masks};
 
 // note: make castle be masks for squares that need checking?
 bitflags! {

@@ -73,14 +73,13 @@ pub mod files {
 mod test {
     use super::*;
 
-
     #[test]
     fn file_char() {
         use super::files::*;
 
         assert_eq!(All.into_iter().
-            map(|f| f.char()).collect::<Vec<_>>(),
-            ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
+            map(|f| f.char()).collect::<String>(),
+           "abcdefgh");
     }
     #[test]
     fn file_display() {

@@ -24,7 +24,12 @@ impl Position {
     pub fn parse(input: &str) -> Self {
         parse_position(input.as_bytes()).unwrap().1
     }
+    #[allow(unused_variables)]
     pub fn is_pseudo_legal_pawn_move(&self, from: Mask, to : Mask) -> bool {
+        // captures
+        // single push
+        // double push
+        // en-passant
         true
     }
     pub fn is_pseudo_legal(&self, mv: Move) -> bool {
@@ -35,7 +40,7 @@ impl Position {
             return false;
         }
         // Check turn.
-        if !self.board.white_occupation().intersects(from) {
+        if !self.board.occupation_of(self.active).contains(from) {
             return false;
         }
 
@@ -66,7 +71,7 @@ impl Position {
 
         // Destination square can not be occupied.
         let to = mv.to.mask();
-        // squares occupied by active side contain `to`
+        // Do squares occupied by active side contain `to`?
         if self.board.occupation_of(self.active).contains(to) {
             return false;
         }
@@ -155,15 +160,15 @@ mod wrappers {
 // "8/8/8/8/8/8/8/8 w KQkq - 0 1"
 named!(pub parse_position<&[u8], Position, PositionError>,
     chain!(
-        board: parse_bit_board ~ ws ~
-        active: parse_color ~ ws ~
-        available: parse_castle ~ ws ~
-        en_passant: parse_file,
+        squares: parse_bit_board ~ ws ~
+        side: parse_color ~ ws ~
+        castle: parse_castle ~ ws ~
+        file: parse_file,
         || Position {
-                board: board,
-                active: active,
-                available: available,
-                en_passant: Some(en_passant)
+                board: squares,
+                active: side,
+                available: castle,
+                en_passant: Some(file)
         }));
 
 #[cfg(test)]
