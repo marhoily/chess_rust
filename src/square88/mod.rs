@@ -23,8 +23,10 @@ impl Square88 {
         self.into_square().mask()
     }
     pub fn into_square(self) -> Square {
-        let (file, rank) = self.file_rank();
-        Square::from(file, rank)
+        Square::from(self.file(), self.rank())
+    }
+    pub fn from_square(square : Square) -> Self {
+        Self::from(square.file(), square.rank())
     }
     pub fn new(bits: u8) -> Self {
         debug_assert!(bits < 120, "is not a valid square number");
@@ -115,7 +117,7 @@ fn forward() {
 #[test]
 fn square_display() {
     assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
-            map(|s| format!("{}", s)).collect::<Vec<_>>(),
+            map(|s| format!("{}", s)).collect_vec(),
             ["h8","g7","f6","e5","d4","c3","b2","a1"]);
 }
 
@@ -136,7 +138,7 @@ fn square_parse() {
 #[test]
 fn square_file_rank() {
     assert_equal(ALL_SQUARES,
-                 ALL_SQUARES.map(|square| Square88::from(square.file(), square.rank())));
+                 ALL_SQUARES.map(|s| Square88::from_square(s.into_square())));
 }
 // noinspection SpellCheckingInspection
 #[test]
