@@ -136,16 +136,13 @@ fn square_parse() {
 #[test]
 fn square_file_rank() {
     assert_equal(ALL_SQUARES,
-            ALL_SQUARES.map(|square| {
-                    Square88::from(square.file(), square.rank())
-                }));
+                 ALL_SQUARES.map(|square| Square88::from(square.file(), square.rank())));
 }
 // noinspection SpellCheckingInspection
 #[test]
 fn square_color() {
-    assert_eq!(ALL_SQUARES.map(|square| {
-                    if square.color() == White { 'w' } else { 'b' }
-                }).collect::<String>(),
+    assert_eq!(ALL_SQUARES
+        .map(|square| square.color().char()).collect::<String>(),
                 "wbwbwbwb\
                  bwbwbwbw\
                  wbwbwbwb\
