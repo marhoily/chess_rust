@@ -1,7 +1,7 @@
 use std::fmt::{Result, Display, Formatter};
 use mask::Mask;
-use file::{File,parse_file};
-use rank::{Rank,parse_rank};
+use file::{File, parse_file};
+use rank::{Rank, parse_rank};
 use color::Color;
 use color::Color::*;
 
@@ -91,8 +91,7 @@ mod test {
     fn square_file_rank() {
         assert_eq!(All.into_iter().collect_vec(),
             All.into_iter().map(|square| {
-                    let (f, r) = square.file_rank();
-                    Square::from(f,r)
+                    Square::from(square.file(), square.rank())
                 }).collect_vec());
     }
     // noinspection SpellCheckingInspection
