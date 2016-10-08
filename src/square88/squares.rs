@@ -98,14 +98,6 @@ mod test {
     use super::*;
 
     #[test]
-    fn all_ranks() {
-        use rank::ranks::*;
-
-        assert_eq!(
-            All.into_iter().collect::<Vec<_>>(),
-            [_8, _7, _6, _5, _4, _3, _2, _1]);
-    }
-    #[test]
     fn all_squares() {
         assert_eq!(All.into_iter().collect::<Vec<_>>(), vec!(
             A8,B8,C8,D8,E8,F8,G8,H8,

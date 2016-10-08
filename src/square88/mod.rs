@@ -164,9 +164,8 @@ mod test {
 
     #[test]
     fn print_const() {
-        use file::*;
-        for rank in ::rank::ranks::All {
-            for file in ALL_FILES {
+        for rank in ::rank::ALL_RANKS {
+            for file in ::file::ALL_FILES {
                 let square88 = Square88::from(file, rank);
                 println!("pub const {}{}: Square88 = Square88(0x{:X});",
                          file.char().to_uppercase().last().unwrap(), rank, square88.0);

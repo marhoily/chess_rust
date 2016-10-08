@@ -50,14 +50,14 @@ impl Position {
                 if piece != WHITE_PAWN {
                     return false;
                 }
-                if mv.to.rank() != ::rank::ranks::_7 {
+                if mv.to.rank() != ::rank::_7 {
                     return false;
                 }
             } else {
                 if piece != BLACK_PAWN {
                     return false;
                 }
-                if mv.to.rank() != ::rank::ranks::_2 {
+                if mv.to.rank() != ::rank::_2 {
                     return false;
                 }
 

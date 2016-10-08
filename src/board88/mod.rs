@@ -17,7 +17,7 @@ impl BitBoard88 {
     pub fn from(source: &BitBoard) -> Self {
         let mut result = BitBoard88::new();
         for file in ::file::ALL_FILES {
-            for rank in ::rank::ranks::All {
+            for rank in ::rank::ALL_RANKS {
                 let mask = Mask::from_file_rank(file, rank);
                 let square = Square88::from(file, rank);
                 result.set_piece(square, source.get_piece(mask));
