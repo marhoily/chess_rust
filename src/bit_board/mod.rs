@@ -187,7 +187,7 @@ mod test {
     use mask::masks::*;
     use rand::*;
     use mask::Mask;
-    use board88::BitBoard88;
+    use board88::Board88;
 
     #[test]
     fn get_piece() {
@@ -253,7 +253,7 @@ mod test {
         let mut gen = weak_rng();
         for _ in 0..2000 {
             let bb = generate_random_board(&mut gen);
-            let b88 = BitBoard88::from(&bb);
+            let b88 = Board88::from(&bb);
             if bb.white_attacks() != b88.white_attacks() {
                 panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}\r\n",
                        bb.white_attacks(),
@@ -328,25 +328,5 @@ mod test {
             }
         }
         result
-    }
-
-    use test::Bencher;
-
-    #[bench]
-    fn convert_bit_board_to_88_througn_fen(b: &mut Bencher) {
-        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
-        b.iter(|| {
-            let board = generate_random_board(&mut gen);
-            let fen = format!("{}", board);
-            BitBoard88::parse(fen.as_str())
-        });
-    }
-    #[bench]
-    fn convert_bit_board_to_88_directly(b: &mut Bencher) {
-        let mut gen = XorShiftRng::from_seed([1, 2, 3, 4]);
-        b.iter(|| {
-            let board = generate_random_board(&mut gen);
-            BitBoard88::from(&board)
-        });
     }
 }

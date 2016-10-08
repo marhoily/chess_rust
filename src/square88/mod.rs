@@ -4,8 +4,13 @@ use std::fmt::{Result, Display, Formatter};
 use file::{File, parse_file};
 use rank::{Rank, parse_rank};
 use color::Color;
+use color::Color::*;
 use square::Square;
 use mask::Mask;
+pub use self::squares::*;
+
+pub mod ops;
+mod squares;
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
@@ -40,13 +45,13 @@ impl Square88 {
     pub fn color(self) -> Color {
         let (file, rank) = self.file_rank();
         if (file.bits() % 2) == (rank.bits() % 2) {
-            Color::White
+            White
         } else {
-            Color::Black
+            Black
         }
     }
     pub fn is_valid(&self) -> bool {
-        self.0 & 0x88 == 0 //&& self.0 < 0x77
+        self.0 & 0x88 == 0
     }
     pub fn too_big(&self) -> bool {
         self.0 > 0x77
@@ -74,13 +79,7 @@ named!(pub parse_square(&[u8]) -> Square88,
         || Square88::from(file, rank))
     );
 
-pub mod ops;
-pub mod squares;
 
-#[cfg(test)]
-mod test {
-    use super::*;
-    use super::squares::*;
 
     #[test]
     fn forward() {
@@ -110,7 +109,6 @@ mod test {
 
     #[test]
     fn square_display() {
-        use super::squares::*;
 
         assert_eq!([H8, G7, F6, E5, D4, C3, B2, A1].into_iter().
             map(|s| format!("{}", s)).collect::<Vec<_>>(),
@@ -119,8 +117,6 @@ mod test {
 
     #[test]
     fn square_debug() {
-        use super::squares::*;
-
         assert_eq!([A8, H8, A1, H1].into_iter().
             map(|s| format!("{:?}", s)).collect::<Vec<_>>(),
             ["Square88(0)", "Square88(7)", "Square88(112)", "Square88(119)"]);
@@ -128,8 +124,6 @@ mod test {
 
     #[test]
     fn square_parse() {
-        use super::squares::*;
-
         assert_eq!(["a8","b7","c6","d5","e4","f3","g2","h1"].into_iter().
             map(|f| Square88::parse(*f)).collect::<Vec<_>>(),
             [A8, B7, C6, D5, E4, F3, G2, H1]);
@@ -137,7 +131,6 @@ mod test {
 
     #[test]
     fn square_file_rank() {
-        use super::squares::*;
         assert_eq!(All.into_iter().collect::<Vec<_>>(),
             All.into_iter().map(|square| {
                     let (f, r) = square.file_rank();
@@ -147,8 +140,6 @@ mod test {
     // noinspection SpellCheckingInspection
     #[test]
     fn square_color() {
-        use color::Color::*;
-        use super::squares::*;
         assert_eq!(All.into_iter().map(|square| {
                     if square.color() == White { 'w' } else { 'b' }
                 }).collect::<String>(),
@@ -172,4 +163,3 @@ mod test {
             }
         }
     }
-}
