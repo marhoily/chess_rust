@@ -24,14 +24,17 @@ impl Color {
         debug_assert!((input as u32) < 128, "it is not even an ASCII character!");
         parse_color(&[input as u8]).unwrap().1
     }
-
+    pub fn char(self) -> char {
+        match self {
+            Color::White => 'w',
+            Color::Black => 'b',
+        }
+    }
 }
+
 impl Display for Color {
     fn fmt(&self, f: &mut Formatter) -> Result {
-        match *self {
-            Color::White => write!(f, "w"),
-            Color::Black => write!(f, "b"),
-        }
+        write!(f, "{}", self.char())
     }
 }
 named!(pub parse_color(&[u8]) -> Color,

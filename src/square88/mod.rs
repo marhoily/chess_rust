@@ -86,8 +86,6 @@ named!(pub parse_square(&[u8]) -> Square88,
         || Square88::from(file, rank))
     );
 
-
-
 #[test]
 fn forward() {
     let mut last = 0;
@@ -124,23 +122,23 @@ fn square_display() {
 #[test]
 fn square_debug() {
     assert_eq!([A8, H8, A1, H1].into_iter().
-            map(|s| format!("{:?}", s)).collect::<Vec<_>>(),
+            map(|s| format!("{:?}", s)).collect_vec(),
             ["Square88(0)", "Square88(7)", "Square88(112)", "Square88(119)"]);
 }
 
 #[test]
 fn square_parse() {
     assert_eq!(["a8","b7","c6","d5","e4","f3","g2","h1"].into_iter().
-            map(|f| Square88::parse(*f)).collect::<Vec<_>>(),
+            map(|f| Square88::parse(*f)).collect_vec(),
             [A8, B7, C6, D5, E4, F3, G2, H1]);
 }
 
 #[test]
 fn square_file_rank() {
-    assert_eq!(ALL_SQUARES.into_iter().collect_vec(),
+    assert_equal(ALL_SQUARES.into_iter(),
             ALL_SQUARES.into_iter().map(|square| {
-                    Square88::from(square.file(),square.rank())
-                }).collect_vec());
+                    Square88::from(square.file(), square.rank())
+                }));
 }
 // noinspection SpellCheckingInspection
 #[test]
