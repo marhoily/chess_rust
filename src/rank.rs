@@ -31,7 +31,7 @@ impl Display for Rank {
     }
 }
 
-pub const ALL_RANKS: Rank = Rank(7);
+pub const ALL_RANKS: Rank = Rank(0);
 
 pub const _1: Rank = Rank(7);
 pub const _2: Rank = Rank(6);
