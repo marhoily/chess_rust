@@ -13,7 +13,7 @@ impl File {
         parse_file(&[input as u8]).unwrap().1
     }
     pub fn char(self) -> char {
-        (FILE_SYMBOLS[0] + self.0) as char
+        FILE_SYMBOLS[self.0 as usize] as char
     }
     pub fn bits(self) -> u8 {
         self.0
@@ -23,7 +23,9 @@ impl File {
 static FILE_SYMBOLS: &'static [u8; 8] = b"abcdefgh";
 
 named!(pub parse_file(&[u8]) -> File,
-    map!(is_a!(FILE_SYMBOLS), |c: &[u8]| File(c[0] - FILE_SYMBOLS[0])));
+    map!(is_a!(FILE_SYMBOLS), |c: &[u8]| {
+        File(c[0] - FILE_SYMBOLS[0])
+    }));
 
 impl Display for File {
     fn fmt(&self, f: &mut Formatter) -> Result {
@@ -65,7 +67,6 @@ mod test {
     fn all_files() {
         assert_eq!(ALL_FILES.collect_vec(), [A, B, C, D, E, F, G, H]);
     }
-
     #[test]
     fn file_char() {
         assert_eq!(ALL_FILES.map(|f| f.char()).collect::<String>(), "abcdefgh");
@@ -76,9 +77,8 @@ mod test {
     }
     #[test]
     fn file_debug() {
-        assert_eq!([A, H].into_iter().
-            map(|f| format!("{:?}", f)).collect_vec(),
-            ["File(0)", "File(7)"]);
+        assert_eq!([A, H].into_iter().map(|f| format!("{:?}", f))
+            .collect_vec(), ["File(0)", "File(7)"]);
     }
 
     #[test]
