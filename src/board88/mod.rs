@@ -108,7 +108,7 @@ impl Board88 {
         UNDEFINED_SQUARE
     }
     pub fn white_attacks(&self) -> Mask {
-        ALL_SQUARES.into_iter()
+        ALL_SQUARES
             .filter(|s| self.is_attacked_by_white(*s))
             .fold(::mask::masks::EMPTY, |acc, s| acc | s.into_mask())
     }
