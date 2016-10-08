@@ -1,6 +1,6 @@
 use super::Square;
 pub const ALL_SQUARES: Square = Square(0);
-pub const UNDEFINED: Square = Square(0xFF);
+pub const UNDEFINED_SQUARE: Square = Square(0xFF);
 
 pub const A8: Square = Square(0);
 pub const B8: Square = Square(1);

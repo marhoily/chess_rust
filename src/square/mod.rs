@@ -4,6 +4,9 @@ use file::{File, parse_file};
 use rank::{Rank, parse_rank};
 use color::Color;
 use color::Color::*;
+pub use self::squares::*;
+
+mod squares;
 
 // Note that index 0 corresponds to a8, and NOT a1!
 // Indexes read left to right, top to bottom!
@@ -58,12 +61,10 @@ named!(pub parse_square(&[u8]) -> Square,
         || Square::from(file, rank))
     );
 
-pub mod squares;
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::squares::*;
     use color::Color::*;
     use itertools::*;
 
