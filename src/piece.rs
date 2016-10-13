@@ -1,5 +1,5 @@
 use std::fmt::{Result, Display, Formatter};
-use kind::{Kind, kinds};
+use kind::*;
 use color::Color;
 
 #[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
@@ -16,7 +16,7 @@ impl Piece {
         self.0
     }
     pub fn color(self) -> Color {
-        if self.0 >= kinds::KINDS_COUNT {
+        if self.0 >= KINDS_COUNT {
             Color::Black
         } else {
             Color::White
@@ -24,9 +24,9 @@ impl Piece {
     }
     pub fn kind(self) -> Kind {
         if self == pieces::VOID {
-            kinds::UNKNOWN
+            UNKNOWN
         } else {
-            Kind::new(self.bits() % kinds::KINDS_COUNT)
+            Kind::new(self.bits() % KINDS_COUNT)
         }
     }
     pub fn char(self) -> char {
@@ -102,23 +102,23 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 mod test {
     use super::*;
     use super::pieces::*;
-    use std::iter::*;
-    use kind::kinds;
+    use kind::*;
+    use itertools::*;
 
     #[test]
     fn color() {
         use color::Color::*;
 
-        assert_eq!(Pieces.into_iter().map(Piece::color).collect::<Vec<_>>(),
+        assert_eq!(Pieces.into_iter().map(Piece::color).collect_vec(),
                    [White, White, White, White, White, White, Black, Black, Black, Black, Black,
                     Black]);
     }
     #[test]
     fn kind() {
-        assert_eq!(VOID.kind(), kinds::UNKNOWN);
+        assert_eq!(VOID.kind(), UNKNOWN);
 
-        assert_eq!(kinds::All.into_iter().chain(kinds::All.into_iter()).collect::<Vec<_>>(),
-                   Pieces.into_iter().map(Piece::kind).collect::<Vec<_>>());
+        assert_eq!(ALL_KINDS.chain(ALL_KINDS).collect_vec(),
+                   Pieces.into_iter().map(Piece::kind).collect_vec());
     }
     #[test]
     fn display() {
@@ -134,7 +134,7 @@ mod test {
         assert_eq!([WHITE_PAWN, BLACK_PAWN, VOID]
                        .into_iter()
                        .map(|pt| format!("{:?}", pt))
-                       .collect::<Vec<_>>(),
+                       .collect_vec(),
                    ["Piece(0)", "Piece(6)", "Piece(16)"]);
     }
     // noinspection SpellCheckingInspection
@@ -146,7 +146,7 @@ mod test {
                        .chars()
                        .into_iter()
                        .map(Piece::parse)
-                       .collect::<Vec<_>>(),
+                       .collect_vec(),
                    [WHITE_PAWN,
                     WHITE_KNIGHT,
                     WHITE_BISHOP,

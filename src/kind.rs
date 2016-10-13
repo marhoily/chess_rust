@@ -1,48 +1,10 @@
+use std::fmt::{Result, Display, Formatter};
+
 use piece::Piece;
 use color::Color;
 
-use std::fmt::{Result, Display, Formatter};
-
 #[derive(Eq, Copy, Clone, Debug, PartialEq, Hash)]
 pub struct Kind(u8);
-
-pub mod kinds {
-    use super::Kind;
-
-    pub const KINDS_COUNT: u8 = 6;
-
-    pub const PAWN: Kind = Kind(0);
-    pub const KNIGHT: Kind = Kind(1);
-    pub const BISHOP: Kind = Kind(2);
-    pub const ROOK: Kind = Kind(3);
-    pub const QUEEN: Kind = Kind(4);
-    pub const KING: Kind = Kind(5);
-    pub const UNKNOWN: Kind = Kind(16);
-
-    #[derive(Copy, Clone, Debug)]
-    pub struct All;
-    impl IntoIterator for All {
-        type Item = Kind;
-        type IntoIter = Kind;
-
-        fn into_iter(self) -> Self::IntoIter {
-            Kind(0)
-        }
-    }
-    impl Iterator for Kind {
-        type Item = Kind;
-
-        fn next(&mut self) -> Option<Self::Item> {
-            if self.0 < KINDS_COUNT {
-                let result = *self;
-                self.0 += 1;
-                Some(result)
-            } else {
-                None
-            }
-        }
-    }
-}
 
 impl Kind {
     pub fn new(bits: u8) -> Self {
@@ -56,16 +18,16 @@ impl Kind {
         self.0
     }
     pub fn of(self, color: Color) -> Piece {
-        debug_assert!(self != kinds::UNKNOWN);
+        debug_assert!(self != UNKNOWN);
         if color == Color::White {
             Piece::new(self.0)
         } else {
-            Piece::new(self.bits() + kinds::KINDS_COUNT)
+            Piece::new(self.bits() + KINDS_COUNT)
         }
     }
     pub fn char(self) -> char {
-        debug_assert!(self != kinds::UNKNOWN,
-                      "There's no symbol defined for kinds::UNKNOWN");
+        debug_assert!(self != UNKNOWN,
+                      "There's no symbol defined for UNKNOWN");
         SYMBOLS[self.0 as usize] as char
     }
 }
@@ -83,48 +45,70 @@ impl Display for Kind {
 
 static SYMBOLS: &'static [u8; 6] = b"PNBRQK";
 
+pub const KINDS_COUNT: u8 = 6;
+pub const ALL_KINDS: Kind = Kind(0);
+
+pub const PAWN: Kind = Kind(0);
+pub const KNIGHT: Kind = Kind(1);
+pub const BISHOP: Kind = Kind(2);
+pub const ROOK: Kind = Kind(3);
+pub const QUEEN: Kind = Kind(4);
+pub const KING: Kind = Kind(5);
+pub const UNKNOWN: Kind = Kind(16);
+
+impl Iterator for Kind {
+    type Item = Kind;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0 < KINDS_COUNT {
+            let result = *self;
+            self.0 += 1;
+            Some(result)
+        } else {
+            None
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
+    use itertools::*;
 
     #[test]
     fn of_color() {
         use piece::pieces::*;
         use color::Color;
 
-        let white = kinds::All.into_iter().map(|pt| pt.of(Color::White));
-        let black = kinds::All.into_iter().map(|pt| pt.of(Color::Black));
-        let together = white.chain(black).collect::<Vec<_>>();
+        let white = ALL_KINDS.map(|pt| pt.of(Color::White));
+        let black = ALL_KINDS.map(|pt| pt.of(Color::Black));
+        let together = white.chain(black).collect_vec();
 
-        assert_eq!(together, Pieces.into_iter().collect::<Vec<_>>());
+        assert_eq!(together, Pieces.into_iter().collect_vec());
     }
     #[test]
     fn display() {
-        assert_eq!(super::kinds::All.into_iter()
+        assert_eq!(ALL_KINDS
                        .map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQK");
     }
     #[test]
     fn debug() {
-        use super::kinds::*;
-
         assert_eq!([PAWN, KING, UNKNOWN]
                        .into_iter()
                        .map(|pt| format!("{:?}", pt))
-                       .collect::<Vec<_>>(),
+                       .collect_vec(),
                    ["Kind(0)", "Kind(5)", "Kind(16)"]);
     }
     // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
-        use super::kinds::*;
-
         assert_eq!("PNBRQK"
                        .chars()
                        .into_iter()
                        .map(Kind::parse)
-                       .collect::<Vec<_>>(),
+                       .collect_vec(),
                    [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]);
     }
 }

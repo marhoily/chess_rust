@@ -1,7 +1,7 @@
 use std::fmt::{Result, Display, Formatter};
 use piece::Piece;
 use piece::pieces::*;
-use kind::kinds::*;
+use kind::*;
 use mask::Mask;
 use mask::masks::*;
 use color::Color;
@@ -200,6 +200,7 @@ mod test {
 
     #[test]
     fn bit_board_squares() {
+        use std::iter::*;
         let mut b = BitBoard::new();
         b.set_piece(A8, BLACK_ROOK);
 

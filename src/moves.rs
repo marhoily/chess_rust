@@ -14,13 +14,13 @@ pub struct Move {
 const CASTLE_Q: Move = Move {
     from: UNDEFINED_SQUARE,
     to: UNDEFINED_SQUARE,
-    promote: kinds::UNKNOWN,
+    promote: UNKNOWN,
     castle: castle::Q,
 };
 const CASTLE_K: Move = Move {
     from: UNDEFINED_SQUARE,
     to: UNDEFINED_SQUARE,
-    promote: kinds::UNKNOWN,
+    promote: UNKNOWN,
     castle: castle::K,
 };
 
@@ -29,7 +29,7 @@ impl Move {
         Move {
             from: from,
             to: to,
-            promote: kinds::UNKNOWN,
+            promote: UNKNOWN,
             castle: castle::NONE,
         }
     }
@@ -57,7 +57,7 @@ impl Display for Move {
             });
         }
         try!(write!(f, "{}-{}", self.from, self.to));
-        if self.promote != kinds::UNKNOWN {
+        if self.promote != UNKNOWN {
             try!(write!(f, "={}", self.promote));
         }
         Ok(())
@@ -68,10 +68,10 @@ named!(parse_promotion(&[u8]) -> Kind,
     complete!(chain!(
         char!('=') ~
         result: alt!(
-            value!(kinds::KNIGHT, char!('N')) |
-            value!(kinds::BISHOP, char!('B')) |
-            value!(kinds::ROOK, char!('R')) |
-            value!(kinds::QUEEN, char!('Q')) ),
+            value!(KNIGHT, char!('N')) |
+            value!(BISHOP, char!('B')) |
+            value!(ROOK, char!('R')) |
+            value!(QUEEN, char!('Q')) ),
     || result)));
 
 named!(parse_straight(&[u8]) -> Move,
@@ -81,7 +81,7 @@ named!(parse_straight(&[u8]) -> Move,
         to: parse_square ~
         promotion: opt!(parse_promotion),
         || Move::promote(from, to, promotion
-                .unwrap_or(kinds::UNKNOWN)))
+                .unwrap_or(UNKNOWN)))
     );
 
 named!(parse_castle(&[u8]) -> Move,
@@ -113,7 +113,7 @@ mod test {
 
     #[test]
     fn promotion_move() {
-        let m = Move::promote(E2, E4, kinds::QUEEN);
+        let m = Move::promote(E2, E4, QUEEN);
         assert_eq!(format!("{:?}", m),
             "Move { from: Square(52), to: Square(36), promote: Kind(4), castle:  }");
     }

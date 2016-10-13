@@ -6,11 +6,11 @@ use castle::Castle;
 use bit_board::BitBoard;
 use color::Color;
 use file::File;
+use kind::*;
 use bit_board::fen;
 use self::wrappers::*;
 use piece::pieces::*;
 use moves::Move;
-use kind::kinds;
 use mask::Mask;
 
 #[derive(Eq, Debug, Copy, Clone, PartialEq)]
@@ -45,7 +45,7 @@ impl Position {
         }
 
         //  Only pawns can promote and only on the back-rank.
-        if mv.promote != kinds::UNKNOWN {
+        if mv.promote != UNKNOWN {
             if self.active == Color::White {
                 if piece != WHITE_PAWN {
                     return false;
