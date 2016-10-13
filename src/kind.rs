@@ -26,8 +26,7 @@ impl Kind {
         }
     }
     pub fn char(self) -> char {
-        debug_assert!(self != UNKNOWN,
-                      "There's no symbol defined for UNKNOWN");
+        debug_assert!(self != UNKNOWN, "There's no symbol defined for UNKNOWN");
         SYMBOLS[self.0 as usize] as char
     }
 }
@@ -84,12 +83,11 @@ mod test {
         let black = ALL_KINDS.map(|pt| pt.of(Color::Black));
         let together = white.chain(black).collect_vec();
 
-        assert_eq!(together, ALL_PIECES.into_iter().collect_vec());
+        assert_eq!(together, ALL_PIECES.collect_vec());
     }
     #[test]
     fn display() {
-        assert_eq!(ALL_KINDS
-                       .map(|pt| format!("{}", pt))
+        assert_eq!(ALL_KINDS.map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQK");
     }

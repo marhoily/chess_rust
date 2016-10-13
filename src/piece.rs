@@ -87,21 +87,18 @@ mod test {
 
     #[test]
     fn color() {
-        assert_eq!(ALL_PIECES.into_iter()
-        .map(|p| p.color().char()).collect::<String>(),
+        assert_eq!(ALL_PIECES.map(|p| p.color().char())
+                       .collect::<String>(),
                    "wwwwwwbbbbbb");
     }
     #[test]
     fn kind() {
         assert_eq!(VOID.kind(), UNKNOWN);
-
-        assert_eq!(ALL_KINDS.chain(ALL_KINDS).collect_vec(),
-                   ALL_PIECES.into_iter().map(Piece::kind).collect_vec());
+        assert_equal(ALL_KINDS.chain(ALL_KINDS), ALL_PIECES.map(Piece::kind));
     }
     #[test]
     fn display() {
-        assert_eq!(ALL_PIECES.into_iter()
-                       .map(|pt| format!("{}", pt))
+        assert_eq!(ALL_PIECES.map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQKpnbrqk");
     }
@@ -116,22 +113,10 @@ mod test {
     // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
-        assert_eq!("PNBRQKpnbrqk"
-                       .chars()
-                       .into_iter()
-                       .map(Piece::parse)
-                       .collect_vec(),
-                   [WHITE_PAWN,
-                    WHITE_KNIGHT,
-                    WHITE_BISHOP,
-                    WHITE_ROOK,
-                    WHITE_QUEEN,
-                    WHITE_KING,
-                    BLACK_PAWN,
-                    BLACK_KNIGHT,
-                    BLACK_BISHOP,
-                    BLACK_ROOK,
-                    BLACK_QUEEN,
-                    BLACK_KING]);
+        assert_equal("PNBRQKpnbrqk"
+                         .chars()
+                         .into_iter()
+                         .map(Piece::parse),
+                     ALL_PIECES);
     }
 }
