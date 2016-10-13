@@ -23,14 +23,14 @@ impl Piece {
         }
     }
     pub fn kind(self) -> Kind {
-        if self == pieces::VOID {
+        if self == VOID {
             UNKNOWN
         } else {
             Kind::new(self.bits() % KINDS_COUNT)
         }
     }
     pub fn char(self) -> char {
-        debug_assert!(self != pieces::VOID, "attempt to pieces::VOID.char()");
+        debug_assert!(self != VOID, "attempt to VOID.char()");
         SYMBOLS[self.0 as usize] as char
     }
 }
@@ -46,52 +46,33 @@ impl Display for Piece {
         write!(f, "{}", self.char())
     }
 }
-use std::ops::Range;
-pub const PIECES_RANGE :Range<u8> = 0..12;
-pub const WHITE_RANGE :Range<Piece> = pieces::WHITE_PAWN..pieces::BLACK_PAWN;
+pub const PIECES_COUNT: usize = 12;
+pub const ALL_PIECES: Piece = Piece(0);
 
-pub mod pieces {
-    use super::Piece;
+pub const WHITE_PAWN: Piece = Piece(0);
+pub const WHITE_KNIGHT: Piece = Piece(1);
+pub const WHITE_BISHOP: Piece = Piece(2);
+pub const WHITE_ROOK: Piece = Piece(3);
+pub const WHITE_QUEEN: Piece = Piece(4);
+pub const WHITE_KING: Piece = Piece(5);
+pub const BLACK_PAWN: Piece = Piece(6);
+pub const BLACK_KNIGHT: Piece = Piece(7);
+pub const BLACK_BISHOP: Piece = Piece(8);
+pub const BLACK_ROOK: Piece = Piece(9);
+pub const BLACK_QUEEN: Piece = Piece(10);
+pub const BLACK_KING: Piece = Piece(11);
+pub const VOID: Piece = Piece(16);
 
-    pub const COUNT: usize = 12;
+impl Iterator for Piece {
+    type Item = Piece;
 
-    pub const WHITE_PAWN: Piece = Piece(0);
-    pub const WHITE_KNIGHT: Piece = Piece(1);
-    pub const WHITE_BISHOP: Piece = Piece(2);
-    pub const WHITE_ROOK: Piece = Piece(3);
-    pub const WHITE_QUEEN: Piece = Piece(4);
-    pub const WHITE_KING: Piece = Piece(5);
-    pub const BLACK_PAWN: Piece = Piece(6);
-    pub const BLACK_KNIGHT: Piece = Piece(7);
-    pub const BLACK_BISHOP: Piece = Piece(8);
-    pub const BLACK_ROOK: Piece = Piece(9);
-    pub const BLACK_QUEEN: Piece = Piece(10);
-    pub const BLACK_KING: Piece = Piece(11);
-    pub const VOID: Piece = Piece(16);
-
-    #[derive(Copy, Clone, Debug)]
-    pub struct Pieces;
-
-    impl IntoIterator for Pieces {
-        type Item = Piece;
-        type IntoIter = Piece;
-
-        fn into_iter(self) -> Self::IntoIter {
-            Piece(0)
-        }
-    }
-
-    impl Iterator for Piece {
-        type Item = Piece;
-
-        fn next(&mut self) -> Option<Self::Item> {
-            if self.0 < COUNT as u8 {
-                let result = *self;
-                self.0 += 1;
-                Some(result)
-            } else {
-                None
-            }
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.0 < PIECES_COUNT as u8 {
+            let result = *self;
+            self.0 += 1;
+            Some(result)
+        } else {
+            None
         }
     }
 }
@@ -101,36 +82,31 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 #[cfg(test)]
 mod test {
     use super::*;
-    use super::pieces::*;
     use kind::*;
     use itertools::*;
 
     #[test]
     fn color() {
-        use color::Color::*;
-
-        assert_eq!(Pieces.into_iter().map(Piece::color).collect_vec(),
-                   [White, White, White, White, White, White, Black, Black, Black, Black, Black,
-                    Black]);
+        assert_eq!(ALL_PIECES.into_iter()
+        .map(|p| p.color().char()).collect::<String>(),
+                   "wwwwwwbbbbbb");
     }
     #[test]
     fn kind() {
         assert_eq!(VOID.kind(), UNKNOWN);
 
         assert_eq!(ALL_KINDS.chain(ALL_KINDS).collect_vec(),
-                   Pieces.into_iter().map(Piece::kind).collect_vec());
+                   ALL_PIECES.into_iter().map(Piece::kind).collect_vec());
     }
     #[test]
     fn display() {
-        assert_eq!(Pieces.into_iter()
+        assert_eq!(ALL_PIECES.into_iter()
                        .map(|pt| format!("{}", pt))
                        .collect::<String>(),
                    "PNBRQKpnbrqk");
     }
     #[test]
     fn debug() {
-        use super::pieces::*;
-
         assert_eq!([WHITE_PAWN, BLACK_PAWN, VOID]
                        .into_iter()
                        .map(|pt| format!("{:?}", pt))
@@ -140,8 +116,6 @@ mod test {
     // noinspection SpellCheckingInspection
     #[test]
     fn parse() {
-        use super::pieces::*;
-
         assert_eq!("PNBRQKpnbrqk"
                        .chars()
                        .into_iter()

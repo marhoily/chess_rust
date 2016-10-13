@@ -16,7 +16,7 @@ impl BitBoard {
                 file = 0;
             }
             file += 1;
-            if square == pieces::VOID {
+            if square == VOID {
                 gap += 1;
             } else {
                 if gap > 0 {
@@ -105,7 +105,6 @@ enum Token {
 }
 
 fn consume(c: char) -> Token {
-    use piece::pieces::*;
     match c {
         'P' => Token::Piece(WHITE_PAWN),
         'N' => Token::Piece(WHITE_KNIGHT),
@@ -139,7 +138,7 @@ fn consume(c: char) -> Token {
 mod test {
     use mask::masks::*;
     use bit_board::BitBoard;
-    use piece::pieces::*;
+    use piece::*;
     use nom::{Err, ErrorKind, Needed};
     use super::parse_bit_board;
 

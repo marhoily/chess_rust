@@ -1,17 +1,16 @@
 use std::fmt::{Result, Display, Formatter};
-use piece::Piece;
-use piece::pieces::*;
+use piece::*;
 use kind::*;
 use mask::Mask;
 use mask::masks::*;
 use color::Color;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
-pub struct BitBoard([Mask; COUNT]);
+pub struct BitBoard([Mask; PIECES_COUNT]);
 
 impl BitBoard {
     pub fn new() -> Self {
-        BitBoard([EMPTY; COUNT])
+        BitBoard([EMPTY; PIECES_COUNT])
     }
     fn index(&self, piece: Piece) -> Mask {
         self.0[piece.bits() as usize]
@@ -78,7 +77,7 @@ impl BitBoard {
         self.0[idx] |= square;
     }
     pub fn get_piece(&self, square: Mask) -> Piece {
-        for probe in Pieces {
+        for probe in ALL_PIECES {
             if self.index(probe).intersects(square) {
                 return probe;
             }
@@ -183,7 +182,7 @@ impl<'a> Iterator for SquareIter<'a> {
 mod test {
     use super::*;
     use std::iter::*;
-    use piece::pieces::*;
+    use piece::*;
     use mask::masks::*;
     use rand::*;
     use mask::Mask;

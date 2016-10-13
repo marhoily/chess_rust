@@ -2,8 +2,7 @@
 
 use std::fmt::{Result, Display, Formatter};
 use square88::*;
-use piece::Piece;
-use piece::pieces::*;
+use piece::*;
 use mask::Mask;
 use bit_board::BitBoard;
 

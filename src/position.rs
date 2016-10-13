@@ -9,7 +9,7 @@ use file::File;
 use kind::*;
 use bit_board::fen;
 use self::wrappers::*;
-use piece::pieces::*;
+use piece::*;
 use moves::Move;
 use mask::Mask;
 

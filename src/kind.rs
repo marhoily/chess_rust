@@ -77,14 +77,14 @@ mod test {
 
     #[test]
     fn of_color() {
-        use piece::pieces::*;
+        use piece::*;
         use color::Color;
 
         let white = ALL_KINDS.map(|pt| pt.of(Color::White));
         let black = ALL_KINDS.map(|pt| pt.of(Color::Black));
         let together = white.chain(black).collect_vec();
 
-        assert_eq!(together, Pieces.into_iter().collect_vec());
+        assert_eq!(together, ALL_PIECES.into_iter().collect_vec());
     }
     #[test]
     fn display() {
