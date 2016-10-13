@@ -1,5 +1,6 @@
 // #![feature(question_mark)]
-#![deny(
+#![allow(unused_imports)]
+#![warn(
     missing_debug_implementations,
     missing_copy_implementations,
 // trivial_casts,
@@ -42,3 +43,16 @@ pub mod moves;
 pub mod castle;
 pub mod position;
 pub mod analysis;
+
+use file::*;
+use rank::*;
+use color::*;
+use square::*;
+use kind::*;
+use piece::*;
+use mask::*;
+use bit_board::*;
+use moves::*;
+//use castle::*;
+use position::*;
+use analysis::*;
