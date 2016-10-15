@@ -8,29 +8,29 @@ impl Mask {
         self << 8
     }
     pub fn shift_east(self) -> Mask {
-        (self << 1) & !masks::files::A
+        (self << 1) & !masks::A
     }
     pub fn shift_north_east(self) -> Mask {
-        (self >> 7) & !masks::files::A
+        (self >> 7) & !masks::A
     }
     pub fn shift_south_east(self) -> Mask {
-        (self << 9) & !masks::files::A
+        (self << 9) & !masks::A
     }
     pub fn shift_west(self) -> Mask {
-        (self >> 1) & !masks::files::H
+        (self >> 1) & !masks::H
     }
     pub fn shift_north_west(self) -> Mask {
-        (self >> 9) & !masks::files::H
+        (self >> 9) & !masks::H
     }
     pub fn shift_south_west(self) -> Mask {
-        (self << 7) & !masks::files::H
+        (self << 7) & !masks::H
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::super::masks::files::E;
-    use super::super::masks::ranks::_5;
+    use super::super::masks::E;
+    use super::super::masks::_5;
 
     //  E|5:
     //           |^^^^@^^^|

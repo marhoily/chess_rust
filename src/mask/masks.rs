@@ -2,36 +2,29 @@ use super::Mask;
 
 pub const EMPTY: Mask = Mask(0);
 
-pub mod files {
-    use super::super::Mask;
+pub const A: Mask = Mask(0x101010101010101);
+pub const B: Mask = Mask(0x202020202020202);
+pub const C: Mask = Mask(0x404040404040404);
+pub const D: Mask = Mask(0x808080808080808);
+pub const E: Mask = Mask(0x1010101010101010);
+pub const F: Mask = Mask(0x2020202020202020);
+pub const G: Mask = Mask(0x4040404040404040);
+pub const H: Mask = Mask(0x8080808080808080);
 
-    pub const A: Mask = Mask(0x101010101010101);
-    pub const B: Mask = Mask(0x202020202020202);
-    pub const C: Mask = Mask(0x404040404040404);
-    pub const D: Mask = Mask(0x808080808080808);
-    pub const E: Mask = Mask(0x1010101010101010);
-    pub const F: Mask = Mask(0x2020202020202020);
-    pub const G: Mask = Mask(0x4040404040404040);
-    pub const H: Mask = Mask(0x8080808080808080);
+// todo: replace with an iterator and an indexer
+pub static FILES: &'static [Mask] = &[A, B, C, D, E, F, G, H];
 
-    // todo: replace with an iterator and an indexer
-    pub static FILES: &'static [Mask] = &[A, B, C, D, E, F, G, H];
-}
-pub mod ranks {
-    use super::super::Mask;
+pub const _8: Mask = Mask(0xFF);
+pub const _7: Mask = Mask(0xFF00);
+pub const _6: Mask = Mask(0xFF0000);
+pub const _5: Mask = Mask(0xFF000000);
+pub const _4: Mask = Mask(0xFF00000000);
+pub const _3: Mask = Mask(0xFF0000000000);
+pub const _2: Mask = Mask(0xFF000000000000);
+pub const _1: Mask = Mask(0xFF00000000000000);
 
-    pub const _8: Mask = Mask(0xFF);
-    pub const _7: Mask = Mask(0xFF00);
-    pub const _6: Mask = Mask(0xFF0000);
-    pub const _5: Mask = Mask(0xFF000000);
-    pub const _4: Mask = Mask(0xFF00000000);
-    pub const _3: Mask = Mask(0xFF0000000000);
-    pub const _2: Mask = Mask(0xFF000000000000);
-    pub const _1: Mask = Mask(0xFF00000000000000);
-
-    // todo: replace with an iterator and an indexer
-    pub static RANKS: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
-}
+// todo: replace with an iterator and an indexer
+pub static RANKS: &'static [Mask] = &[_8, _7, _6, _5, _4, _3, _2, _1];
 
 pub const FIRST: Mask = Mask(0x1);
 
@@ -149,8 +142,6 @@ mod test {
 
     #[test]
     fn files() {
-        use super::files::*;
-
         assert_eq!(A.single_bits().collect_vec(),
                    [A8, A7, A6, A5, A4, A3, A2, A1]);
 
@@ -177,7 +168,6 @@ mod test {
     }
     #[test]
     fn ranks() {
-        use super::ranks::*;
         assert_eq!(_8.single_bits().collect_vec(),
                    [A8, B8, C8, D8, E8, F8, G8, H8]);
 

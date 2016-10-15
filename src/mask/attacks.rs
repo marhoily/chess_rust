@@ -1,5 +1,5 @@
 use super::*;
-use super::masks::files::*;
+use super::masks::*;
 
 impl Mask {
     pub fn white_pawn_attacks(self) -> Mask {
@@ -40,8 +40,6 @@ impl Mask {
 
 #[cfg(test)]
 mod tests {
-    use super::super::masks::files::*;
-    use super::super::masks::ranks::*;
     use super::super::masks::*;
 
     #[test]

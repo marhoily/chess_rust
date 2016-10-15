@@ -27,8 +27,8 @@ impl Mask {
     pub fn dump(self) -> String {
         let mut result = String::with_capacity(100);
         result.push('|');
-        for rank in masks::ranks::RANKS {
-            for file in masks::files::FILES {
+        for rank in masks::RANKS {
+            for file in masks::FILES {
                 if self.intersects(*file & *rank) {
                     result.push('@');
                 } else {
@@ -88,7 +88,7 @@ mod test {
 
     #[test]
     fn dump() {
-        let mask = masks::files::E | masks::ranks::_5 | masks::A8;
+        let mask = masks::E | masks::_5 | masks::A8;
         assert_eq!(mask.dump(),
                    "|@^^^@^^^|...\
                     |^^^^@^^^|...\
@@ -102,7 +102,7 @@ mod test {
 
     #[test]
     fn flip_horizontally() {
-        let mask = masks::files::B | masks::ranks::_2;
+        let mask = masks::B | masks::_2;
         assert_eq!(mask.dump(),
                    "|^@^^^^^^|...\
                     |^@^^^^^^|...\
@@ -125,7 +125,7 @@ mod test {
 
     #[test]
     fn flip_vertically() {
-        let mask = masks::files::B | masks::ranks::_2;
+        let mask = masks::B | masks::_2;
         assert_eq!(mask.dump(),
                    "|^@^^^^^^|...\
                     |^@^^^^^^|...\
@@ -148,7 +148,7 @@ mod test {
 
     #[test]
     fn fill() {
-        let stoppers = masks::files::B | masks::ranks::_2;
+        let stoppers = masks::B | masks::_2;
         assert_eq!(stoppers.dump(),
                    "|^@^^^^^^|...\
                     |^@^^^^^^|...\

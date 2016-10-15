@@ -39,12 +39,12 @@ mod tests {
 
     #[test]
     fn count() {
-        let m = masks::files::B | masks::ranks::_2;
+        let m = masks::B | masks::_2;
         assert_eq!(m.count(), 15);
     }
     #[test]
     fn has_mote_than_one_bit_set() {
-        assert_eq!(masks::files::B.has_mote_than_one_bit_set(), true);
+        assert_eq!(masks::B.has_mote_than_one_bit_set(), true);
         assert_eq!(masks::B2.has_mote_than_one_bit_set(), false);
         assert_eq!(masks::EMPTY.has_mote_than_one_bit_set(), false);
     }
