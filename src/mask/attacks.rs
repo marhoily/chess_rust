@@ -2,8 +2,13 @@ use super::*;
 use super::masks::*;
 
 impl Mask {
-    pub fn white_pawn_attacks(self) -> Mask {
-        self.shift_north_east() | self.shift_north_west()
+    pub fn white_pawn_double_pushes(self, stoppers: Mask) -> Mask {
+        let first_push = (self & _2).shift_north();
+        first_push | (first_push & !stoppers).shift_north()
+    }
+    pub fn white_pawn_attacks_and_pushes(self, stoppers: Mask) -> Mask {
+        self.shift_north_east() | self.shift_north_west() | self.shift_north() |
+        self.white_pawn_double_pushes(stoppers)
     }
     pub fn black_pawn_attacks(self) -> Mask {
         self.shift_south_east() | self.shift_south_west()
@@ -45,15 +50,29 @@ mod tests {
     #[test]
     fn white_pawn_attacks() {
         assert_eq!((A7 | E7 | F8 | H7 | B3 | G3 | A1 | H1)
-                       .white_pawn_attacks()
+                       .white_pawn_attacks_and_pushes(EMPTY)
                        .dump(),
-                   "|^@^@^@@^|...\
+                   "|@@^@@@@@|...\
                     |^^^^^^^^|...\
                     |^^^^^^^^|...\
                     |^^^^^^^^|...\
-                    |@^@^^@^@|...\
+                    |@@@^^@@@|...\
                     |^^^^^^^^|...\
-                    |^@^^^^@^|...\
+                    |@@^^^^@@|...\
+                    |^^^^^^^^|...");
+    }
+    #[test]
+    fn white_pawn_attacks_() {
+        assert_eq!((B2 | F2)
+                       .white_pawn_attacks_and_pushes(B3 | F4)
+                       .dump(),
+                   "|^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^^^^|...\
+                    |^^^^^@^^|...\
+                    |@@@^@@@^|...\
+                    |^^^^^^^^|...\
                     |^^^^^^^^|...");
     }
     #[test]
@@ -158,7 +177,7 @@ mod tests {
     }
     #[test]
     fn king_attacks() {
-        assert_eq!((F7|C1).king_attacks().dump(),
+        assert_eq!((F7 | C1).king_attacks().dump(),
                    "|^^^^@@@^|...\
                     |^^^^@^@^|...\
                     |^^^^@@@^|...\

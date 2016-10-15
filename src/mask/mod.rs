@@ -66,10 +66,10 @@ impl Mask {
     pub fn fill<F>(self, shift: F, stoppers: Mask) -> Mask
         where F: Fn(Mask) -> Mask
     {
-        let empty = !stoppers;
+        let filter = !stoppers;
         let mut acc = self;
         for _ in 0..7 {
-            acc |= empty & shift(acc)
+            acc |= shift(acc) & filter
         }
         acc
     }
