@@ -1,5 +1,6 @@
 use std::fmt::{Result, Display, Formatter};
 use castle::*;
+use rank::*;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]
 pub enum Color {
@@ -8,6 +9,9 @@ pub enum Color {
 }
 
 impl Color {
+    pub fn en_passant_rank(self) -> Rank {
+        if self == Color::White { _6 } else { _3 }
+    }
     pub fn invert(self) -> Self {
         match self {
             Color::White => Color::Black,

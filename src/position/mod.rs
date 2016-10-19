@@ -31,15 +31,9 @@ impl Position {
         let attacks = pawns.shift_north_east() | pawns.shift_north_west();
         let non_enp_captures = attacks & self.board.black_occupation();
 
-        let en_passant_available = self.en_passant
-            .map_or(EMPTY, |file| {
-                Mask::from_file_rank(file,
-                                     if self.active == White {
-                                         ::rank::_6
-                                     } else {
-                                         ::rank::_3
-                                     })
-            });
+        let en_passant_available = self.en_passant.map_or(EMPTY, |file| {
+            Mask::from_file_rank(file, self.active.en_passant_rank())
+        });
 
         let enp_captures = attacks & !self.board.occupation() & en_passant_available;
 
@@ -87,7 +81,6 @@ impl Position {
                 if mv.to.rank() != ::rank::_2 {
                     return false;
                 }
-
             }
         }
         if mv.castle != castle::NONE {
@@ -111,12 +104,15 @@ impl Position {
         self.board.attacks(self.active).contains(to)
     }
 }
-impl ::std::fmt::Display for Position {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+
+use std::fmt::{Display, Formatter, Result};
+impl Display for Position {
+    fn fmt(&self, f: &mut Formatter) -> Result {
         let r = self.en_passant.map_or('-', |x| x.char());
         write!(f, "{} {} {} {}", self.board, self.active, self.available, r)
     }
 }
+
 #[derive(Eq, Copy, Clone, Debug, PartialEq)]
 pub enum PositionError {
     Board(fen::ParsingError),
