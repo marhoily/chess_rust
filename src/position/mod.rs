@@ -5,13 +5,15 @@ use castle;
 use castle::Castle;
 use bit_board::BitBoard;
 use color::Color;
+use color::Color::*;
+use mask::*;
+use mask::masks::*;
 use file::File;
 use kind::*;
 use bit_board::fen;
 use self::wrappers::*;
 use piece::*;
 use moves::Move;
-use mask::Mask;
 
 #[derive(Eq, Debug, Copy, Clone, PartialEq)]
 pub struct Position {
@@ -24,8 +26,33 @@ impl Position {
     pub fn parse(input: &str) -> Self {
         parse_position(input.as_bytes()).unwrap().1
     }
+    pub fn generate_pseudo_legal_white_pawn_moves(&self) -> Mask {
+        let pawns = self.board.white_pawns();
+        let attacks = pawns.shift_north_east() | pawns.shift_north_west();
+        let non_enp_captures = attacks & self.board.black_occupation();
+
+        let en_passant_available = self.en_passant
+            .map_or(EMPTY, |file| {
+                Mask::from_file_rank(file,
+                                     if self.active == White {
+                                         ::rank::_6
+                                     } else {
+                                         ::rank::_3
+                                     })
+            });
+
+        let enp_captures = attacks & !self.board.occupation() & en_passant_available;
+
+        let all_captures = enp_captures | non_enp_captures;
+
+        let first_push = (pawns & _2).shift_north();
+        let all_pushes = first_push | (first_push & !self.board.occupation()).shift_north();
+
+        all_captures | all_pushes
+    }
     #[allow(unused_variables)]
-    pub fn is_pseudo_legal_pawn_move(&self, from: Mask, to : Mask) -> bool {
+    pub fn is_pseudo_legal_pawn_move(&self, from: Mask, to: Mask) -> bool {
+
         // captures
         // single push
         // double push
@@ -46,7 +73,7 @@ impl Position {
 
         //  Only pawns can promote and only on the back-rank.
         if mv.promote != UNKNOWN {
-            if self.active == Color::White {
+            if self.active == White {
                 if piece != WHITE_PAWN {
                     return false;
                 }
