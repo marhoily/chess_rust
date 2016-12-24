@@ -1,3 +1,5 @@
+#![allow(unused_qualifications)]
+
 use kind::*;
 use square::*;
 use castle::Castle;
@@ -56,9 +58,9 @@ impl Display for Move {
                 "O-O"
             });
         }
-        try!(write!(f, "{}-{}", self.from, self.to));
+        write!(f, "{}-{}", self.from, self.to)?;
         if self.promote != UNKNOWN {
-            try!(write!(f, "={}", self.promote));
+            write!(f, "={}", self.promote)?;
         }
         Ok(())
     }

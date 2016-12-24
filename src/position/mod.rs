@@ -30,15 +30,11 @@ impl Position {
         let pawns = self.board.white_pawns();
         let attacks = pawns.shift_north_east() | pawns.shift_north_west();
         let non_enp_captures = attacks & self.board.black_occupation();
-
         let en_passant_available = self.en_passant.map_or(EMPTY, |file| {
             Mask::from_file_rank(file, self.active.en_passant_rank())
         });
-
         let enp_captures = attacks & !self.board.occupation() & en_passant_available;
-
         let all_captures = enp_captures | non_enp_captures;
-
         let first_push = (pawns & _2).shift_north();
         let all_pushes = first_push | (first_push & !self.board.occupation()).shift_north();
 

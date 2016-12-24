@@ -50,7 +50,7 @@ pub fn parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
     use nom::ErrorKind::Custom as C;
 
     let mut result = BitBoard::new();
-    let mut square = masks::FIRST;
+    let mut square = FIRST;
     let mut file = 0;
     let mut just_had_gap = false;
     for (i, e) in input.iter().enumerate() {
@@ -63,7 +63,7 @@ pub fn parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
 
                 result.set_piece(square, p);
                 square <<= 1;
-                if square == masks::EMPTY {
+                if square == EMPTY {
                     return Done(&input[i+1..], result)
                 }
                 just_had_gap = false;
@@ -79,7 +79,7 @@ pub fn parse_bit_board(input: &[u8]) -> IResult<&[u8], BitBoard, ParsingError> {
                 if file > 8 {
                     return err(GapIsTooBig);
                 }
-                if square == masks::EMPTY {
+                if square == EMPTY {
                     return Done(&input[i+1..], result)
                 }
                 just_had_gap = true;
