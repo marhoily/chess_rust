@@ -4,9 +4,9 @@ version = "0.1.0"
 authors = ["marhoily <marhoily@homtail.com>"]
 
 [dependencies]
-bitflags = "0.7"
+bitflags = "*"
 nom = "^1.2.4"
 clippy = "*"
-rand = "0.3"
-itertools = "0.5.1"
-quickcheck = "0.3.1"
+rand = "*"
+itertools = "*"
+quickcheck = "*"
