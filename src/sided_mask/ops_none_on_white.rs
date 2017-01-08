@@ -14,15 +14,15 @@ impl BitOr<WhiteMask> for Mask {
     }
 }
 impl BitAnd<Mask> for WhiteMask {
-    type Output = Mask;
+    type Output = WhiteMask;
     fn bitand(self, rhs: Mask) -> Self::Output {
-        self.0 & rhs
+        WhiteMask(self.0 & rhs)
     }
 }
 impl BitAnd<WhiteMask> for Mask {
-    type Output = Mask;
+    type Output = WhiteMask;
     fn bitand(self, rhs: WhiteMask) -> Self::Output {
-        self & rhs.0
+        WhiteMask(self & rhs.0)
     }
 }
 
