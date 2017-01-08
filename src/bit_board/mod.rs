@@ -5,6 +5,7 @@ use mask::Mask;
 use mask::masks::*;
 use color::Color;
 use side::*;
+use sided_mask::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; PIECES_COUNT]);
@@ -17,8 +18,8 @@ impl BitBoard {
         self.0[piece.bits() as usize]
     }
 
-    pub fn pawns<S: Side>(&self) -> Mask {
-        self.index(S::PAWN)
+    pub fn pawns<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::PAWN))
     }
     pub fn pawns_of(&self, color: Color) -> Mask {
         self.index(PAWN.of(color))
@@ -115,7 +116,7 @@ impl BitBoard {
     }
     pub fn white_attacks(&self) -> Mask {
         let stoppers = self.occupation();
-        let a = self.pawns::<White>().white_pawn_attacks_and_pushes(stoppers);
+        let a = self.pawns::<White>().pawn_attacks_and_pushes(stoppers).0;
         let b = self.white_knights().knight_attacks();
         let c = self.white_bishops().bishop_attacks(stoppers);
         let d = self.white_rooks().rook_attacks(stoppers);
@@ -125,7 +126,7 @@ impl BitBoard {
     }
     pub fn black_attacks(&self) -> Mask {
         let stoppers = self.occupation();
-        let a = self.pawns::<Black>().black_pawn_attacks();
+        let a = self.pawns::<Black>().pawn_attacks_and_pushes(stoppers).0;
         let b = self.black_knights().knight_attacks();
         let c = self.black_bishops().bishop_attacks(stoppers);
         let d = self.black_rooks().rook_attacks(stoppers);

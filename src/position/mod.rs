@@ -28,7 +28,7 @@ impl Position {
         parse_position(input.as_bytes()).unwrap().1
     }
     pub fn generate_pseudo_legal_white_pawn_moves(&self) -> Mask {
-        let pawns = self.board.pawns::<White>();
+        let pawns = self.board.pawns::<White>().0;
         let attacks = pawns.shift_north_east() | pawns.shift_north_west();
         let non_enp_captures = attacks & self.board.black_occupation();
         let enp_captures = attacks & self.en_passant_take_square_mask();
