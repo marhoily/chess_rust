@@ -4,6 +4,7 @@ use kind::*;
 use mask::Mask;
 use mask::masks::*;
 use color::Color;
+use side::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BitBoard([Mask; PIECES_COUNT]);
@@ -16,7 +17,10 @@ impl BitBoard {
         self.0[piece.bits() as usize]
     }
 
-    pub fn pawns(&self, color: Color) -> Mask {
+    pub fn pawns<S: Side>(&self) -> Mask {
+        self.index(S::PAWN)
+    }
+    pub fn pawns_of(&self, color: Color) -> Mask {
         self.index(PAWN.of(color))
     }
     pub fn knights(&self, color: Color) -> Mask {
@@ -35,9 +39,9 @@ impl BitBoard {
         self.index(KING.of(color))
     }
 
-    pub fn white_pawns(&self) -> Mask {
+  /*  pub fn white_pawns(&self) -> Mask {
         self.index(WHITE_PAWN)
-    }
+    }*/
     pub fn white_knights(&self) -> Mask {
         self.index(WHITE_KNIGHT)
     }
@@ -53,9 +57,9 @@ impl BitBoard {
     pub fn white_kings(&self) -> Mask {
         self.index(WHITE_KING)
     }
-    pub fn black_pawns(&self) -> Mask {
+  /* pub fn black_pawns(&self) -> Mask {
         self.index(BLACK_PAWN)
-    }
+    }*/
     pub fn black_knights(&self) -> Mask {
         self.index(BLACK_KNIGHT)
     }
@@ -111,7 +115,7 @@ impl BitBoard {
     }
     pub fn white_attacks(&self) -> Mask {
         let stoppers = self.occupation();
-        let a = self.white_pawns().white_pawn_attacks_and_pushes(stoppers);
+        let a = self.pawns::<White>().white_pawn_attacks_and_pushes(stoppers);
         let b = self.white_knights().knight_attacks();
         let c = self.white_bishops().bishop_attacks(stoppers);
         let d = self.white_rooks().rook_attacks(stoppers);
@@ -121,7 +125,7 @@ impl BitBoard {
     }
     pub fn black_attacks(&self) -> Mask {
         let stoppers = self.occupation();
-        let a = self.black_pawns().black_pawn_attacks();
+        let a = self.pawns::<Black>().black_pawn_attacks();
         let b = self.black_knights().knight_attacks();
         let c = self.black_bishops().bishop_attacks(stoppers);
         let d = self.black_rooks().rook_attacks(stoppers);

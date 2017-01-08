@@ -10,6 +10,7 @@
  )]
 
 #![feature(test)]
+#![feature(associated_consts)]
 
 #![feature(plugin)]
 #![plugin(clippy)]
@@ -30,6 +31,7 @@ extern crate nom;
 pub mod file;
 pub mod rank;
 pub mod color;
+pub mod side;
 pub mod square;
 #[cfg(test)]
 mod square88;
@@ -47,6 +49,7 @@ pub mod analysis;
 use file::*;
 use rank::*;
 use color::*;
+use side::*;
 use square::*;
 use kind::*;
 use piece::*;

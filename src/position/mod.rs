@@ -5,7 +5,7 @@ use castle;
 use castle::Castle;
 use bit_board::BitBoard;
 use color::Color;
-use color::Color::*;
+use side::*;
 use mask::*;
 use mask::masks::*;
 use file::File;
@@ -28,7 +28,7 @@ impl Position {
         parse_position(input.as_bytes()).unwrap().1
     }
     pub fn generate_pseudo_legal_white_pawn_moves(&self) -> Mask {
-        let pawns = self.board.white_pawns();
+        let pawns = self.board.pawns::<White>();
         let attacks = pawns.shift_north_east() | pawns.shift_north_west();
         let non_enp_captures = attacks & self.board.black_occupation();
         let enp_captures = attacks & self.en_passant_take_square_mask();
@@ -63,7 +63,7 @@ impl Position {
 
         //  Only pawns can promote and only on the back-rank.
         if mv.promote != UNKNOWN {
-            if self.active == White {
+            if self.active == Color::White {
                 if piece != WHITE_PAWN {
                     return false;
                 }
@@ -93,7 +93,7 @@ impl Position {
         }
 
         // Handle pawn pushes
-        if self.board.pawns(self.active).contains(to) {
+        if self.board.pawns_of(self.active).contains(to) {
             return self.is_pseudo_legal_pawn_move(from, to);
         }
 
