@@ -100,6 +100,9 @@ impl BitBoard {
             self.black_occupation()
         }
     }
+    pub fn occupation1<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.0[S::RANGE].iter().fold(EMPTY, |acc, &x| acc | x))
+    }
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
@@ -248,36 +251,36 @@ mod test {
         b
     }
 
-   // #[test]
-   // fn white_attacks() {
-   //     let mut gen = weak_rng();
-   //     for _ in 0..2000 {
-   //         let bb = generate_random_board(&mut gen);
-   //         let b88 = Board88::from(&bb);
-   //         if bb.white_attacks() != b88.white_attacks() {
-   //             panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}\r\n",
-   //                    bb.white_attacks(),
-   //                    b88.white_attacks(),
-   //                    format!("{}", bb))
-   //         }
-   //     }
-   // }
-   // #[test]
-   // fn black_attacks_are_white_attacks_reverse() {
-   //     let mut gen = weak_rng();
-   //     for _ in 0..2000 {
-   //         let bb = generate_random_board(&mut gen);
-   //         let inverse = bb.swap_colors();
-   //         let cmp = inverse.black_attacks().flip_vertically();
-   //         if bb.white_attacks() != cmp {
-   //             panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nbb: {}\r\ninverse: {}\r\n",
-   //                    bb.white_attacks(),
-   //                    cmp,
-   //                    bb,
-   //                    inverse)
-   //         }
-   //     }
-   // }
+    // #[test]
+    // fn white_attacks() {
+    //     let mut gen = weak_rng();
+    //     for _ in 0..2000 {
+    //         let bb = generate_random_board(&mut gen);
+    //         let b88 = Board88::from(&bb);
+    //         if bb.white_attacks() != b88.white_attacks() {
+    //             panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nfen: {}\r\n",
+    //                    bb.white_attacks(),
+    //                    b88.white_attacks(),
+    //                    format!("{}", bb))
+    //         }
+    //     }
+    // }
+    // #[test]
+    // fn black_attacks_are_white_attacks_reverse() {
+    //     let mut gen = weak_rng();
+    //     for _ in 0..2000 {
+    //         let bb = generate_random_board(&mut gen);
+    //         let inverse = bb.swap_colors();
+    //         let cmp = inverse.black_attacks().flip_vertically();
+    //         if bb.white_attacks() != cmp {
+    //             panic!("\r\nbit-board: {:?}\r\nx88 board: {:?}\r\nbb: {}\r\ninverse: {}\r\n",
+    //                    bb.white_attacks(),
+    //                    cmp,
+    //                    bb,
+    //                    inverse)
+    //         }
+    //     }
+    // }
 
     #[test]
     fn test_generate_random_board() {
