@@ -13,6 +13,18 @@ impl BitOr<WhiteMask> for Mask {
         self | rhs.0
     }
 }
+impl BitAnd<Mask> for WhiteMask {
+    type Output = Mask;
+    fn bitand(self, rhs: Mask) -> Self::Output {
+        self.0 & rhs
+    }
+}
+impl BitAnd<WhiteMask> for Mask {
+    type Output = Mask;
+    fn bitand(self, rhs: WhiteMask) -> Self::Output {
+        self & rhs.0
+    }
+}
 
 #[cfg(test)]
 mod tests {

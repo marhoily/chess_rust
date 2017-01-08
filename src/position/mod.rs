@@ -30,7 +30,7 @@ impl Position {
     }
     pub fn generate_pseudo_legal_white_pawn_moves(&self) -> Mask {
         let pawns = self.board.pawns::<White>();
-        let attacks = pawns.attack().0;
+        let attacks = pawns.attack();
         let non_enp_captures = attacks & self.board.black_occupation();
         let enp_captures = attacks & self.en_passant_take_square_mask();
         let single_pushes = pawns.0.shift_north() & !self.board.occupation();
