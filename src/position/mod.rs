@@ -32,13 +32,9 @@ impl Position {
         let attacks = pawns.shift_north_east() | pawns.shift_north_west();
         let non_enp_captures = attacks & self.board.black_occupation();
         let enp_captures = attacks & self.en_passant_take_square_mask();
-        let all_captures = enp_captures | non_enp_captures;
-
         let single_pushes = pawns.shift_north() & !self.board.occupation();
         let double_pushes = single_pushes.shift_north() & !self.board.occupation() & _4;
-        let all_pushes = (single_pushes | double_pushes) & !self.board.occupation();
-
-        all_captures | all_pushes
+        enp_captures | non_enp_captures | single_pushes | double_pushes
     }
 
     pub fn en_passant_take_square_mask(&self) -> Mask {
