@@ -12,12 +12,19 @@ pub mod ops_none_on_white;
 pub mod ops_white_on_white;
 pub mod ops_black_on_black;
 
-pub trait SidedMask {
+pub trait SidedMask
+    where Self: Sized
+{
     fn wrap(m: Mask) -> Self;
+    fn mask(&self) -> Mask;
     fn advance(self) -> Self;
     fn attack(self) -> Self;
     fn pawn_attacks_and_pushes(self, stoppers: Mask) -> Self;
     fn pawn_double_pushes(self, stoppers: Mask) -> Self;
+
+    fn filter<M: Into<Mask>>(self, f: M) -> Self {
+        Self::wrap(self.mask() & f.into())
+    }
 }
 
 impl SidedMask for WhiteMask {
@@ -37,6 +44,9 @@ impl SidedMask for WhiteMask {
         let first_push = (self.0 & _2).shift_north();
         WhiteMask(first_push | (first_push & !stoppers).shift_north())
     }
+    fn mask(&self) -> Mask {
+        self.0
+    }
 }
 impl SidedMask for BlackMask {
     fn advance(self) -> Self {
@@ -53,5 +63,8 @@ impl SidedMask for BlackMask {
     }
     fn pawn_double_pushes(self, stoppers: Mask) -> Self {
         unimplemented!()
+    }
+    fn mask(&self) -> Mask {
+        self.0
     }
 }
