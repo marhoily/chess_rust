@@ -6,6 +6,8 @@ pub struct WhiteMask(pub Mask);
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BlackMask(pub Mask);
 
+pub mod ops;
+
 pub trait SidedMask {
     fn wrap(m: Mask) -> Self;
     fn advance(self) -> Self;
