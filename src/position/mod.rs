@@ -33,8 +33,10 @@ impl Position {
         let non_enp_captures = attacks & self.board.black_occupation();
         let enp_captures = attacks & !self.board.occupation() & self.en_passant_take_square_mask();
         let all_captures = enp_captures | non_enp_captures;
-        let first_push = (pawns & _2).shift_north();
-        let all_pushes = (pawns | (first_push & !self.board.occupation())).shift_north();
+
+        let single_pushes = pawns.shift_north() & !self.board.occupation();
+        let double_pushes = single_pushes.shift_north() & !self.board.occupation() & _4;
+        let all_pushes = (single_pushes | double_pushes) & !self.board.occupation();
 
         all_captures | all_pushes
     }
@@ -211,18 +213,19 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
-    //    #[test]
-    //    fn generate_pseudo_legal_white_pawn_moves_single_take() {
-    //        let p = Position::parse("8/8/2pp4/3P4/8/8/8/8 w KQkq e 0 1");
-    //        let m = p.generate_pseudo_legal_white_pawn_moves();
-    //        assert_eq!(m.dump(),
-    //        "|^^^^^^^^|..\
-    //        .|^^^^^^^^|..\
-    //        .|^^@^@^^^|..\
-    //        .|^^^^^^^^|..\
-    //        .|^^^^^^^^|..\
-    //        .|^^^^^^^^|..\
-    //        .|^^^^^^^^|..\
-    //        .|^^^^^^^^|...");
-    //    }
+
+    #[test]
+    fn generate_pseudo_legal_white_pawn_moves_single_take() {
+        let p = Position::parse("8/8/2pp4/3P4/8/8/8/8 w KQkq - 0 1");
+        let m = p.generate_pseudo_legal_white_pawn_moves();
+        assert_eq!(m.dump(),
+        "|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^@^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|...");
+    }
 }
