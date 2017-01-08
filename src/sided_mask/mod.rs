@@ -6,6 +6,8 @@ pub struct WhiteMask(pub Mask);
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct BlackMask(pub Mask);
 
+pub mod ops_black_on_white;
+pub mod ops_white_on_black;
 pub mod ops_none_on_white;
 pub mod ops_white_on_white;
 pub mod ops_black_on_black;

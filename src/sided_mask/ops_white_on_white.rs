@@ -1,8 +1,6 @@
 use super::*;
 use std::ops::*;
 
-
-
 impl BitOr<WhiteMask> for WhiteMask {
     type Output = WhiteMask;
     fn bitor(self, rhs: WhiteMask) -> Self::Output {
