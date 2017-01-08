@@ -128,12 +128,12 @@ named!(pub parse_position<&[u8], Position, PositionError>,
         squares: parse_bit_board ~ ws ~
         side: parse_color ~ ws ~
         castle: parse_castle ~ ws ~
-        file: parse_file,
+        file: parse_file_or_dash,
         || Position {
                 board: squares,
                 active: side,
                 available: castle,
-                en_passant: Some(file)
+                en_passant: file
         }));
 
 #[cfg(test)]
@@ -145,6 +145,13 @@ mod test {
         assert_eq!(format!("{}",
                            Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1")),
         "8/8/8/8/8/8/8/8 w KQkq e");
+    }
+
+    #[test]
+    fn en_passant_is_dash() {
+        assert_eq!(format!("{}",
+                           Position::parse("8/8/8/8/8/8/8/8 w KQkq - 0 1")),
+        "8/8/8/8/8/8/8/8 w KQkq -");
     }
 
     #[test]
@@ -160,6 +167,7 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
+
     #[test]
     fn en_passant_file_mask_e() {
         let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1");
@@ -173,20 +181,20 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
-    /*#[test]
-    fn generate_pseudo_legal_white_pawn_moves_single_push() {
-        let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq a 0 1");
-        let m = p.generate_pseudo_legal_white_pawn_moves();
-        assert_eq!(m.dump(),
-        "|^^^^^^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^@^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|...");
-    }*/
+    // #[test]
+    // fn generate_pseudo_legal_white_pawn_moves_single_push() {
+    // let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq a 0 1");
+    // let m = p.generate_pseudo_legal_white_pawn_moves();
+    // assert_eq!(m.dump(),
+    // "|^^^^^^^^|..\
+    // .|^^^^^^^^|..\
+    // .|^^^^@^^^|..\
+    // .|^^^^^^^^|..\
+    // .|^^^^^^^^|..\
+    // .|^^^^^^^^|..\
+    // .|^^^^^^^^|..\
+    // .|^^^^^^^^|...");
+    // }
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_single_take() {
         let p = Position::parse("8/8/2pp4/3P4/8/8/8/8 w KQkq e 0 1");
@@ -200,6 +208,5 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
-
     }
 }
