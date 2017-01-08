@@ -37,6 +37,7 @@ pub fn parse_castle(input: &[u8]) -> R<Castle, PositionError> {
 }
 
 pub fn parse_file(input: &[u8]) -> R<File, PositionError> {
+    // TODO: _or_dash
     ::file::parse_file(input).map_err(|err| {
         match err {
             P(C(pe), x) => P(C(EnPassant(pe)), x),

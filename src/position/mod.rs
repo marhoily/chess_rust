@@ -148,7 +148,20 @@ mod test {
     }
 
     #[test]
-    fn en_passant_file_mask() {
+    fn en_passant_file_mask_a() {
+        let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq a 0 1");
+        assert_eq!(p.en_passant_file_mask().dump(),
+        "|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|@^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|...");
+    }
+    #[test]
+    fn en_passant_file_mask_e() {
         let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1");
         assert_eq!(p.en_passant_file_mask().dump(),
         "|^^^^^^^^|..\
@@ -160,9 +173,9 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
-    #[test]
+    /*#[test]
     fn generate_pseudo_legal_white_pawn_moves_single_push() {
-        let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq - 0 1");
+        let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq a 0 1");
         let m = p.generate_pseudo_legal_white_pawn_moves();
         assert_eq!(m.dump(),
         "|^^^^^^^^|..\
@@ -173,7 +186,7 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
-    }
+    }*/
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_single_take() {
         let p = Position::parse("8/8/2pp4/3P4/8/8/8/8 w KQkq e 0 1");
