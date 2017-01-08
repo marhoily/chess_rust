@@ -22,6 +22,7 @@ pub struct Position {
     available: Castle,
     en_passant: Option<File>,
 }
+
 impl Position {
     pub fn parse(input: &str) -> Self {
         parse_position(input.as_bytes()).unwrap().1
@@ -42,7 +43,6 @@ impl Position {
     }
     #[allow(unused_variables)]
     pub fn is_pseudo_legal_pawn_move(&self, from: Mask, to: Mask) -> bool {
-
         // captures
         // single push
         // double push
@@ -102,6 +102,7 @@ impl Position {
 }
 
 use std::fmt::{Display, Formatter, Result};
+
 impl Display for Position {
     fn fmt(&self, f: &mut Formatter) -> Result {
         let r = self.en_passant.map_or('-', |x| x.char());
@@ -141,7 +142,22 @@ mod test {
     #[test]
     fn correct_fen() {
         assert_eq!(format!("{}",
-                Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1")),
-                "8/8/8/8/8/8/8/8 w KQkq e");
+                           Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1")),
+        "8/8/8/8/8/8/8/8 w KQkq e");
+    }
+
+    #[test]
+    fn generate_pseudo_legal_white_pawn_moves_single_push() {
+        let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq e 0 1");
+        let m = p.generate_pseudo_legal_white_pawn_moves();
+        assert_eq!(m.dump(),
+        "|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^@^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|...");
     }
 }
