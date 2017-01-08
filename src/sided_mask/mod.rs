@@ -12,26 +12,38 @@ pub mod ops_none_on_white;
 pub mod ops_white_on_white;
 pub mod ops_black_on_black;
 
-pub trait SidedMask
+pub trait SidedMask : Into<Mask>
     where Self: Sized
 {
     fn wrap(m: Mask) -> Self;
     fn mask(&self) -> Mask;
-    fn advance(self) -> Self;
-    fn attack(self) -> Self;
+    fn advance(&self) -> Self;
+    fn attack(&self) -> Self;
     fn pawn_attacks_and_pushes(self, stoppers: Mask) -> Self;
     fn pawn_double_pushes(self, stoppers: Mask) -> Self;
 
-    fn filter<M: Into<Mask>>(self, f: M) -> Self {
+    fn filter<M: Into<Mask>>(&self, f: M) -> Self {
         Self::wrap(self.mask() & f.into())
     }
+    fn and<M: Into<Mask>>(&self, f: M) -> Self {
+        Self::wrap(self.mask() | f.into())
+    }
 }
-
+impl Into<Mask> for WhiteMask {
+    fn into(self) -> Mask {
+        self.0
+    }
+}
+impl Into<Mask> for BlackMask {
+    fn into(self) -> Mask {
+        self.0
+    }
+}
 impl SidedMask for WhiteMask {
-    fn advance(self) -> Self {
+    fn advance(&self) -> Self {
         WhiteMask(self.0.shift_north())
     }
-    fn attack(self) -> Self {
+    fn attack(&self) -> Self {
         WhiteMask(self.0.shift_north_east() | self.0.shift_north_west())
     }
     fn wrap(m: Mask) -> Self {
@@ -49,10 +61,10 @@ impl SidedMask for WhiteMask {
     }
 }
 impl SidedMask for BlackMask {
-    fn advance(self) -> Self {
+    fn advance(&self) -> Self {
         BlackMask(self.0.shift_north())
     }
-    fn attack(self) -> Self {
+    fn attack(&self) -> Self {
         BlackMask(self.0.shift_north_east() | self.0.shift_north_west())
     }
     fn wrap(m: Mask) -> Self {

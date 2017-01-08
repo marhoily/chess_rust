@@ -28,6 +28,18 @@ impl Position {
     pub fn parse(input: &str) -> Self {
         parse_position(input.as_bytes()).unwrap().1
     }
+    pub fn generate_pseudo_legal_pawn_moves<S:Side>(&self) -> S::Mask {
+        let pawns = self.board.pawns::<S>();
+        let attacks = pawns.attack();
+        let non_enp_captures = attacks.filter(self.board.black_occupation());
+        let enp_captures = attacks.filter(self.en_passant_take_square_mask());
+        let single_pushes = pawns.advance().filter(!self.board.occupation());
+        let double_pushes = single_pushes.advance().filter(!self.board.occupation() & _4);
+        enp_captures
+            .and(non_enp_captures)
+            .and(single_pushes)
+            .and(double_pushes)
+    }
     pub fn generate_pseudo_legal_white_pawn_moves(&self) -> WhiteMask {
         let pawns = self.board.pawns::<White>();
         let attacks = pawns.attack();
