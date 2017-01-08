@@ -25,6 +25,18 @@ impl BitAnd<WhiteMask> for Mask {
         WhiteMask(self & rhs.0)
     }
 }
+impl BitAnd<Mask> for BlackMask {
+    type Output = BlackMask;
+    fn bitand(self, rhs: Mask) -> Self::Output {
+        BlackMask(self.0 & rhs)
+    }
+}
+impl BitAnd<BlackMask> for Mask {
+    type Output = BlackMask;
+    fn bitand(self, rhs: BlackMask) -> Self::Output {
+        BlackMask(self & rhs.0)
+    }
+}
 
 #[cfg(test)]
 mod tests {

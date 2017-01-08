@@ -40,9 +40,6 @@ impl BitBoard {
         self.index(KING.of(color))
     }
 
-  /*  pub fn white_pawns(&self) -> Mask {
-        self.index(WHITE_PAWN)
-    }*/
     pub fn white_knights(&self) -> Mask {
         self.index(WHITE_KNIGHT)
     }
@@ -58,9 +55,7 @@ impl BitBoard {
     pub fn white_kings(&self) -> Mask {
         self.index(WHITE_KING)
     }
-  /* pub fn black_pawns(&self) -> Mask {
-        self.index(BLACK_PAWN)
-    }*/
+
     pub fn black_knights(&self) -> Mask {
         self.index(BLACK_KNIGHT)
     }
