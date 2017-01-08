@@ -32,6 +32,7 @@ pub mod file;
 pub mod rank;
 pub mod color;
 pub mod side;
+pub mod sided_mask;
 pub mod square;
 #[cfg(test)]
 mod square88;
@@ -50,6 +51,7 @@ use file::*;
 use rank::*;
 use color::*;
 use side::*;
+use sided_mask::*;
 use square::*;
 use kind::*;
 use piece::*;
