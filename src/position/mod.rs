@@ -228,4 +228,18 @@ mod test {
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
+    #[test]
+    fn generate_pseudo_legal_white_pawn_moves_en_passant() {
+        let p = Position::parse("8/8/3p4/3P4/8/8/8/8 w KQkq e 0 1");
+        let m = p.generate_pseudo_legal_white_pawn_moves();
+        assert_eq!(m.dump(),
+        "|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^@^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|...");
+    }
 }
