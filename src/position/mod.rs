@@ -43,7 +43,7 @@ impl Position {
 
     pub fn en_passant_take_square_mask<S: Side>(&self) -> Mask {
         self.en_passant.map_or(EMPTY,
-                               |file| Mask::from_file_rank(file, self.active.en_passant_rank()))
+                               |file| Mask::from_file_rank(file, S::EN_PASSANT_RANK))
     }
     #[allow(unused_variables)]
     pub fn is_pseudo_legal_pawn_move(&self, from: Mask, to: Mask) -> bool {
