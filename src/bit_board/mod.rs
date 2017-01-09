@@ -24,52 +24,35 @@ impl BitBoard {
     pub fn pawns_of(&self, color: Color) -> Mask {
         self.index(PAWN.of(color))
     }
-    pub fn knights(&self, color: Color) -> Mask {
+    pub fn knights<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::KNIGHT))
+    }
+    pub fn knights_of(&self, color: Color) -> Mask {
         self.index(KNIGHT.of(color))
     }
-    pub fn bishops(&self, color: Color) -> Mask {
+    pub fn bishops<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::BISHOP))
+    }
+    pub fn bishops_of(&self, color: Color) -> Mask {
         self.index(BISHOP.of(color))
     }
-    pub fn rooks(&self, color: Color) -> Mask {
+    pub fn rooks<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::ROOK))
+    }
+    pub fn rooks_of(&self, color: Color) -> Mask {
         self.index(ROOK.of(color))
     }
-    pub fn queens(&self, color: Color) -> Mask {
+    pub fn queens<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::QUEEN))
+    }
+    pub fn queens_of(&self, color: Color) -> Mask {
         self.index(QUEEN.of(color))
     }
-    pub fn kings(&self, color: Color) -> Mask {
+    pub fn kings<S: Side>(&self) -> S::Mask {
+        S::Mask::wrap(self.index(S::KING))
+    }
+    pub fn kings_of(&self, color: Color) -> Mask {
         self.index(KING.of(color))
-    }
-
-    pub fn white_knights(&self) -> Mask {
-        self.index(WHITE_KNIGHT)
-    }
-    pub fn white_bishops(&self) -> Mask {
-        self.index(WHITE_BISHOP)
-    }
-    pub fn white_rooks(&self) -> Mask {
-        self.index(WHITE_ROOK)
-    }
-    pub fn white_queens(&self) -> Mask {
-        self.index(WHITE_QUEEN)
-    }
-    pub fn white_kings(&self) -> Mask {
-        self.index(WHITE_KING)
-    }
-
-    pub fn black_knights(&self) -> Mask {
-        self.index(BLACK_KNIGHT)
-    }
-    pub fn black_bishops(&self) -> Mask {
-        self.index(BLACK_BISHOP)
-    }
-    pub fn black_rooks(&self) -> Mask {
-        self.index(BLACK_ROOK)
-    }
-    pub fn black_queens(&self) -> Mask {
-        self.index(BLACK_QUEEN)
-    }
-    pub fn black_kings(&self) -> Mask {
-        self.index(BLACK_KING)
     }
 
     pub fn set_piece(&mut self, square: Mask, piece: Piece) {
@@ -106,31 +89,22 @@ impl BitBoard {
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
-    pub fn white_attacks(&self) -> Mask {
+    pub fn attacks<S : Side>(&self) -> Mask {
         let stoppers = self.occupation();
-        let a = self.pawns::<White>().pawn_attacks_and_pushes(stoppers).0;
-        let b = self.white_knights().knight_attacks();
-        let c = self.white_bishops().bishop_attacks(stoppers);
-        let d = self.white_rooks().rook_attacks(stoppers);
-        let e = self.white_queens().queen_attacks(stoppers);
-        let f = self.white_kings().king_attacks();
+        let a = self.pawns::<S>().pawn_attacks_and_pushes(stoppers).mask();
+        let b = self.knights::<S>().mask().knight_attacks();
+        let c = self.bishops::<S>().mask().bishop_attacks(stoppers);
+        let d = self.rooks::<S>().mask().rook_attacks(stoppers);
+        let e = self.queens::<S>().mask().queen_attacks(stoppers);
+        let f = self.kings::<S>().mask().king_attacks();
         a | b | c | d | e | f
     }
-    pub fn black_attacks(&self) -> Mask {
-        let stoppers = self.occupation();
-        let a = self.pawns::<Black>().pawn_attacks_and_pushes(stoppers).0;
-        let b = self.black_knights().knight_attacks();
-        let c = self.black_bishops().bishop_attacks(stoppers);
-        let d = self.black_rooks().rook_attacks(stoppers);
-        let e = self.black_queens().queen_attacks(stoppers);
-        let f = self.black_kings().king_attacks();
-        a | b | c | d | e | f
-    }
-    pub fn attacks(&self, color: Color) -> Mask {
+
+    pub fn attacks_of(&self, color: Color) -> Mask {
         if color == Color::White {
-            self.white_attacks()
+            self.attacks::<White>()
         } else {
-            self.black_attacks()
+            self.attacks::<Black>()
         }
     }
     pub fn white_castling_move_masks(&self) -> Mask {

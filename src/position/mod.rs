@@ -102,7 +102,7 @@ impl Position {
             return self.is_pseudo_legal_pawn_move(from, to);
         }
 
-        self.board.attacks(self.active).contains(to)
+        self.board.attacks_of(self.active).contains(to)
     }
 }
 

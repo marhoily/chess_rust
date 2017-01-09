@@ -27,6 +27,7 @@ pub struct Black;
 impl Side for White {
     type Mask = WhiteMask;
     type Opposite = Black;
+
     const PAWN : Piece = WHITE_PAWN;
     const KNIGHT : Piece = WHITE_KNIGHT;
     const BISHOP : Piece = WHITE_BISHOP;
