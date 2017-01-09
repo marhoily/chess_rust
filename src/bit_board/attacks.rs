@@ -4,6 +4,7 @@ impl BitBoard {
     pub fn is_attacked_by<S: Side>(&self, m: Mask) -> bool {
         self.pawns::<S>().attack().mask() & m != EMPTY ||
             self.knights::<S>().mask().knight_attacks() & m != EMPTY ||
+            self.kings::<S>().mask().king_attacks() & m != EMPTY ||
             self.bishops::<S>().mask().bishop_attacks(self.occupation()) & m != EMPTY ||
             self.rooks::<S>().mask().rook_attacks(self.occupation()) & m != EMPTY ||
             self.queens::<S>().mask().queen_attacks(self.occupation()) & m != EMPTY
@@ -31,6 +32,11 @@ mod tests {
     #[test]
     fn by_knight() {
         yes("8/8/8/8/4k3/2N5/8/8 b - - 0 1")
+    }
+
+    #[test]
+    fn by_king() {
+        yes("8/8/8/8/4K3/3k4/8/8 w - - 0 1")
     }
 
     #[test]
