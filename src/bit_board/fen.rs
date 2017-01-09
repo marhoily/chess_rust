@@ -158,23 +158,23 @@ mod test {
 
     #[test]
     fn double_gap() {
-        expect_error("pp51whatewer", super::ParsingError::DoubleGap, 3);
+        expect_error("pp51whatever", super::ParsingError::DoubleGap, 3);
     }
 
     #[test]
     fn rank_is_too_long() {
-        expect_error("p7Qwhatewer", super::ParsingError::RankIsTooLong, 2);
+        expect_error("p7Q_whatever", super::ParsingError::RankIsTooLong, 2);
     }
 
     #[test]
     fn gap_is_too_big() {
-        expect_error("pp7whatewer", super::ParsingError::GapIsTooBig, 2);
+        expect_error("pp7whatever", super::ParsingError::GapIsTooBig, 2);
     }
 
     #[test]
     fn rank_is_too_short() {
-        expect_error("p6/whatewer", super::ParsingError::RankIsTooShort, 2);
-        expect_error("6p/whatewer", super::ParsingError::RankIsTooShort, 2);
+        expect_error("p6/whatever", super::ParsingError::RankIsTooShort, 2);
+        expect_error("6p/whatever", super::ParsingError::RankIsTooShort, 2);
     }
 
     #[test]
@@ -190,7 +190,7 @@ mod test {
 
     #[test]
     fn unrecognized_token() {
-        expect_error("p7/whatewer", super::ParsingError::UnrecognizedToken, 3);
+        expect_error("p7/whatever", super::ParsingError::UnrecognizedToken, 3);
     }
 
     #[test]

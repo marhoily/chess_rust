@@ -135,8 +135,6 @@ mod tests {
     }
 }
 
-// pub fn white_pawn_pushes
-// pub fn black_pawn_pushes
 // pub fn xray_bishop_attacks(self, occupied: Mask, stoppers: Mask) -> Mask {
 //     let attacks = self.bishop_attacks(occupied);
 //     attacks ^ self.bishop_attacks((stoppers & attacks) ^ stoppers)
