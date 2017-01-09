@@ -5,6 +5,8 @@ impl BitBoard {
         self.pawns::<S>().attack().mask() & m != EMPTY ||
             self.knights::<S>().mask().knight_attacks() & m != EMPTY ||
             self.kings::<S>().mask().king_attacks() & m != EMPTY ||
+            // optimize: extract self.occupation()
+            // optimize: mix queens into bishops\rooks
             self.bishops::<S>().mask().bishop_attacks(self.occupation()) & m != EMPTY ||
             self.rooks::<S>().mask().rook_attacks(self.occupation()) & m != EMPTY ||
             self.queens::<S>().mask().queen_attacks(self.occupation()) & m != EMPTY
