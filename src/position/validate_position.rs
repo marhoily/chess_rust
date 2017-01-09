@@ -73,14 +73,14 @@ impl Position {
     fn validate_en_passant(&self) -> Assessment {
         use ::rank::*;
         if let Some(file) = self.en_passant {
-            let target_rank = if self.active == Color::White { _6 } else { _3 };
             let pawn_rank = if self.active == Color::White { _5 } else { _4 };
-            let target_square = Mask::from_file_rank(file, target_rank);
             let pawn_square = Mask::from_file_rank(file, pawn_rank);
             let pawns_of_inactive = self.board.pawns_of(self.active.invert());
             if pawns_of_inactive & pawn_square == EMPTY {
                 return EN_PASSANT_WITHOUT_PAWN
             }
+            let target_rank = if self.active == Color::White { _6 } else { _3 };
+            let target_square = Mask::from_file_rank(file, target_rank);
             if self.board.get_piece(target_square) != VOID {
                 return EN_PASSANT_SQUARE_OCCUPIED
             }
