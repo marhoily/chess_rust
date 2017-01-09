@@ -5,7 +5,8 @@ impl BitBoard {
         self.pawns::<S>().attack().mask() & m != EMPTY ||
             self.knights::<S>().mask().knight_attacks() & m != EMPTY ||
             self.bishops::<S>().mask().bishop_attacks(self.occupation()) & m != EMPTY ||
-            self.rooks::<S>().mask().rook_attacks(self.occupation()) & m != EMPTY
+            self.rooks::<S>().mask().rook_attacks(self.occupation()) & m != EMPTY ||
+            self.queens::<S>().mask().queen_attacks(self.occupation()) & m != EMPTY
     }
     pub fn is_check_to<S: Side>(&self) -> bool {
         self.is_attacked_by::<S::Opposite>(self.kings::<S>().mask())
@@ -55,6 +56,18 @@ mod tests {
     #[test]
     fn rook_is_blocked_with_black() {
         no("8/8/8/8/1R1bk3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn by_queen() {
+        yes("8/8/8/8/1Q2k3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn queen_is_blocked_with_white() {
+        no("8/8/8/8/1Q1Bk3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn queen_is_blocked_with_black() {
+        no("8/8/8/8/1Q1bk3/8/8/8 b - - 0 1")
     }
 
     pub fn yes(fen: &str) {
