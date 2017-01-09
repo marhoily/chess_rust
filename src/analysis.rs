@@ -42,7 +42,7 @@ enum Errors {
 enum BoardValidationWarnings {
     TooManyPawns(Color),
     TooManyPieces(Color),
-    PawnsOnBackrank(Color),
+    PawnsOnBackRank(Color),
 }
 
 enum BoardValidationErrors {
