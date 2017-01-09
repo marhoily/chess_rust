@@ -13,6 +13,7 @@ bitflags! {
         const WHITE_PAWNS_ON_PROMOTION_RANK= 1 << 4,
         const BLACK_PAWNS_ON_PROMOTION_RANK= 1 << 5,
         const EN_PASSANT_WITHOUT_PAWN= 1 << 6,
+        const EN_PASSANT_SQUARE_OCCUPIED= 1 << 7,
         const WTF= 1 << 20,
     }
 }
@@ -72,11 +73,16 @@ impl Position {
     fn validate_en_passant(&self) -> Assessment {
         use ::rank::*;
         if let Some(file) = self.en_passant {
+            let target_rank = if self.active == Color::White { _6 } else { _3 };
             let pawn_rank = if self.active == Color::White { _5 } else { _4 };
+            let target_square = Mask::from_file_rank(file, target_rank);
             let pawn_square = Mask::from_file_rank(file, pawn_rank);
             let pawns_of_inactive = self.board.pawns_of(self.active.invert());
             if pawns_of_inactive & pawn_square == EMPTY {
                 return EN_PASSANT_WITHOUT_PAWN
+            }
+            if self.board.get_piece(target_square) != VOID {
+                return EN_PASSANT_SQUARE_OCCUPIED
             }
         }
         VALID
@@ -148,6 +154,12 @@ mod tests {
         assert_assessment(
             "8/8/8/8/8/8/K7/7k w - a 0 1",
             EN_PASSANT_WITHOUT_PAWN);
+    }
+    #[test]
+    fn en_passant_square_occupied() {
+        assert_assessment(
+            "8/8/n7/p7/8/8/K7/7k w - a 0 1",
+            EN_PASSANT_SQUARE_OCCUPIED);
     }
 
     fn assert_assessment(fen: &str, expected: Assessment) {
