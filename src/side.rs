@@ -17,6 +17,7 @@ pub trait Side {
 
     const RANGE : Range<usize>;
     const EN_PASSANT_RANK : Rank;
+    const DOUBLE_PUSH_RANK_MASK : Mask;
 }
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
@@ -37,6 +38,7 @@ impl Side for White {
     
     const RANGE : Range<usize> = 0..6;
     const EN_PASSANT_RANK : Rank = _6;
+    const DOUBLE_PUSH_RANK_MASK : Mask = masks::_4;
 }
 impl Side for Black {
     type Mask = BlackMask;
@@ -51,4 +53,5 @@ impl Side for Black {
 
     const RANGE : Range<usize> = 6..12;
     const EN_PASSANT_RANK : Rank = _3;
+    const DOUBLE_PUSH_RANK_MASK : Mask = masks::_5;
 }

@@ -62,10 +62,10 @@ impl SidedMask for WhiteMask {
 }
 impl SidedMask for BlackMask {
     fn advance(&self) -> Self {
-        unimplemented!()
+        BlackMask(self.0.shift_south())
     }
     fn attack(&self) -> Self {
-        unimplemented!()
+        BlackMask(self.0.shift_south_east() | self.0.shift_south_west())
     }
     fn wrap(m: Mask) -> Self {
         BlackMask(m)
