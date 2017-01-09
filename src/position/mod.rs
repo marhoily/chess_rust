@@ -28,6 +28,7 @@ impl Position {
 mod validate_position;
 mod validate_move;
 mod pawn_moves;
+mod king_moves;
 
 use std::fmt::{Display, Formatter, Result};
 
