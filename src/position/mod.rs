@@ -39,10 +39,12 @@ impl Position {
         let pawns = self.board.pawns::<S>();
         let empty_squares = !self.board.occupation();
         let attacks = pawns.attack();
-        let non_enp_captures = attacks.filter(self.board.occupation_gen::<S::Opposite>());
+        let non_enp_captures = attacks.filter(
+            self.board.occupation_gen::<S::Opposite>());
         let enp_captures = attacks.filter(self.en_passant_take_square_mask::<S>());
         let single_pushes = pawns.advance().filter(empty_squares);
-        let double_pushes = single_pushes.advance().filter(empty_squares & S::DOUBLE_PUSH_RANK_MASK);
+        let double_pushes = single_pushes.advance()
+            .filter(empty_squares & S::DOUBLE_PUSH_RANK_MASK);
         enp_captures
             .and(non_enp_captures)
             .and(single_pushes)
@@ -223,6 +225,19 @@ mod test {
     fn generate_pseudo_legal_black_pawn_moves_double_push() {
         assert_pseudo_legal_pawn_moves(
             "8/3p4/8/8/8/8/8/8 b KQkq - 0 1", D6 | D5
+        );
+    }
+
+    #[test]
+    fn generate_pseudo_legal_black_pawn_moves_double_push_blocked() {
+        assert_pseudo_legal_pawn_moves(
+            "8/3p4/8/3p4/8/8/8/8 b KQkq - 0 1", D6 | D4
+        );
+    }
+    #[test]
+    fn generate_pseudo_legal_black_pawn_moves_double_push_opposed() {
+        assert_pseudo_legal_pawn_moves(
+            "8/3p4/8/3P4/8/8/8/8 b KQkq - 0 1", D6
         );
     }
 
