@@ -150,15 +150,27 @@ mod tests {
     }
 
     #[test]
-    fn en_passant_without_pawn() {
+    fn white_en_passant_without_pawn() {
         assert_assessment(
             "8/8/8/8/8/8/K7/7k w - a 0 1",
             EN_PASSANT_WITHOUT_PAWN);
     }
     #[test]
-    fn en_passant_square_occupied() {
+    fn black_en_passant_without_pawn() {
+        assert_assessment(
+            "8/8/8/8/8/8/K7/7k b - e 0 1",
+            EN_PASSANT_WITHOUT_PAWN);
+    }
+    #[test]
+    fn white_en_passant_square_occupied() {
         assert_assessment(
             "8/8/n7/p7/8/8/K7/7k w - a 0 1",
+            EN_PASSANT_SQUARE_OCCUPIED);
+    }
+    #[test]
+    fn black_en_passant_square_occupied() {
+        assert_assessment(
+            "8/8/8/8/4P3/4n3/K7/7k b - e 0 1",
             EN_PASSANT_SQUARE_OCCUPIED);
     }
 
