@@ -7,12 +7,12 @@ use std::str;
 
 impl BitBoard {
     pub fn print_fen(&self) -> String {
-        let mut sb = String::with_capacity(60);
+        let mut result = String::with_capacity(60);
         let mut file = 0;
         let mut gap = 0;
         for square in self.squares() {
             if file == 8 {
-                sb.push('/');
+                result.push('/');
                 file = 0;
             }
             file += 1;
@@ -20,17 +20,17 @@ impl BitBoard {
                 gap += 1;
             } else {
                 if gap > 0 {
-                    sb.push_str(format!("{}", gap).as_str());
+                    result.push_str(format!("{}", gap).as_str());
                     gap = 0;
                 }
-                sb.push(square.char())
+                result.push(square.char())
             }
             if file == 8 && gap > 0 {
-                sb.push_str(format!("{}", gap).as_str());
+                result.push_str(format!("{}", gap).as_str());
                 gap = 0;
             }
         }
-        sb
+        result
     }
 }
 
