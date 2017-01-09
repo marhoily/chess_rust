@@ -31,12 +31,11 @@ impl Position {
     pub fn pseudo_legal_pawn_moves(&self) -> Mask {
         if self.active == Color::White {
             self.pseudo_legal_pawn_moves_of::<White>().0
-        }
-        else {
+        } else {
             self.pseudo_legal_pawn_moves_of::<Black>().0
         }
     }
-    pub fn pseudo_legal_pawn_moves_of<S:Side>(&self) -> S::Mask {
+    pub fn pseudo_legal_pawn_moves_of<S: Side>(&self) -> S::Mask {
         let pawns = self.board.pawns::<S>();
         let empty_squares = !self.board.occupation();
         let attacks = pawns.attack();
@@ -187,27 +186,33 @@ mod test {
 
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_single_push() {
-        let p = Position::parse("8/8/8/3P4/8/8/8/8 w KQkq - 0 1");
-        let m = p.pseudo_legal_pawn_moves();
-        assert_eq!(m, D6);
+        assert_pseudo_legal_pawn_moves(
+            "8/8/8/3P4/8/8/8/8 w KQkq - 0 1", D6
+        );
     }
 
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_take_to_the_left() {
-        let p = Position::parse("8/8/2pp4/3P4/8/8/8/8 w KQkq - 0 1");
-        let m = p.pseudo_legal_pawn_moves();
-        assert_eq!(m, C6);
+        assert_pseudo_legal_pawn_moves(
+            "8/8/2pp4/3P4/8/8/8/8 w KQkq - 0 1", C6
+        );
     }
+
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_take_to_the_right() {
-        let p = Position::parse("8/8/3pp3/3P4/8/8/8/8 w KQkq - 0 1");
-        let m = p.pseudo_legal_pawn_moves();
-        assert_eq!(m, E6);
+        assert_pseudo_legal_pawn_moves(
+            "8/8/3pp3/3P4/8/8/8/8 w KQkq - 0 1", E6
+        );
     }
+
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_en_passant() {
-        let p = Position::parse("8/8/3p4/3P4/8/8/8/8 w KQkq e 0 1");
-        let m = p.pseudo_legal_pawn_moves();
-        assert_eq!(m, E6);
+        assert_pseudo_legal_pawn_moves(
+            "8/8/3p4/3P4/8/8/8/8 w KQkq e 0 1", E6
+        );
+    }
+
+    fn assert_pseudo_legal_pawn_moves(fen: &str, expected: Mask) {
+        assert_eq!(Position::parse(fen).pseudo_legal_pawn_moves(), expected);
     }
 }
