@@ -2,13 +2,10 @@ use super::*;
 
 impl BitBoard {
     pub fn is_attacked_by<S: Side>(&self, m: Mask) -> bool {
-        if self.pawns::<S>().attack().mask() & m != EMPTY {
-            return true
-        }
-        if self.knights::<S>().mask().knight_attacks() & m != EMPTY {
-            return true
-        }
-        false
+        self.pawns::<S>().attack().mask() & m != EMPTY ||
+            self.knights::<S>().mask().knight_attacks() & m != EMPTY ||
+            self.bishops::<S>().mask().bishop_attacks(self.occupation()) & m != EMPTY ||
+            self.rooks::<S>().mask().rook_attacks(self.occupation()) & m != EMPTY
     }
     pub fn is_check_to<S: Side>(&self) -> bool {
         self.is_attacked_by::<S::Opposite>(self.kings::<S>().mask())
@@ -33,6 +30,31 @@ mod tests {
     #[test]
     fn by_knight() {
         yes("8/8/8/8/4k3/2N5/8/8 b - - 0 1")
+    }
+
+    #[test]
+    fn by_bishop() {
+        yes("8/1B6/8/8/4k3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn bishop_is_blocked_with_white() {
+        no("8/1B6/8/3R4/4k3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn bishop_is_blocked_with_black() {
+        no("8/1B6/8/3r4/4k3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn by_rook() {
+        yes("8/8/8/8/1R2k3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn rook_is_blocked_with_white() {
+        no("8/8/8/8/1R1Bk3/8/8/8 b - - 0 1")
+    }
+    #[test]
+    fn rook_is_blocked_with_black() {
+        no("8/8/8/8/1R1bk3/8/8/8 b - - 0 1")
     }
 
     pub fn yes(fen: &str) {
