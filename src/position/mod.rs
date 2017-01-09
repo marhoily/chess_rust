@@ -30,11 +30,12 @@ impl Position {
     }
     pub fn generate_pseudo_legal_pawn_moves<S:Side>(&self) -> S::Mask {
         let pawns = self.board.pawns::<S>();
+        let empty_squares = !self.board.occupation();
         let attacks = pawns.attack();
         let non_enp_captures = attacks.filter(self.board.occupation_gen::<S::Opposite>());
         let enp_captures = attacks.filter(self.en_passant_take_square_mask::<S>());
-        let single_pushes = pawns.advance().filter(!self.board.occupation());
-        let double_pushes = single_pushes.advance().filter(!self.board.occupation() & _4);
+        let single_pushes = pawns.advance().filter(empty_squares);
+        let double_pushes = single_pushes.advance().filter(empty_squares & _4);
         enp_captures
             .and(non_enp_captures)
             .and(single_pushes)
