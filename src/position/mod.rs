@@ -13,10 +13,10 @@ use piece::*;
 
 #[derive(Eq, Debug, Copy, Clone, PartialEq)]
 pub struct Position {
-    board: BitBoard,
-    active: Color,
-    available: Castle,
-    en_passant: Option<File>,
+    pub board: BitBoard,
+    pub active: Color,
+    pub available: Castle,
+    pub en_passant: Option<File>,
 }
 
 impl Position {

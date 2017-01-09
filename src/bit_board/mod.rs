@@ -110,6 +110,7 @@ impl BitBoard {
 }
 
 pub mod fen;
+pub mod attacks;
 
 impl Display for BitBoard {
     fn fmt(&self, f: &mut Formatter) -> Result {
