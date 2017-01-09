@@ -95,23 +95,23 @@ impl BitBoard {
     }
     pub fn occupation_of(&self, color: Color) -> Mask {
         if color == Color::White {
-            self.white_occupation()
+            self.occupation_gen::<White>().mask()
         } else {
-            self.black_occupation()
+            self.occupation_gen::<Black>().mask()
         }
     }
-    pub fn occupation1<S: Side>(&self) -> S::Mask {
+    pub fn occupation_gen<S: Side>(&self) -> S::Mask {
         S::Mask::wrap(self.0[S::RANGE].iter().fold(EMPTY, |acc, &x| acc | x))
     }
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
-    pub fn white_occupation(&self) -> Mask {
-        self.0[..6].iter().fold(EMPTY, |acc, &x| acc | x)
-    }
-    pub fn black_occupation(&self) -> Mask {
-        self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
-    }
+//    pub fn white_occupation(&self) -> Mask {
+//        self.0[..6].iter().fold(EMPTY, |acc, &x| acc | x)
+//    }
+//    pub fn black_occupation(&self) -> Mask {
+//        self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
+//    }
     pub fn white_attacks(&self) -> Mask {
         let stoppers = self.occupation();
         let a = self.pawns::<White>().pawn_attacks_and_pushes(stoppers).0;
@@ -190,6 +190,7 @@ mod test {
     use rand::*;
     use mask::Mask;
     use board88::Board88;
+    use side::*;
 
     #[test]
     fn get_piece() {
@@ -221,14 +222,14 @@ mod test {
 
     #[test]
     fn black_occupation() {
-        assert_eq!(sample_with_one_of_each_kind().black_occupation().dump(),
+        assert_eq!(sample_with_one_of_each_kind().occupation_gen::<Black>().0.dump(),
                    "|@@@@@@^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
                     .|^^^^^^^^|...|^^^^^^^^|...");
     }
 
     #[test]
     fn white_occupation() {
-        assert_eq!(sample_with_one_of_each_kind().white_occupation().dump(),
+        assert_eq!(sample_with_one_of_each_kind().occupation_gen::<White>().0.dump(),
                    "|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
                     .|^^^^^^^^|...|@@@@@@^^|...");
     }
