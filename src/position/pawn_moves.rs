@@ -43,7 +43,6 @@ impl Position {
 #[cfg(test)]
 mod test {
     use super::*;
-    use side::*;
 
     #[test]
     fn generate_pseudo_legal_white_pawn_moves_single_push() {

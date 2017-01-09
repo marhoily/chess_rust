@@ -120,7 +120,6 @@ named!(pub parse_position<&[u8], Position, PositionError>,
 #[cfg(test)]
 mod test {
     use super::*;
-    use side::*;
 
     #[test]
     fn correct_fen() {

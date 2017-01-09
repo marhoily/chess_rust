@@ -104,7 +104,6 @@ named!(pub parse_move(&[u8]) -> Move,
 mod test {
     use square::*;
     use super::*;
-    use kind::*;
 
     #[test]
     fn usual_move() {

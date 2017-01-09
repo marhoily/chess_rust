@@ -1,18 +1,15 @@
 // #![feature(question_mark)]
-#![warn(unused_imports)]
 #![warn(
     missing_debug_implementations,
     missing_copy_implementations,
-// trivial_casts,
+    // trivial_casts,
     trivial_numeric_casts,
     unused_import_braces,
-    unused_qualifications
- )]
+    unused_qualifications,
+    unused_imports
+)]
 
-#![feature(test)]
-#![feature(associated_consts)]
-
-#![feature(plugin)]
+#![feature(test, associated_consts, plugin)]
 #![plugin(clippy)]
 
 extern crate test;

@@ -137,7 +137,6 @@ mod test {
     use std::iter::*;
     use rand::*;
     use mask::Mask;
-    use side::*;
 
     #[test]
     fn get_piece() {
