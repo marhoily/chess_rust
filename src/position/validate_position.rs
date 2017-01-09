@@ -16,6 +16,8 @@ bitflags! {
         const EN_PASSANT_SQUARE_OCCUPIED = 1 << 7,
         const CASTLING_WITHOUT_ROOK_A1 = 1 << 8,
         const CASTLING_WITHOUT_ROOK_H1 = 1 << 9,
+        const CASTLING_WITHOUT_ROOK_A8 = 1 << 10,
+        const CASTLING_WITHOUT_ROOK_H8 = 1 << 11,
         const WTF= 1 << 20,
     }
 }
@@ -99,6 +101,16 @@ impl Position {
         if self.available.contains(castle::WK) {
             if self.board.rooks::<White>().0 & H1 == EMPTY {
                 return CASTLING_WITHOUT_ROOK_H1
+            }
+        }
+        if self.available.contains(castle::BQ) {
+            if self.board.rooks::<Black>().0 & A8 == EMPTY {
+                return CASTLING_WITHOUT_ROOK_A8
+            }
+        }
+        if self.available.contains(castle::BK) {
+            if self.board.rooks::<Black>().0 & H8 == EMPTY {
+                return CASTLING_WITHOUT_ROOK_H8
             }
         }
         VALID
@@ -191,10 +203,28 @@ mod tests {
     }
 
     #[test]
-    fn valid_castling() {
+    fn valid_all_castling_available() {
         assert_assessment(
             "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
             VALID);
+    }
+    #[test]
+    fn valid_no_castling_available_no_rooks() {
+        assert_assessment(
+            "4k3/8/8/8/8/8/8/4K3 w - - 0 1",
+            VALID);
+    }
+    #[test]
+    fn castling_without_rook_h8() {
+        assert_assessment(
+            "r3k3/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+            CASTLING_WITHOUT_ROOK_H8);
+    }
+    #[test]
+    fn castling_without_rook_a8() {
+        assert_assessment(
+            "4k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+            CASTLING_WITHOUT_ROOK_A8);
     }
     #[test]
     fn castling_without_rook_h1() {
