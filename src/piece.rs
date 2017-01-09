@@ -82,7 +82,6 @@ static SYMBOLS: &'static [u8; 12] = b"PNBRQKpnbrqk";
 #[cfg(test)]
 mod test {
     use super::*;
-    use kind::*;
     use itertools::*;
 
     #[test]

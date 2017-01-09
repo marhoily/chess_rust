@@ -1,5 +1,4 @@
 use mask::*;
-use masks::*;
 
 #[derive(Eq, Copy, Clone, Debug, Default, PartialEq)]
 pub struct WhiteMask(pub Mask);

@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 #![allow(collapsible_if)]
 
 use castle;
@@ -14,7 +13,6 @@ use bit_board::fen;
 use self::wrappers::*;
 use piece::*;
 use moves::Move;
-use sided_mask::*;
 
 #[derive(Eq, Debug, Copy, Clone, PartialEq)]
 pub struct Position {
@@ -82,6 +80,7 @@ impl Position {
     }
 }
 
+mod validate_position;
 mod pawn_moves;
 
 use std::fmt::{Display, Formatter, Result};

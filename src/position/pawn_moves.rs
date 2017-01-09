@@ -1,16 +1,5 @@
 use super::*;
-use castle;
-use castle::Castle;
-use bit_board::BitBoard;
 use color::Color;
-use side::*;
-use mask::*;
-use mask::masks::*;
-use file::File;
-use kind::*;
-use bit_board::fen;
-use piece::*;
-use moves::Move;
 use sided_mask::*;
 
 impl Position {

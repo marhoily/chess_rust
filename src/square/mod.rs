@@ -65,7 +65,6 @@ named!(pub parse_square(&[u8]) -> Square,
 #[cfg(test)]
 mod test {
     use super::*;
-    use color::Color::*;
     use itertools::*;
 
     #[test]

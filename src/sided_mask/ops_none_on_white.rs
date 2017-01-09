@@ -40,10 +40,8 @@ impl BitAnd<BlackMask> for Mask {
 
 #[cfg(test)]
 mod tests {
-    use mask::*;
     use mask::masks::*;
     use super::*;
-    use super::super::*;
 
     pub fn none() -> Mask {
         E

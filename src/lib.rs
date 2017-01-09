@@ -1,5 +1,5 @@
 // #![feature(question_mark)]
-#![allow(unused_imports)]
+#![warn(unused_imports)]
 #![warn(
     missing_debug_implementations,
     missing_copy_implementations,
@@ -47,17 +47,4 @@ pub mod castle;
 pub mod position;
 pub mod analysis;
 
-use file::*;
-use rank::*;
-use color::*;
-use side::*;
-use sided_mask::*;
-use square::*;
-use kind::*;
-use piece::*;
-use mask::*;
-use bit_board::*;
-use moves::*;
-// use castle::*;
-use position::*;
-use analysis::*;
+mod check_namespaces;

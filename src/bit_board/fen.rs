@@ -1,5 +1,4 @@
 use piece::*;
-use mask::masks;
 use super::*;
 use nom::IResult;
 use nom::IResult::*;

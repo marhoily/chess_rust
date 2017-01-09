@@ -50,7 +50,6 @@ named!(pub parse_color(&[u8]) -> Color,
 mod test {
     use super::*;
     use super::Color::*;
-    use castle::*;
 
     #[test]
     fn color_invert() {

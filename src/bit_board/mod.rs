@@ -135,11 +135,8 @@ impl<'a> Iterator for SquareIter<'a> {
 mod test {
     use super::*;
     use std::iter::*;
-    use piece::*;
-    use mask::masks::*;
     use rand::*;
     use mask::Mask;
-    use board88::Board88;
     use side::*;
 
     #[test]
