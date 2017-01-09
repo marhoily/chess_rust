@@ -117,7 +117,13 @@ mod test {
             "8/3p4/8/3P4/8/8/8/8 b KQkq - 0 1", D6
         );
     }
-
+    #[test]
+    fn generate_pseudo_legal_white_pawn_moves_random() {
+        assert_pseudo_legal_pawn_moves(
+            "N4p2/P3P2P/8/8/p1p3kp/1P4P1/Kp4p1/P6P w - - 0 1",
+            E8 |F8|H8|A4|B4|C4|H4|B2|G2|H2
+        );
+    }
     fn assert_pseudo_legal_pawn_moves(fen: &str, expected: Mask) {
         assert_eq!(Position::parse(fen).pseudo_legal_pawn_moves(), expected);
     }

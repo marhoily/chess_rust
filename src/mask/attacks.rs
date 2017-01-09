@@ -2,17 +2,6 @@ use super::*;
 use super::masks::*;
 
 impl Mask {
-    pub fn white_pawn_double_pushes(self, stoppers: Mask) -> Mask {
-        let first_push = (self & _2).shift_north();
-        first_push | (first_push & !stoppers).shift_north()
-    }
-    pub fn white_pawn_attacks_and_pushes(self, stoppers: Mask) -> Mask {
-        self.shift_north_east() | self.shift_north_west() | self.shift_north() |
-        self.white_pawn_double_pushes(stoppers)
-    }
-    pub fn black_pawn_attacks(self) -> Mask {
-        self.shift_south_east() | self.shift_south_west()
-    }
     pub fn knight_attacks(self) -> Mask {
         let x = self;
         let a = ((x << 17) | (x >> 15)) & !A;
@@ -46,49 +35,6 @@ impl Mask {
 #[cfg(test)]
 mod tests {
     use super::super::masks::*;
-
-    #[test]
-    fn white_pawn_attacks() {
-        assert_eq!((A7 | E7 | F8 | H7 | B3 | G3 | A1 | H1)
-                       .white_pawn_attacks_and_pushes(EMPTY)
-                       .dump(),
-                   "|@@^@@@@@|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |@@@^^@@@|...\
-                    |^^^^^^^^|...\
-                    |@@^^^^@@|...\
-                    |^^^^^^^^|...");
-    }
-    #[test]
-    fn white_pawn_attacks_() {
-        assert_eq!((B2 | F2)
-                       .white_pawn_attacks_and_pushes(B3 | F4)
-                       .dump(),
-                   "|^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^@^^|...\
-                    |@@@^@@@^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...");
-    }
-    #[test]
-    fn black_pawn_attacks() {
-        assert_eq!((A2 | E2 | F1 | H2 | B6 | G6 | A8 | H8)
-                       .black_pawn_attacks()
-                       .dump(),
-                   "|^^^^^^^^|...\
-                    |^@^^^^@^|...\
-                    |^^^^^^^^|...\
-                    |@^@^^@^@|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^^^^^^^^|...\
-                    |^@^@^@@^|...");
-    }
 
     #[test]
     fn knight_attacks() {
