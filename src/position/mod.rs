@@ -77,7 +77,8 @@ impl Position {
             return self.is_pseudo_legal_pawn_move(from, to);
         }
 
-        self.board.attacks_of(self.active).contains(to)
+        // determine which non-pawn piece this is and check it
+        true
     }
 }
 

@@ -19,8 +19,6 @@ pub trait SidedMask : Into<Mask>
     fn mask(&self) -> Mask;
     fn advance(&self) -> Self;
     fn attack(&self) -> Self;
-    fn pawn_attacks_and_pushes(self, stoppers: Mask) -> Self;
-    fn pawn_double_pushes(self, stoppers: Mask) -> Self;
 
     fn filter<M: Into<Mask>>(&self, f: M) -> Self {
         Self::wrap(self.mask() & f.into())
@@ -49,13 +47,7 @@ impl SidedMask for WhiteMask {
     fn wrap(m: Mask) -> Self {
         WhiteMask(m)
     }
-    fn pawn_attacks_and_pushes(self, stoppers: Mask) -> Self {
-        self.attack() | self.advance() | self.pawn_double_pushes(stoppers)
-    }
-    fn pawn_double_pushes(self, stoppers: Mask) -> Self {
-        let first_push = (self.0 & _2).shift_north();
-        WhiteMask(first_push | (first_push & !stoppers).shift_north())
-    }
+
     fn mask(&self) -> Mask {
         self.0
     }
@@ -69,12 +61,6 @@ impl SidedMask for BlackMask {
     }
     fn wrap(m: Mask) -> Self {
         BlackMask(m)
-    }
-    fn pawn_attacks_and_pushes(self, stoppers: Mask) -> Self {
-        unimplemented!()
-    }
-    fn pawn_double_pushes(self, stoppers: Mask) -> Self {
-        unimplemented!()
     }
     fn mask(&self) -> Mask {
         self.0

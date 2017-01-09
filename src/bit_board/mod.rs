@@ -89,24 +89,6 @@ impl BitBoard {
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
-    pub fn attacks<S : Side>(&self) -> Mask {
-        let stoppers = self.occupation();
-        let a = self.pawns::<S>().pawn_attacks_and_pushes(stoppers).mask();
-        let b = self.knights::<S>().mask().knight_attacks();
-        let c = self.bishops::<S>().mask().bishop_attacks(stoppers);
-        let d = self.rooks::<S>().mask().rook_attacks(stoppers);
-        let e = self.queens::<S>().mask().queen_attacks(stoppers);
-        let f = self.kings::<S>().mask().king_attacks();
-        a | b | c | d | e | f
-    }
-
-    pub fn attacks_of(&self, color: Color) -> Mask {
-        if color == Color::White {
-            self.attacks::<White>()
-        } else {
-            self.attacks::<Black>()
-        }
-    }
     pub fn castling_move_masks<S: Side>(&self) -> Mask {
         EMPTY
     }

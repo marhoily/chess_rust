@@ -41,25 +41,23 @@ impl BitAnd<BlackMask> for Mask {
 #[cfg(test)]
 mod tests {
     use mask::*;
+    use mask::masks::*;
     use super::*;
     use super::super::*;
 
     pub fn none() -> Mask {
-        Mask::new(0)
+        E
     }
     pub fn white() -> WhiteMask {
-        WhiteMask::wrap(none())
-    }
-    pub fn is_mask(m : Mask) {
-
+        WhiteMask::wrap(_4)
     }
 
     #[test]
     fn white_bit_or_none() {
-        is_mask(white() | none());
+        assert_eq!(white() | none(), E | _4);
     }
     #[test]
     fn none_bit_or_white() {
-        is_mask(none() | white());
+        assert_eq!(none() | white(), E | _4);
     }
 }
