@@ -107,7 +107,7 @@ impl BitBoard {
             self.attacks::<Black>()
         }
     }
-    pub fn white_castling_move_masks(&self) -> Mask {
+    pub fn castling_move_masks<S: Side>(&self) -> Mask {
         EMPTY
     }
     pub fn swap_colors(&self) -> Self {
