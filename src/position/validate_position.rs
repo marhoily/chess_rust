@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+#![allow(dead_code, collapsible_if)]
 #![allow(trivial_casts, trivial_numeric_casts)]
 
 use super::*;
@@ -7,13 +7,15 @@ bitflags! {
     pub flags Assessment: u32 {
         const VALID = 0 ,
         const HAS_NO_WHITE_KING = 1 << 0,
-        const HAS_MORE_THAN_ONE_WHITE_KING= 1 << 1,
-        const HAS_NO_BLACK_KING= 1 << 2,
-        const HAS_MORE_THAN_ONE_BLACK_KING= 1 << 3,
-        const WHITE_PAWNS_ON_PROMOTION_RANK= 1 << 4,
-        const BLACK_PAWNS_ON_PROMOTION_RANK= 1 << 5,
-        const EN_PASSANT_WITHOUT_PAWN= 1 << 6,
-        const EN_PASSANT_SQUARE_OCCUPIED= 1 << 7,
+        const HAS_MORE_THAN_ONE_WHITE_KING = 1 << 1,
+        const HAS_NO_BLACK_KING = 1 << 2,
+        const HAS_MORE_THAN_ONE_BLACK_KING = 1 << 3,
+        const WHITE_PAWNS_ON_PROMOTION_RANK = 1 << 4,
+        const BLACK_PAWNS_ON_PROMOTION_RANK = 1 << 5,
+        const EN_PASSANT_WITHOUT_PAWN = 1 << 6,
+        const EN_PASSANT_SQUARE_OCCUPIED = 1 << 7,
+        const CASTLING_WITHOUT_ROOK_A1 = 1 << 8,
+        const CASTLING_WITHOUT_ROOK_H1 = 1 << 9,
         const WTF= 1 << 20,
     }
 }
@@ -26,7 +28,8 @@ impl Position {
             self.has_no_white_king() |
             self.has_more_than_one_black_king() |
             self.has_no_black_king() |
-            self.validate_en_passant()
+            self.validate_en_passant() |
+            self.validate_castling()
     }
     fn white_pawns_on_promotion_rank(&self) -> Assessment {
         if self.board.pawns::<White>().0 & _8 != EMPTY {
@@ -83,6 +86,19 @@ impl Position {
             let target_square = Mask::from_file_rank(file, target_rank);
             if self.board.get_piece(target_square) != VOID {
                 return EN_PASSANT_SQUARE_OCCUPIED
+            }
+        }
+        VALID
+    }
+    fn validate_castling(&self) -> Assessment {
+        if self.available.contains(castle::WQ) {
+            if self.board.rooks::<White>().0 & A1 == EMPTY {
+                return CASTLING_WITHOUT_ROOK_A1
+            }
+        }
+        if self.available.contains(castle::WK) {
+            if self.board.rooks::<White>().0 & H1 == EMPTY {
+                return CASTLING_WITHOUT_ROOK_H1
             }
         }
         VALID
@@ -173,6 +189,26 @@ mod tests {
             "8/8/8/8/4P3/4n3/K7/7k b - e 0 1",
             EN_PASSANT_SQUARE_OCCUPIED);
     }
+
+    #[test]
+    fn valid_castling() {
+        assert_assessment(
+            "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+            VALID);
+    }
+    #[test]
+    fn castling_without_rook_h1() {
+        assert_assessment(
+            "r3k2r/8/8/8/8/8/8/R3K3 w KQkq - 0 1",
+            CASTLING_WITHOUT_ROOK_H1);
+    }
+    #[test]
+    fn castling_without_rook_a1() {
+        assert_assessment(
+            "r3k2r/8/8/8/8/8/8/4K2R w KQkq - 0 1",
+            CASTLING_WITHOUT_ROOK_A1);
+    }
+
 
     fn assert_assessment(fen: &str, expected: Assessment) {
         assert_eq!(Position::parse(fen).validate(), expected);
