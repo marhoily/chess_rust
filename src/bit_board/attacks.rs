@@ -5,9 +5,12 @@ impl BitBoard {
         if self.pawns::<S>().attack().mask() & m != EMPTY {
             return true
         }
+        if self.knights::<S>().mask().knight_attacks() & m != EMPTY {
+            return true
+        }
         false
     }
-    pub fn is_check<S: Side>(&self) -> bool {
+    pub fn is_check_to<S: Side>(&self) -> bool {
         self.is_attacked_by::<S::Opposite>(self.kings::<S>().mask())
     }
 }
@@ -27,6 +30,11 @@ mod tests {
         yes("8/8/8/8/4k3/3P4/8/8 b - - 0 1")
     }
 
+    #[test]
+    fn by_knight() {
+        yes("8/8/8/8/4k3/2N5/8/8 b - - 0 1")
+    }
+
     pub fn yes(fen: &str) {
         assert_eq!(check(fen), true);
     }
@@ -38,9 +46,9 @@ mod tests {
     pub fn check(fen: &str) -> bool {
         let p = Position::parse(fen);
         if p.active == Color::White {
-            p.board.is_check::<White>()
+            p.board.is_check_to::<White>()
         } else {
-            p.board.is_check::<Black>()
+            p.board.is_check_to::<Black>()
         }
     }
 }

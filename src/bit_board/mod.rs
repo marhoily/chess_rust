@@ -176,9 +176,16 @@ mod test {
 
     #[test]
     fn white_occupation() {
-        assert_eq!(sample_with_one_of_each_kind().occupation_gen::<White>().0.dump(),
-                   "|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|...|^^^^^^^^|..\
-                    .|^^^^^^^^|...|@@@@@@^^|...");
+        assert_eq!(sample_with_one_of_each_kind()
+            .occupation_gen::<White>().0.dump(),
+            "|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|^^^^^^^^|..\
+            .|@@@@@@^^|...");
     }
 
     fn sample_with_one_of_each_kind() -> BitBoard {
