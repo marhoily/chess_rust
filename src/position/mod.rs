@@ -32,7 +32,7 @@ impl Position {
         let pawns = self.board.pawns::<S>();
         let attacks = pawns.attack();
         let non_enp_captures = attacks.filter(self.board.occupation_gen::<S::Opposite>());
-        let enp_captures = attacks.filter(self.en_passant_take_square_mask());
+        let enp_captures = attacks.filter(self.en_passant_take_square_mask::<S>());
         let single_pushes = pawns.advance().filter(!self.board.occupation());
         let double_pushes = single_pushes.advance().filter(!self.board.occupation() & _4);
         enp_captures
@@ -41,7 +41,7 @@ impl Position {
             .and(double_pushes)
     }
 
-    pub fn en_passant_take_square_mask(&self) -> Mask {
+    pub fn en_passant_take_square_mask<S: Side>(&self) -> Mask {
         self.en_passant.map_or(EMPTY,
                                |file| Mask::from_file_rank(file, self.active.en_passant_rank()))
     }
@@ -161,7 +161,7 @@ mod test {
     #[test]
     fn en_passant_file_mask_dash() {
         let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq - 0 1");
-        assert_eq!(p.en_passant_take_square_mask().dump(),
+        assert_eq!(p.en_passant_take_square_mask::<White>().dump(),
         "|^^^^^^^^|..\
         .|^^^^^^^^|..\
         .|^^^^^^^^|..\
@@ -175,7 +175,7 @@ mod test {
     #[test]
     fn en_passant_file_mask_a() {
         let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq a 0 1");
-        assert_eq!(p.en_passant_take_square_mask().dump(),
+        assert_eq!(p.en_passant_take_square_mask::<White>().dump(),
         "|^^^^^^^^|..\
         .|^^^^^^^^|..\
         .|@^^^^^^^|..\
@@ -188,14 +188,14 @@ mod test {
 
     #[test]
     fn en_passant_file_mask_e() {
-        let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq e 0 1");
-        assert_eq!(p.en_passant_take_square_mask().dump(),
+        let p = Position::parse("8/8/8/8/8/8/8/8 b KQkq e 0 1");
+        assert_eq!(p.en_passant_take_square_mask::<Black>().dump(),
         "|^^^^^^^^|..\
         .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
+        .|^^^^^^^^|..\
         .|^^^^@^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|..\
-        .|^^^^^^^^|..\
         .|^^^^^^^^|..\
         .|^^^^^^^^|...");
     }
