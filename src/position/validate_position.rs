@@ -18,6 +18,8 @@ bitflags! {
         const CASTLING_WITHOUT_ROOK_H1 = 1 << 9,
         const CASTLING_WITHOUT_ROOK_A8 = 1 << 10,
         const CASTLING_WITHOUT_ROOK_H8 = 1 << 11,
+        const CASTLING_WITHOUT_KING_E1 = 1 << 12,
+        const CASTLING_WITHOUT_KING_E8 = 1 << 13,
         const WTF= 1 << 20,
     }
 }
@@ -111,6 +113,17 @@ impl Position {
         if self.available.contains(castle::BK) {
             if self.board.rooks::<Black>().0 & H8 == EMPTY {
                 return CASTLING_WITHOUT_ROOK_H8
+            }
+        }
+
+        if self.available.intersects(castle::W) {
+            if self.board.kings::<White>().0 & E1 == EMPTY {
+                return CASTLING_WITHOUT_KING_E1
+            }
+        }
+        if self.available.intersects(castle::B) {
+            if self.board.kings::<Black>().0 & E8 == EMPTY {
+                return CASTLING_WITHOUT_KING_E8
             }
         }
         VALID
@@ -207,6 +220,18 @@ mod tests {
         assert_assessment(
             "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
             VALID);
+    }
+    #[test]
+    fn castling_without_king_e1() {
+        assert_assessment(
+            "r3k2r/8/8/8/8/8/8/R2K3R w KQkq - 0 1",
+            CASTLING_WITHOUT_KING_E1);
+    }
+    #[test]
+    fn castling_without_king_e8() {
+        assert_assessment(
+            "r2k3r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+            CASTLING_WITHOUT_KING_E8);
     }
     #[test]
     fn valid_no_castling_available_no_rooks() {
