@@ -71,6 +71,13 @@ mod test {
     }
 
     #[test]
+    fn generate_pseudo_legal_black_pawn_moves_take_to_the_left() {
+        assert_pseudo_legal_pawn_moves(
+            "8/8/3p4/2PP4/8/8/8/8 b KQkq - 0 1", C5
+        );
+    }
+
+    #[test]
     fn generate_pseudo_legal_white_pawn_moves_take_to_the_right() {
         assert_pseudo_legal_pawn_moves(
             "8/8/3pp3/3P4/8/8/8/8 w KQkq - 0 1", E6

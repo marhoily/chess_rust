@@ -134,7 +134,7 @@ mod test {
     fn en_passant_is_dash() {
         assert_eq!(format!("{}",
                            Position::parse("8/8/8/8/8/8/8/8 w - - 0 1")),
-        "8/8/8/8/8/8/8/8 w KQkq -");
+        "8/8/8/8/8/8/8/8 w - -");
     }
 
     #[test]
