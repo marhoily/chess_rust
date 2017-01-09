@@ -133,25 +133,25 @@ mod test {
     #[test]
     fn en_passant_is_dash() {
         assert_eq!(format!("{}",
-                           Position::parse("8/8/8/8/8/8/8/8 w KQkq - 0 1")),
+                           Position::parse("8/8/8/8/8/8/8/8 w - - 0 1")),
         "8/8/8/8/8/8/8/8 w KQkq -");
     }
 
     #[test]
     fn en_passant_file_mask_dash() {
-        let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq - 0 1");
+        let p = Position::parse("8/8/8/8/8/8/8/8 w - - 0 1");
         assert_eq!(p.en_passant_take_square_mask::<White>(), EMPTY);
     }
 
     #[test]
     fn en_passant_file_mask_a() {
-        let p = Position::parse("8/8/8/8/8/8/8/8 w KQkq a 0 1");
+        let p = Position::parse("8/8/8/8/8/8/8/8 w - a 0 1");
         assert_eq!(p.en_passant_take_square_mask::<White>(), A6);
     }
 
     #[test]
     fn en_passant_file_mask_e() {
-        let p = Position::parse("8/8/8/8/8/8/8/8 b KQkq e 0 1");
+        let p = Position::parse("8/8/8/8/8/8/8/8 b - e 0 1");
         assert_eq!(p.en_passant_take_square_mask::<Black>(), E3);
     }
 }
