@@ -106,12 +106,6 @@ impl BitBoard {
     pub fn occupation(&self) -> Mask {
         self.0.iter().fold(EMPTY, |acc, &x| acc | x)
     }
-//    pub fn white_occupation(&self) -> Mask {
-//        self.0[..6].iter().fold(EMPTY, |acc, &x| acc | x)
-//    }
-//    pub fn black_occupation(&self) -> Mask {
-//        self.0[6..].iter().fold(EMPTY, |acc, &x| acc | x)
-//    }
     pub fn white_attacks(&self) -> Mask {
         let stoppers = self.occupation();
         let a = self.pawns::<White>().pawn_attacks_and_pushes(stoppers).0;
