@@ -1,6 +1,6 @@
 #![allow(collapsible_if)]
 
-use super::root::*;
+use super::*;
 use castle;
 use color::Color;
 use moves::Move;
@@ -75,6 +75,10 @@ mod tests {
     #[test]
     fn source_square_must_not_be_vacant() {
         no(Move::new(E2, E4), "8/8/8/8/8/8/8/8 w - - 0 1");
+    }
+    #[test]
+    fn check_turn() {
+        no(Move::new(A2, A4), "8/8/8/8/8/8/P7/8 b - - 0 1");
     }
 
     fn yes(m: Move, fen: &str) {
