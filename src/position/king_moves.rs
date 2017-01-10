@@ -1,5 +1,7 @@
-use super::*;
+use super::root::*;
 use color::Color;
+use side::*;
+use mask::*;
 use sided_mask::*;
 
 impl Position {

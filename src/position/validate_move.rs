@@ -1,9 +1,11 @@
 #![allow(collapsible_if)]
 
-use super::*;
+use super::root::*;
 use castle;
 use color::Color;
 use moves::Move;
+use piece::*;
+use kind::*;
 
 impl Position {
     pub fn is_pseudo_legal(&self, mv: Move) -> bool {
