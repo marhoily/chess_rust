@@ -19,6 +19,7 @@ impl Position {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mask::masks::*;
 
     #[test]
     fn pseudo_legal_white_king_moves_center() {

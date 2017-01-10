@@ -2,6 +2,7 @@
 #![allow(trivial_casts, trivial_numeric_casts)]
 
 use super::*;
+use mask::masks::*;
 
 bitflags! {
     pub flags Assessment: u32 {

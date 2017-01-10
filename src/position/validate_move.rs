@@ -58,3 +58,32 @@ impl Position {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use moves::*;
+    use square::*;
+
+    #[test]
+    fn valid_pawn_move() {
+        yes(Move::new(A2, A4), "8/8/8/8/8/8/P7/8 w - - 0 1");
+    }
+
+    #[test]
+    fn source_square_must_not_be_vacant() {
+        no(Move::new(E2, E4), "8/8/8/8/8/8/8/8 w - - 0 1");
+    }
+
+    fn yes(m: Move, fen: &str) {
+        assert_eq!(test(fen, m), true)
+    }
+
+    fn no(m: Move, fen: &str) {
+        assert_eq!(test(fen, m), false)
+    }
+
+    fn test(fen: &str, m: Move) -> bool {
+        Position::parse(fen).is_pseudo_legal(m)
+    }
+}

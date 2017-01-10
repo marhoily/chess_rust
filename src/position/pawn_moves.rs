@@ -1,6 +1,7 @@
 use super::*;
 use color::Color;
 use sided_mask::*;
+use mask::masks::*;
 
 impl Position {
     pub fn pseudo_legal_pawn_moves(&self) -> Mask {

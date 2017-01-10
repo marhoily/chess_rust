@@ -4,7 +4,6 @@ use bit_board::BitBoard;
 use color::Color;
 use side::*;
 use mask::*;
-use mask::masks::*;
 use file::File;
 use kind::*;
 use bit_board::fen;
@@ -67,6 +66,7 @@ named!(pub parse_position<&[u8], Position, PositionError>,
 #[cfg(test)]
 mod test {
     use super::*;
+    use mask::masks::*;
 
     #[test]
     fn correct_fen() {
