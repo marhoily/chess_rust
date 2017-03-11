@@ -18,7 +18,7 @@ impl Kind {
         self.0
     }
     pub fn of(self, color: Color) -> Piece {
-        debug_assert!(self != UNKNOWN);
+        debug_assert_ne!(self, UNKNOWN);
         if color == Color::White {
             Piece::new(self.0)
         } else {
@@ -26,7 +26,7 @@ impl Kind {
         }
     }
     pub fn char(self) -> char {
-        debug_assert!(self != UNKNOWN, "There's no symbol defined for UNKNOWN");
+        debug_assert_ne!(self, UNKNOWN, "There's no symbol defined for UNKNOWN");
         SYMBOLS[self.0 as usize] as char
     }
 }

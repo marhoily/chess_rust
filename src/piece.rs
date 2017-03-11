@@ -30,7 +30,7 @@ impl Piece {
         }
     }
     pub fn char(self) -> char {
-        debug_assert!(self != VOID, "attempt to VOID.char()");
+        debug_assert_ne!(self, VOID, "attempt to VOID.char()");
         SYMBOLS[self.0 as usize] as char
     }
 }

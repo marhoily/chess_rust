@@ -30,7 +30,7 @@ impl Square88 {
     }
     pub fn new(bits: u8) -> Self {
         debug_assert!(bits < 120, "is not a valid square number");
-        debug_assert!(bits & 0x88 != 0, "is not a valid square number");
+        debug_assert_ne!(bits & 0x88, 0, "is not a valid square number");
         Square88(bits)
     }
     pub fn from(f: File, r: Rank) -> Self {
