@@ -1,5 +1,3 @@
-#![allow(unused_qualifications)]
-
 use kind::*;
 use square::*;
 use castle::Castle;
@@ -13,6 +11,7 @@ pub struct Move {
     pub promote: Kind,
     pub castle: Castle,
 }
+
 const CASTLE_Q: Move = Move {
     from: UNDEFINED_SQUARE,
     to: UNDEFINED_SQUARE,
@@ -52,7 +51,7 @@ impl Move {
 impl Display for Move {
     fn fmt(&self, f: &mut Formatter) -> Result {
         if self.castle != castle::NONE {
-            return write!(f, "{}", if self.castle ==castle::Q {
+            return write!(f, "{}", if self.castle == castle::Q {
                 "O-O-O"
             } else {
                 "O-O"
@@ -67,37 +66,37 @@ impl Display for Move {
 }
 
 named!(parse_promotion(&[u8]) -> Kind,
-    complete!(chain!(
-        char!('=') ~
-        result: alt!(
-            value!(KNIGHT, char!('N')) |
-            value!(BISHOP, char!('B')) |
-            value!(ROOK, char!('R')) |
-            value!(QUEEN, char!('Q')) ),
-    || result)));
+complete!(chain!(
+    char!('=') ~
+    result: alt!(
+        value!(KNIGHT, char!('N')) |
+        value!(BISHOP, char!('B')) |
+        value!(ROOK, char!('R')) |
+        value!(QUEEN, char!('Q')) ),
+|| result)));
 
 named!(parse_straight(&[u8]) -> Move,
-    chain!(
-        from: parse_square ~
-        alt!(char!('-') | char!(':')) ? ~
-        to: parse_square ~
-        promotion: opt!(parse_promotion),
-        || Move::promote(from, to, promotion
-                .unwrap_or(UNKNOWN)))
-    );
+chain!(
+    from: parse_square ~
+    alt!(char!('-') | char!(':')) ? ~
+    to: parse_square ~
+    promotion: opt!(parse_promotion),
+    || Move::promote(from, to, promotion
+            .unwrap_or(UNKNOWN)))
+);
 
 named!(parse_castle(&[u8]) -> Move,
-    alt!(
-        complete!(value!(CASTLE_Q, tag!("o-o-o"))) |
-        complete!(value!(CASTLE_Q, tag!("0-0-0"))) |
-        complete!(value!(CASTLE_Q, tag!("O-O-O"))) |
-        value!(CASTLE_K, tag!("o-o")) |
-        value!(CASTLE_K, tag!("0-0")) |
-        value!(CASTLE_K, tag!("O-O"))
-    ));
+alt!(
+    complete!(value!(CASTLE_Q, tag!("o-o-o"))) |
+    complete!(value!(CASTLE_Q, tag!("0-0-0"))) |
+    complete!(value!(CASTLE_Q, tag!("O-O-O"))) |
+    value!(CASTLE_K, tag!("o-o")) |
+    value!(CASTLE_K, tag!("0-0")) |
+    value!(CASTLE_K, tag!("O-O"))
+));
 
 named!(pub parse_move(&[u8]) -> Move,
-    alt!(parse_straight | parse_castle));
+alt!(parse_straight | parse_castle));
 
 
 #[cfg(test)]
@@ -116,7 +115,7 @@ mod test {
     fn promotion_move() {
         let m = Move::promote(E2, E4, QUEEN);
         assert_eq!(format!("{:?}", m),
-            "Move { from: Square(52), to: Square(36), promote: Kind(4), castle:  }");
+        "Move { from: Square(52), to: Square(36), promote: Kind(4), castle:  }");
     }
 
     #[test]
@@ -126,12 +125,14 @@ mod test {
         assert_eq!(format!("{}", Move::parse("c3-f2")), "c3-f2");
         assert_eq!(format!("{}", Move::parse("a8:h1")), "a8-h1");
     }
+
     #[test]
     fn parse_short_castle() {
         assert_eq!(format!("{}", Move::parse("O-O")), "O-O");
         assert_eq!(format!("{}", Move::parse("0-0")), "O-O");
         assert_eq!(format!("{}", Move::parse("o-o")), "O-O");
     }
+
     #[test]
     fn parse_long_castle() {
         assert_eq!(format!("{}", Move::parse("O-O-O")), "O-O-O");

@@ -1,7 +1,14 @@
 #![allow(dead_code, collapsible_if)]
 #![allow(trivial_casts, trivial_numeric_casts)]
 
-use super::*;
+use super::root::*;
+use mask::*;
+use mask::masks::*;
+use side::*;
+use piece::*;
+use castle;
+use color::*;
+
 
 bitflags! {
     pub flags Assessment: u32 {

@@ -1,11 +1,11 @@
-use super::*;
+use super::root::*;
 use castle::Castle;
 use bit_board::BitBoard;
 use color::Color;
 use file::File;
 use nom::Err::Position as P;
 use nom::ErrorKind::Custom as C;
-use super::PositionError::*;
+use super::root::PositionError::*;
 
 type R<'a, T, X> = ::nom::IResult<&'a [u8], T, X>;
 
