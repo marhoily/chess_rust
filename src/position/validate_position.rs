@@ -11,23 +11,23 @@ use color::*;
 
 
 bitflags! {
-    pub flags Assessment: u32 {
-        const VALID = 0 ,
-        const HAS_NO_WHITE_KING = 1 << 0,
-        const HAS_MORE_THAN_ONE_WHITE_KING = 1 << 1,
-        const HAS_NO_BLACK_KING = 1 << 2,
-        const HAS_MORE_THAN_ONE_BLACK_KING = 1 << 3,
-        const WHITE_PAWNS_ON_PROMOTION_RANK = 1 << 4,
-        const BLACK_PAWNS_ON_PROMOTION_RANK = 1 << 5,
-        const EN_PASSANT_WITHOUT_PAWN = 1 << 6,
-        const EN_PASSANT_SQUARE_OCCUPIED = 1 << 7,
-        const CASTLING_WITHOUT_ROOK_A1 = 1 << 8,
-        const CASTLING_WITHOUT_ROOK_H1 = 1 << 9,
-        const CASTLING_WITHOUT_ROOK_A8 = 1 << 10,
-        const CASTLING_WITHOUT_ROOK_H8 = 1 << 11,
-        const CASTLING_WITHOUT_KING_E1 = 1 << 12,
-        const CASTLING_WITHOUT_KING_E8 = 1 << 13,
-        const WTF= 1 << 20,
+    pub struct Assessment: u32 {
+        const VALID = 0 ;
+        const HAS_NO_WHITE_KING = 1;
+        const HAS_MORE_THAN_ONE_WHITE_KING = 1 << 1;
+        const HAS_NO_BLACK_KING = 1 << 2;
+        const HAS_MORE_THAN_ONE_BLACK_KING = 1 << 3;
+        const WHITE_PAWNS_ON_PROMOTION_RANK = 1 << 4;
+        const BLACK_PAWNS_ON_PROMOTION_RANK = 1 << 5;
+        const EN_PASSANT_WITHOUT_PAWN = 1 << 6;
+        const EN_PASSANT_SQUARE_OCCUPIED = 1 << 7;
+        const CASTLING_WITHOUT_ROOK_A1 = 1 << 8;
+        const CASTLING_WITHOUT_ROOK_H1 = 1 << 9;
+        const CASTLING_WITHOUT_ROOK_A8 = 1 << 10;
+        const CASTLING_WITHOUT_ROOK_H8 = 1 << 11;
+        const CASTLING_WITHOUT_KING_E1 = 1 << 12;
+        const CASTLING_WITHOUT_KING_E8 = 1 << 13;
+        const WTF= 1 << 20;
     }
 }
 
