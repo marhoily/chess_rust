@@ -166,13 +166,4 @@ fn square_color() {
                  bwbwbwbw");
 }
 
-#[test]
-fn print_const() {
-    for rank in ::rank::ALL_RANKS {
-        for file in ::file::ALL_FILES {
-            let square88 = Square88::from(file, rank);
-            println!("pub const {}{}: Square88 = Square88(0x{:X});",
-                         file.char().to_uppercase().last().unwrap(), rank, square88.0);
-        }
-    }
-}
+

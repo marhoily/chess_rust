@@ -96,14 +96,6 @@ fn all_squares() {
 }
 
 #[test]
-fn print_const_squares() {
-    for s in ALL_SQUARES {
-        println!("pub const {} : Square88 = Square88({});",
-                 s.to_string().to_uppercase(),
-                 s.bits());
-    }
-}
-#[test]
 fn invalid() {
     assert_eq!(UNDEFINED_SQUARE.is_valid(), false);
 }

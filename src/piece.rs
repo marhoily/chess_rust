@@ -46,6 +46,7 @@ impl Display for Piece {
         write!(f, "{}", self.char())
     }
 }
+
 pub const PIECES_COUNT: usize = 12;
 pub const ALL_PIECES: Piece = Piece(0);
 
@@ -87,27 +88,30 @@ mod test {
     #[test]
     fn color() {
         assert_eq!(ALL_PIECES.map(|p| p.color().char())
-                       .collect::<String>(),
-                   "wwwwwwbbbbbb");
+            .collect::<String>(),
+        "wwwwwwbbbbbb");
     }
+
     #[test]
     fn kind() {
         assert_eq!(VOID.kind(), UNKNOWN);
         assert_equal(ALL_KINDS.chain(ALL_KINDS), ALL_PIECES.map(Piece::kind));
     }
+
     #[test]
     fn display() {
         assert_eq!(ALL_PIECES.map(|pt| format!("{}", pt))
-                       .collect::<String>(),
-                   "PNBRQKpnbrqk");
+            .collect::<String>(),
+        "PNBRQKpnbrqk");
     }
+
     #[test]
     fn debug() {
         assert_eq!([WHITE_PAWN, BLACK_PAWN, VOID]
-                       .into_iter()
-                       .map(|pt| format!("{:?}", pt))
-                       .collect_vec(),
-                   ["Piece(0)", "Piece(6)", "Piece(16)"]);
+            .into_iter()
+            .map(|pt| format!("{:?}", pt))
+            .collect_vec(),
+        ["Piece(0)", "Piece(6)", "Piece(16)"]);
     }
     // noinspection SpellCheckingInspection
     #[test]

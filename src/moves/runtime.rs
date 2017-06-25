@@ -108,14 +108,14 @@ mod test {
     fn usual_move() {
         let m = Move::new(E2, E4);
         assert_eq!(format!("{:?}", m),
-        "Move { from: Square(52), to: Square(36), promote: Kind(16), castle:  }");
+        "Move { from: Square(52), to: Square(36), promote: Kind(16), castle: NONE }");
     }
 
     #[test]
     fn promotion_move() {
         let m = Move::promote(E2, E4, QUEEN);
         assert_eq!(format!("{:?}", m),
-        "Move { from: Square(52), to: Square(36), promote: Kind(4), castle:  }");
+        "Move { from: Square(52), to: Square(36), promote: Kind(4), castle: NONE }");
     }
 
     #[test]

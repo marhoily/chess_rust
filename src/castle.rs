@@ -190,7 +190,7 @@ mod test {
 
     #[test]
     fn debug() {
-        assert_eq!(format!("{:?}", NONE), "");
-        assert_eq!(format!("{:?}", Q), "Q | WQ | BQ");
+        assert_eq!(format!("{:?}", NONE), "NONE");
+        assert_eq!(format!("{:?}", Q), "NONE | Q | WQ | BQ");
     }
 }
